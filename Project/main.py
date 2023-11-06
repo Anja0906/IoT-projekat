@@ -1,4 +1,5 @@
-from components.buzzer.buzzer import Buzzer
+# from components.buzzer.buzzer import Buzzer
+from components.dht.dht import DHT
 from components.door_light.dioda import Dioda
 from components.door_membrane_switch.membrane_switch import MembraneSwitch
 from components.door_sensor.door_sensor import MotionSensor
@@ -18,10 +19,10 @@ def run_door_motion(settings):
     motion_sensor.run([])
 
 
-def run_buzzer(settings):
-    buzzer_settings = settings['DS1']
-    door_buzzer = Buzzer(buzzer_settings['pin'], buzzer_settings['simulated'])
-    door_buzzer.run([])
+# def run_buzzer(settings):
+#     buzzer_settings = settings['DS1']
+#     door_buzzer = Buzzer(buzzer_settings['pin'], buzzer_settings['simulated'])
+#     door_buzzer.run([])
 
 
 def run_uds(settings):
@@ -36,10 +37,17 @@ def run_membrane_switch(settings):
     uds.run([])
 
 
+def run_dht(settings):
+    dht_settings = settings['DHT']
+    dht = DHT(dht_settings['pin'], dht_settings['simulated'])
+    dht.run([])
+
+
 if __name__ == '__main__':
     settings = load_settings()
     # run_door_light(settings)
     # run_door_motion(settings)
     # run_buzzer(settings)
     # run_uds(settings)
-    run_membrane_switch(settings)
+    #run_membrane_switch(settings)
+    #run_dht(settings)

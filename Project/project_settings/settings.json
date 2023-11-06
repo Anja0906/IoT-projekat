@@ -19,5 +19,9 @@
   "DMS": {
     "simulated": true,
     "pin": 17
+  },
+  "DHT": {
+    "simulated": true,
+    "pin": 17
   }
 }
