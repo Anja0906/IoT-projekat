@@ -47,4 +47,3 @@ class Dioda(object):
         except KeyboardInterrupt:
             for t in threads:
                 stop_event.set()
-

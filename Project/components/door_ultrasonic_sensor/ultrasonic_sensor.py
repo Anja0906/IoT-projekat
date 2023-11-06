@@ -64,7 +64,7 @@ class UltrasonicSensor(object):
             while True:
                 distance = self.get_distance()
                 if distance is not None:
-                    print(f'Distance: {round(distance,2)} cm')
+                    print(f'Distance: {round(distance, 2)} cm')
                 else:
                     print('Measurement timed out')
                 time.sleep(1)
