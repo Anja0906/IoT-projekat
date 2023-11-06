@@ -15,5 +15,9 @@
     "simulated": true,
     "trigger_pin": 23,
     "echo_pin": 24
+  },
+  "DHT": {
+    "simulated": true,
+    "pin": 17
   }
 }
