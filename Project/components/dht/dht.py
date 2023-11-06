@@ -81,13 +81,13 @@ class DHT(object):
         elif code == -999:
             return "DHTLIB_INVALID_VALUE"
 
-    def run_dht_loop(self, delay, callback, stop_event):
+    def run_dht_loop(self, delay, stop_event):
         import RPi.GPIO as GPIO  # Make sure to import GPIO module
         while True:
             check = self.readDHT11()
             code = self.parseCheckCode(check)
             humidity, temperature = self.humidity, self.temperature
-            callback(humidity, temperature, code)
+            self.callback(humidity, temperature, code)
             if stop_event.is_set():
                 break
             time.sleep(delay)  # Delay between readings
@@ -112,7 +112,7 @@ class DHT(object):
                 humidity = 100
             yield humidity, temperature
 
-    def run_dht_simulator(self, delay, callback, stop_event):
+    def run_dht_simulator(self, delay, stop_event):
         for h, t in self.generate_values():
             time.sleep(delay)
             self.dht_callback(h, t)
@@ -124,12 +124,12 @@ class DHT(object):
         try:
             if self.simulated:
                 print("Starting motion simulator")
-                dht_thread = threading.Thread(target=self.run_dht_simulator, args=(2, self.dht_callback, stop_event))
+                dht_thread = threading.Thread(target=self.run_dht_simulator, args=(2, stop_event))
                 dht_thread.start()
                 threads.append(dht_thread)
             elif not self.simulated:
                 print("Starting motion loop")
-                motion_thread = threading.Thread(target=self.run_dht_loop, args=(2, self.dht_callback, stop_event))
+                motion_thread = threading.Thread(target=self.run_dht_loop, args=(2, stop_event))
                 motion_thread.start()
                 threads.append(motion_thread)
             else:
