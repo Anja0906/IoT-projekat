@@ -19,10 +19,11 @@ def run_door_motion(settings):
     motion_sensor.run([])
 
 
-# def run_buzzer(settings):
-#     buzzer_settings = settings['DS1']
-#     door_buzzer = Buzzer(buzzer_settings['pin'], buzzer_settings['simulated'])
-#     door_buzzer.run([])
+def run_buzzer(settings):
+    buzzer_settings = settings['DS1']
+    print("Pritisnuli ste bazer")
+    # door_buzzer = Buzzer(buzzer_settings['pin'], buzzer_settings['simulated'])
+    # door_buzzer.run([])
 
 
 def run_uds(settings):
@@ -43,11 +44,41 @@ def run_dht(settings):
     dht.run([])
 
 
-if __name__ == '__main__':
+def menu_print():
+    print("Door light  --> 1")
+    print("Door motion --> 2")
+    print("Buzzer      --> 3")
+    print("UDS         --> 4")
+    print("MembraneSW  --> 5")
+    print("DHT         --> 6")
+    print("izlazak     --> x")
+
+
+
+def menu():
     settings = load_settings()
-    # run_door_light(settings)
-    # run_door_motion(settings)
-    # run_buzzer(settings)
-    # run_uds(settings)
-    # run_membrane_switch(settings)
-    # run_dht(settings)
+    while True:
+        menu_print()
+        choice = input("Unesite izbor: ")
+
+        if choice.strip().lower() == "1":
+            run_door_light(settings)
+        elif choice.strip().lower() == "2":
+            run_door_motion(settings)
+        elif choice.strip().lower() == "3":
+            run_buzzer(settings)
+        elif choice.strip().lower() == "4":
+            run_uds(settings)
+        elif choice.strip().lower() == "5":
+            run_membrane_switch(settings)
+        elif choice.strip().lower() == "6":
+            run_dht(settings)
+        else:
+            break
+
+
+
+
+if __name__ == '__main__':
+
+    menu()
