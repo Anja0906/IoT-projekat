@@ -23,5 +23,6 @@
   "DHT": {
     "simulated": true,
     "pin": 17
-  }
+  },
+  
 }

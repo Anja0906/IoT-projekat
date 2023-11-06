@@ -49,5 +49,5 @@ if __name__ == '__main__':
     # run_door_motion(settings)
     # run_buzzer(settings)
     # run_uds(settings)
-    #run_membrane_switch(settings)
-    #run_dht(settings)
+    # run_membrane_switch(settings)
+    # run_dht(settings)
