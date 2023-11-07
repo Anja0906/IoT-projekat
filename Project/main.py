@@ -33,7 +33,9 @@ def run_uds(settings):
 
 def run_membrane_switch(settings):
     dms_settings = settings['DMS']
-    uds = MembraneSwitch(dms_settings['pin'], dms_settings['simulated'])
+    uds = MembraneSwitch(dms_settings['simulated'], dms_settings['R1'], dms_settings['R2'],
+                         dms_settings['R3'], dms_settings['R4'], dms_settings['C1'],
+                         dms_settings['C2'], dms_settings['C3'], dms_settings['C4'])
     uds.run([])
 
 
