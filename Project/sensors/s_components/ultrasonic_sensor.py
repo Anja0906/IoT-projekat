@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 import time
 
 
-def get_distance(trigger_pin, echo_pin,code):
+def get_distance(trigger_pin, echo_pin, code):
     GPIO.setmode(GPIO.BCM)
     TRIG_PIN = int(trigger_pin)
     ECHO_PIN = int(echo_pin)
@@ -37,10 +37,10 @@ def get_distance(trigger_pin, echo_pin,code):
     return distance
 
 
-def run_uds(trigger_pin, echo_pin,code):
+def run_uds(trigger_pin, echo_pin, code):
     try:
         while True:
-            distance = get_distance(trigger_pin, echo_pin,code)
+            distance = get_distance(trigger_pin, echo_pin, code)
             if distance is not None:
                 print(f'Distance: {distance} cm')
             else:

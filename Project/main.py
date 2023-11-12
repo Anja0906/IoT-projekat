@@ -5,7 +5,6 @@ from components.buzzer_component import run_db
 from components.dht import run_dht
 from components.dioda import run_dl
 from components.door_button_sensor import run_ds
-from components.door_pir import run_dpir
 from components.door_ultrasonic_sensor import run_dus
 from components.membrane_switch import run_dms
 from components.door_pir import run_dpir
@@ -28,13 +27,11 @@ def run_pir_threads(settings, threads, stop_event):
 
 def run_dpir_threads(settings, threads, stop_event):
     dpir1_settings = settings['DPIR1']
-
     run_dpir(dpir1_settings, threads, stop_event, 'DPIR1')
 
 
 def run_ds_threads(settings, threads, stop_event):
     ds1_settings = settings['DS1']
-
     run_ds(ds1_settings, threads, stop_event, 'DS1')
 
 
@@ -87,6 +84,7 @@ def process_menu_choice(choice, settings, threads, stop_event):
 
 
 def menu(stop_event):
+    #Ovde ostaviti while a ovu funkciju u __main__ izbaciti iz while i probati da li se tako zaustavlja program
     while not stop_event.is_set():
         user_input = input("Press 'm' to open the menu: ")
         if user_input == "m":

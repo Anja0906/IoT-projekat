@@ -5,7 +5,6 @@ from actuators.buzzer import buzz
 
 
 def db_callback():
-
     t = time.localtime()
     print("="*20)
     print(f"Timestamp: {time.strftime('%H:%M:%S', t)}")
@@ -14,7 +13,6 @@ def db_callback():
 
 def run_db(settings, threads, stop_event, code):
         if settings['simulated']:
-
             db_thread = threading.Thread(target=db_callback, args=())
             db_thread.start()
             threads.append(db_thread)
@@ -23,4 +21,3 @@ def run_db(settings, threads, stop_event, code):
             db_thread = threading.Thread(target=buzz, args=(pin))
             db_thread.start()
             threads.append(db_thread)
-            print(code + " loop started")

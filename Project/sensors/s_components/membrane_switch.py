@@ -26,7 +26,6 @@ def detect_motion(code, c1, c2, c3, c4, r1, r2, r3, r4):
     GPIO.setup(C3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(C4, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
-
     def read_line(line, characters):
         GPIO.output(line, GPIO.HIGH)
         if GPIO.input(C1) == 1:
