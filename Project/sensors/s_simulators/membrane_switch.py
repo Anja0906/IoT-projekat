@@ -8,10 +8,10 @@ def generate_key_presses(max_length=8):
         yield ''.join(key_presses)
 
 
-def run_keypad_simulator(delay, callback, stop_event, code):
+def run_keypad_simulator(delay, callback, stop_event, code, print_lock):
     for key_sequence in generate_key_presses():
         time.sleep(delay)
-        callback(key_sequence, code)
+        callback(key_sequence, code, print_lock)
         if stop_event.is_set():
             break
 

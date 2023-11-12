@@ -1,3 +1,4 @@
+import sys
 import threading
 import time
 
@@ -7,48 +8,56 @@ from components.door_ultrasonic_sensor import run_dus
 from components.membrane_switch import run_dms
 from components.door_pir import run_dpir
 from project_settings.settings import load_settings
+from threading import Lock
+
+print_lock = Lock()
 
 
-def run_dht_threads(settings, threads, stop_event):
+def run_dht_threads(settings, threads, stop_event, print_lock):
     rdht1_settings = settings['RDHT1']
     rdht2_settings = settings['RDHT2']
-    run_dht(rdht1_settings, threads, stop_event, 'RDHT1')
-    run_dht(rdht2_settings, threads, stop_event, 'RDHT2')
+    run_dht(rdht1_settings, threads, stop_event, 'RDHT1', print_lock)
+    run_dht(rdht2_settings, threads, stop_event, 'RDHT2', print_lock)
 
 
-def run_pir_threads(settings, threads, stop_event):
+def run_pir_threads(settings, threads, stop_event, print_lock):
     rpir1_settings = settings['RPIR1']
     rpir2_settings = settings['RPIR2']
-    run_dpir(rpir1_settings, threads, stop_event, 'RPIR1')
-    run_dpir(rpir2_settings, threads, stop_event, 'RPIR2')
+    run_dpir(rpir1_settings, threads, stop_event, 'RPIR1', print_lock)
+    run_dpir(rpir2_settings, threads, stop_event, 'RPIR2', print_lock)
 
 
-def run_dpir_threads(settings, threads, stop_event):
+def run_dpir_threads(settings, threads, stop_event, print_lock):
     dpir1_settings = settings['DPIR1']
-    run_dpir(dpir1_settings, threads, stop_event, 'DPIR1')
+    run_dpir(dpir1_settings, threads, stop_event, 'DPIR1', print_lock)
 
 
-def run_ds_threads(settings, threads, stop_event):
+def run_ds_threads(settings, threads, stop_event, print_lock):
     ds1_settings = settings['DS1']
-    run_ds(ds1_settings, threads, stop_event, 'DS1')
+    run_ds(ds1_settings, threads, stop_event, 'DS1', print_lock)
 
 
-def run_dus_threads(settings, threads, stop_event):
+def run_dus_threads(settings, threads, stop_event, print_lock):
     dus1_settings = settings['DUS1']
-    run_dus(dus1_settings, threads, stop_event, 'DUS1')
+    run_dus(dus1_settings, threads, stop_event, 'DUS1', print_lock)
 
 
-def run_dms_threads(settings, threads, stop_event):
+def run_dms_threads(settings, threads, stop_event, print_lock):
     dms_settings = settings['DMS']
-    run_dms(dms_settings, threads, stop_event, 'DMS')
+    run_dms(dms_settings, threads, stop_event, 'DMS', print_lock)
 
 
-def run_all_threads(settings, threads, stop_event):
-    run_dht_threads(settings, threads, stop_event)
-    run_pir_threads(settings, threads, stop_event)
-    run_dpir_threads(settings, threads, stop_event)
-    run_dus_threads(settings, threads, stop_event)
-    run_dms_threads(settings, threads, stop_event)
+def run_all_threads(settings, threads, stop_event, print_lock):
+    if stop_event.is_set():
+        sys.exit()
+    run_dht_threads(settings, threads, stop_event, print_lock)
+    run_pir_threads(settings, threads, stop_event, print_lock)
+    run_dpir_threads(settings, threads, stop_event, print_lock)
+    run_dus_threads(settings, threads, stop_event, print_lock)
+    run_dms_threads(settings, threads, stop_event, print_lock)
+
+    for thread in threads:
+        thread.join()
 
 
 def start_your_sensors_daytona_500():
@@ -70,12 +79,13 @@ if __name__ == "__main__":
     stop_event = threading.Event()
 
     try:
-        run_all_threads(settings, threads, stop_event)
-        while not stop_event.is_set():
-            time.sleep(5)
+        while True:
+            run_all_threads(settings, threads, stop_event, print_lock)
+            stop_event.clear()
+            threads = []
+
     except KeyboardInterrupt:
         print('Stopping app')
         for t in threads:
             stop_event.set()
-
-    print("App stopped")
+        sys.exit(0)

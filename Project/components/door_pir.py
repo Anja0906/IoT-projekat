@@ -4,18 +4,19 @@ import time
 from sensors.s_simulators.pir import run_pir_simulator
 
 
-def dpir_callback(motion_detected, code):
+def dpir_callback(motion_detected, code, print_lock):
     if motion_detected:
-        t = time.localtime()
-        print("=" * 20)
-        print(f"Timestamp: {time.strftime('%H:%M:%S', t)}")
-        print(f"Code: {code}")
-        print(f"Motion detected\n")
+        with print_lock:
+            t = time.localtime()
+            print("=" * 20)
+            print(f"Timestamp: {time.strftime('%H:%M:%S', t)}")
+            print(f"Code: {code}")
+            print(f"Motion detected\n")
 
 
-def run_dpir(settings, threads, stop_event, code):
+def run_dpir(settings, threads, stop_event, code, print_lock):
     if settings['simulated']:
-        dpir_thread = threading.Thread(target=run_pir_simulator, args=(5, dpir_callback, stop_event, code))
+        dpir_thread = threading.Thread(target=run_pir_simulator, args=(5, dpir_callback, stop_event, code, print_lock))
         dpir_thread.start()
         threads.append(dpir_thread)
     else:

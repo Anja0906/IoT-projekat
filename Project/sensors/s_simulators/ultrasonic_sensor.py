@@ -22,9 +22,9 @@ def generate_values():
         print(f'Error: {str(e)}')
 
 
-def run_uds_simulator(delay, callback, stop_event, code):
+def run_uds_simulator(delay, callback, stop_event, code, print_lock):
     for g in generate_values():
         time.sleep(delay)
-        callback(g, code)
+        callback(g, code, print_lock)
         if stop_event.is_set():
             break
