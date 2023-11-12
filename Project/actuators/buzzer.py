@@ -1,8 +1,7 @@
 import time
 
 
-
-def buzz(pin,pitch,duration):
+def buzz(pin, pitch, duration):
     import RPi.GPIO as GPIO
     pin = int(pin)
     GPIO.setmode(GPIO.BCM)

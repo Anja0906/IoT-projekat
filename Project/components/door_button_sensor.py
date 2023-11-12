@@ -17,11 +17,11 @@ def ds_callback(current_value, code):
 
 def run_ds(settings, threads, stop_event, code):
     if settings['simulated']:
-        print("Starting " + code + " sumilator")
+        print("Starting " + code + " simulator")
         ds_thread = threading.Thread(target=run_ds_simulator, args=(5, ds_callback, stop_event, code))
         ds_thread.start()
         threads.append(ds_thread)
-        print(code + " sumilator started\n")
+        print(code + " simulator started\n")
     else:
         from sensors.s_components.door_sensor_button import press_button
         print("Starting " + code + " loop")

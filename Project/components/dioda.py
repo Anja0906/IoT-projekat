@@ -4,7 +4,7 @@ import time
 result = True
 
 
-def dl_callback(code):
+def dl_callback():
     global result
     t = time.localtime()
     print("=" * 20)
@@ -19,13 +19,13 @@ def dl_callback(code):
 
 def run_dl(settings, threads, stop_event, code):
     if settings['simulated']:
-        dl_thread = threading.Thread(target=dl_callback, args=(code,))
+        dl_thread = threading.Thread(target=dl_callback, args=())
         dl_thread.start()
         threads.append(dl_thread)
     else:
         pin = settings['pin']
         from actuators.dioda import run_dl
-        dms_thread = threading.Thread(target=run_dl, args=(pin,code))
+        dms_thread = threading.Thread(target=run_dl, args=(pin, code))
         dms_thread.start()
         threads.append(dms_thread)
 

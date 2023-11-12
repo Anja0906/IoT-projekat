@@ -8,10 +8,9 @@ def generate_values():
         yield motion_detected
 
 
-def run_pir_simulator(delay, callback, stop_event,code):
+def run_pir_simulator(delay, callback, stop_event, code):
     for motion in generate_values():
         time.sleep(delay)
-        callback(motion,code)
+        callback(motion, code)
         if stop_event.is_set():
             break
-
