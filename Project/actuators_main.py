@@ -39,16 +39,27 @@ def process_menu_choice(choice, settings, threads, stop_event):
         print("Exiting the menu. Printing is resumed.")
 
 
+def start_your_sensors_daytona_500():
+    print("Alright alright alright")
+    time.sleep(1)
+    print("Gentlemaaaaaaaaan")
+    time.sleep(1)
+    print("START")
+    time.sleep(1)
+    print("YOUR")
+    time.sleep(1)
+    print("ACTUATOOOOOORS")
+
+
 def menu(stop_event):
     while not stop_event.is_set():
-        user_input = input("Press 'm' to open the menu: ")
-        if user_input == "m":
-            display_menu()
-            user_input = input("Enter your choice: ")
-            process_menu_choice(user_input, settings, threads, stop_event)
+        display_menu()
+        user_input = input("Enter your choice: ")
+        process_menu_choice(user_input, settings, threads, stop_event)
 
 
 if __name__ == "__main__":
+    start_your_sensors_daytona_500()
     settings = load_settings()
     threads = []
     stop_event = threading.Event()

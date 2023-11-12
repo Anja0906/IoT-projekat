@@ -51,7 +51,20 @@ def run_all_threads(settings, threads, stop_event):
     run_dms_threads(settings, threads, stop_event)
 
 
+def start_your_sensors_daytona_500():
+    print("Alright alright alright")
+    time.sleep(1)
+    print("Gentlemaaaaaaaaan")
+    time.sleep(1)
+    print("START")
+    time.sleep(1)
+    print("YOUR")
+    time.sleep(1)
+    print("SENSOOOOOOOOOORS")
+
+
 if __name__ == "__main__":
+    start_your_sensors_daytona_500()
     settings = load_settings()
     threads = []
     stop_event = threading.Event()
