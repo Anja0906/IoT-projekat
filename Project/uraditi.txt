@@ -1,0 +1,3 @@
+Dodatti threading.lock jer se preplicu printevi
+
+Ubaciti drugacije while petlje tako da moze da se zaustavi code sa ctrl+c

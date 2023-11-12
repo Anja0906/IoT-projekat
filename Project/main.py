@@ -120,12 +120,13 @@ if __name__ == "__main__":
     stop_event = threading.Event()
 
     try:
+        run_all_threads(settings, threads, stop_event)
         while not stop_event.is_set():
-            run_all_threads(settings, threads, stop_event)
             run_menu_thread(threads, stop_event)
             time.sleep(5)
     except KeyboardInterrupt:
         print('Stopping app')
-        stop_event.set()
+        for t in threads:
+            stop_event.set()
 
     print("App stopped")
