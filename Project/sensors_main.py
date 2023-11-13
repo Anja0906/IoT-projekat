@@ -1,15 +1,12 @@
 import sys
 import threading
 import time
-
 from components.dht import run_dht
-from components.door_button_sensor import run_ds
 from components.door_ultrasonic_sensor import run_dus
 from components.membrane_switch import run_dms
 from components.door_pir import run_dpir
 from project_settings.settings import load_settings
 from threading import Lock
-
 print_lock = Lock()
 
 
@@ -32,11 +29,6 @@ def run_dpir_threads(settings, threads, stop_event, print_lock):
     run_dpir(dpir1_settings, threads, stop_event, 'DPIR1', print_lock)
 
 
-def run_ds_threads(settings, threads, stop_event, print_lock):
-    ds1_settings = settings['DS1']
-    run_ds(ds1_settings, threads, stop_event, 'DS1', print_lock)
-
-
 def run_dus_threads(settings, threads, stop_event, print_lock):
     dus1_settings = settings['DUS1']
     run_dus(dus1_settings, threads, stop_event, 'DUS1', print_lock)
@@ -48,14 +40,11 @@ def run_dms_threads(settings, threads, stop_event, print_lock):
 
 
 def run_all_threads(settings, threads, stop_event, print_lock):
-    if stop_event.is_set():
-        sys.exit()
     run_dht_threads(settings, threads, stop_event, print_lock)
     run_pir_threads(settings, threads, stop_event, print_lock)
     run_dpir_threads(settings, threads, stop_event, print_lock)
     run_dus_threads(settings, threads, stop_event, print_lock)
     run_dms_threads(settings, threads, stop_event, print_lock)
-
     for thread in threads:
         thread.join()
 

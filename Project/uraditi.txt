@@ -1,6 +1,0 @@
-Dodatti threading.lock jer se preplicu printevi
-
-Pogledati u nekom projektu kako rade liniju
-with print_lock:
-
-Ubaciti drugacije while petlje tako da moze da se zaustavi code sa ctrl+c
