@@ -46,5 +46,62 @@
   "RPIR2": {
     "simulated": true,
     "pin": 17
+  },
+  "DS2": {
+    "simulated": true,
+    "pin": 17
+  },
+  "DUS2": {
+    "simulated": true,
+    "trigger_pin": 23,
+    "echo_pin": 24
+  },
+  "DPIR2": {
+    "simulated": true,
+    "pin": 17
+  },
+  "GDHT": {
+    "simulated": true,
+    "pin": 17
+  },
+  "RPIR3": {
+    "simulated": true,
+    "pin": 17
+  },
+  "RDHT3": {
+    "simulated": true,
+    "pin": 17
+  },
+  "RPIR4": {
+    "simulated": true,
+    "pin": 17
+  },
+  "RDHT4": {
+    "simulated": true,
+    "pin": 17
+  },
+  "BB": {
+    "simulated": true,
+    "pin": 17
+  },
+  "GLCD": {
+    "simulated": true,
+    "pin": 17
+  },
+  "GSG": {
+    "simulated": true,
+    "pin": 17
+  },
+  "B4SD": {
+    "simulated": true,
+    "pin": 17
+  },
+  "BIR": {
+    "simulated": true,
+    "pin": 17
+  },
+  "BRGB": {
+    "simulated": true,
+    "pin": 17
   }
 }
