@@ -10,10 +10,6 @@ def generate_values():
     try:
         while True:
             distance = get_distance()
-            if distance is not None:
-                print(f'Distance: {round(distance, 2)} cm')
-            else:
-                print('Measurement timed out')
             yield distance
 
     except KeyboardInterrupt:
