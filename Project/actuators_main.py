@@ -14,9 +14,11 @@ def run_dl_threads(settings, threads, stop_event):
     run_dl(dl_settings, threads, stop_event, "DL")
 
 
-def run_db_threads(settings, threads, stop_event):
-    db_settings = settings["DB"]
-    run_db(db_settings, threads, stop_event, "DB")
+def run_db_threads(settings, threads, stop_event, choice):
+    if choice==1:
+        run_db(settings["DB"], threads, stop_event, "DB")
+    else:
+        run_db(settings["BB"], threads, stop_event, "BB")
 
 
 def run_menu_thread(threads, stop_event):
@@ -28,15 +30,18 @@ def run_menu_thread(threads, stop_event):
 def display_menu():
     print("Menu Options:")
     print("Press l to control Door Light")
-    print("Press b to control Door Buzzer")
+    print("Press b1 to control Door Buzzer")
+    print("Press b2 to control Bedroom Buzzer")
     print("Press 'e' to exit the menu")
 
 
 def process_menu_choice(choice, settings, threads, stop_event):
     if choice == "l":
         run_dl_threads(settings, threads, stop_event)
-    elif choice == "b":
-        run_db_threads(settings, threads, stop_event)
+    elif choice == "b1":
+        run_db_threads(settings, threads, stop_event, 1)
+    elif choice == "b2":
+        run_db_threads(settings, threads, stop_event, 2)
     elif choice == "x":
         print("Exiting the menu. Printing is resumed.")
 
