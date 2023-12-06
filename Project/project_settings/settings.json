@@ -41,15 +41,21 @@
   },
   "DPIR1": {
     "simulated": true,
-    "pin": 17
+    "pin": 17,
+    "runs_on": "DPIR1",
+    "name": "DPIR1"
   },
   "RPIR1": {
     "simulated": true,
-    "pin": 17
+    "pin": 17,
+    "runs_on": "RPIR1",
+    "name": "RPIR1"
   },
   "RPIR2": {
     "simulated": true,
-    "pin": 17
+    "pin": 17,
+    "runs_on": "RPIR2",
+    "name": "RPIR2"
   },
   "DS2": {
     "simulated": true,
@@ -62,7 +68,9 @@
   },
   "DPIR2": {
     "simulated": true,
-    "pin": 17
+    "pin": 17,
+    "runs_on": "DPIR2",
+    "name": "DPIR2"
   },
   "GDHT": {
     "simulated": true,
@@ -72,7 +80,9 @@
   },
   "RPIR3": {
     "simulated": true,
-    "pin": 17
+    "pin": 17,
+    "runs_on": "RPIR3",
+    "name": "RPIR3"
   },
   "RDHT3": {
     "simulated": true,
@@ -82,7 +92,9 @@
   },
   "RPIR4": {
     "simulated": true,
-    "pin": 17
+    "pin": 17,
+    "runs_on": "RPIR4",
+    "name": "RPIR4"
   },
   "RDHT4": {
     "simulated": true,
