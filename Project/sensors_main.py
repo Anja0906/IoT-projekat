@@ -10,11 +10,12 @@ from threading import Lock
 print_lock = Lock()
 
 
-def run_dht_threads(settings, threads, stop_event, print_lock):
-    rdht1_settings = settings['RDHT1']
-    rdht2_settings = settings['RDHT2']
-    run_dht(rdht1_settings, threads, stop_event, 'RDHT1', print_lock)
-    run_dht(rdht2_settings, threads, stop_event, 'RDHT2', print_lock)
+def run_dht_threads(settings, threads, stop_event):
+    run_dht(settings['RDHT1'], threads, stop_event, 'RDHT1')
+    run_dht(settings['RDHT2'], threads, stop_event, 'RDHT2')
+    run_dht(settings['RDHT3'], threads, stop_event, 'RDHT3')
+    run_dht(settings['RDHT4'], threads, stop_event, 'RDHT4')
+    run_dht(settings['GDHT'], threads, stop_event, 'GDHT')
 
 
 def run_pir_threads(settings, threads, stop_event, print_lock):
@@ -40,7 +41,7 @@ def run_dms_threads(settings, threads, stop_event, print_lock):
 
 
 def run_all_threads(settings, threads, stop_event, print_lock):
-    run_dht_threads(settings, threads, stop_event, print_lock)
+    run_dht_threads(settings, threads, stop_event)
     run_pir_threads(settings, threads, stop_event, print_lock)
     run_dpir_threads(settings, threads, stop_event, print_lock)
     run_dus_threads(settings, threads, stop_event, print_lock)

@@ -28,12 +28,16 @@
     "C4": 21
   },
   "RDHT1": {
-    "simulated": true,
-    "pin": 17
+     "simulated": true,
+    "pin": 17,
+    "runs_on": "RDHT1",
+    "name": "RDHT1"
   },
   "RDHT2": {
     "simulated": true,
-    "pin": 17
+    "pin": 17,
+    "runs_on": "RDHT2",
+    "name": "RDHT2"
   },
   "DPIR1": {
     "simulated": true,
@@ -62,7 +66,9 @@
   },
   "GDHT": {
     "simulated": true,
-    "pin": 17
+    "pin": 17,
+    "runs_on": "GDHT",
+    "name": "GDHT"
   },
   "RPIR3": {
     "simulated": true,
@@ -70,7 +76,9 @@
   },
   "RDHT3": {
     "simulated": true,
-    "pin": 17
+    "pin": 17,
+    "runs_on": "RDHT3",
+    "name": "RDHT3"
   },
   "RPIR4": {
     "simulated": true,
@@ -78,7 +86,9 @@
   },
   "RDHT4": {
     "simulated": true,
-    "pin": 17
+    "pin": 17,
+    "runs_on": "RDHT4",
+    "name": "RDHT4"
   },
   "BB": {
     "simulated": true,
