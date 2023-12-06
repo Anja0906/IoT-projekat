@@ -23,7 +23,7 @@ def publisher_task(event, dht_batch):
 
 
 publish_event = threading.Event()
-publisher_thread = threading.Thread(target=publisher_task, args=(publish_event, dht_batch,))
+publisher_thread = threading.Thread(target=publisher_task, args=(publish_event, dht_batch))
 publisher_thread.daemon = True
 publisher_thread.start()
 

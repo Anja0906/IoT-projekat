@@ -28,8 +28,9 @@ def run_pir_threads(settings, threads, stop_event, print_lock):
     run_dpir(settings['DPIR2'], threads, stop_event, 'DPIR2')
 
 
-def run_dus_threads(settings, threads, stop_event, print_lock):
-    run_dus(settings['DUS1'], threads, stop_event, 'DUS1', print_lock)
+def run_dus_threads(settings, threads, stop_event):
+    run_dus(settings['DUS1'], threads, stop_event, 'DUS1')
+    run_dus(settings['DUS2'], threads, stop_event, 'DUS2')
 
 
 def run_dms_threads(settings, threads, stop_event, print_lock):
@@ -44,7 +45,7 @@ def run_ds_threads(settings, threads, stop_event):
 def run_all_threads(settings, threads, stop_event, print_lock):
     run_dht_threads(settings, threads, stop_event)
     run_pir_threads(settings, threads, stop_event, print_lock)
-    run_dus_threads(settings, threads, stop_event, print_lock)
+    run_dus_threads(settings, threads, stop_event)
     run_dms_threads(settings, threads, stop_event, print_lock)
     run_ds_threads(settings, threads, stop_event)
     for thread in threads:
