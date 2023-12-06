@@ -36,8 +36,9 @@ def run_dms_threads(settings, threads, stop_event, print_lock):
     run_dms(settings['DMS'], threads, stop_event, 'DMS', print_lock)
 
 
-def run_ds_threads(settings, threads, stop_event, print_lock):
-    run_ds(settings['DS1'], threads, stop_event, 'DS1', print_lock)
+def run_ds_threads(settings, threads, stop_event):
+    run_ds(settings['DS1'], threads, stop_event, 'DS1')
+    run_ds(settings['DS2'], threads, stop_event, 'DS2')
 
 
 def run_all_threads(settings, threads, stop_event, print_lock):
@@ -45,7 +46,7 @@ def run_all_threads(settings, threads, stop_event, print_lock):
     run_pir_threads(settings, threads, stop_event, print_lock)
     run_dus_threads(settings, threads, stop_event, print_lock)
     run_dms_threads(settings, threads, stop_event, print_lock)
-    run_ds_threads(settings, threads, stop_event, print_lock)
+    run_ds_threads(settings, threads, stop_event)
     for thread in threads:
         thread.join()
 
