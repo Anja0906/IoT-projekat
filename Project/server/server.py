@@ -11,7 +11,6 @@ load_dotenv()
 app = Flask(__name__)
 
 influxdb_token = os.environ.get('INFLUXDB_TOKEN')
-
 org = os.environ.get('ORGANIZATION')
 url = os.environ.get('URL')
 bucket = os.environ.get('BUCKET_NAME')
@@ -32,6 +31,9 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe("MembraneSwitch")
     client.subscribe("Buzzer")
     client.subscribe("DoorLight")
+    client.subscribe("Gyro")
+    client.subscribe("LCD")
+    client.subscribe("Clock")
 
 mqtt_client.on_connect = on_connect
 mqtt_client.on_message = lambda client, userdata, msg: save_to_db(json.loads(msg.payload.decode('utf-8')))
