@@ -9,6 +9,7 @@ from components.lcd_clock import run_clock
 from components.membrane_switch import run_dms
 from components.door_pir import run_dpir
 from components.door_button_sensor import run_ds
+from components.rgb_dioda import run_rgb_light
 from project_settings.settings import load_settings
 
 def run_dht_threads(settings, threads, stop_event):
@@ -51,6 +52,9 @@ def run_lcd_threads(settings, threads, stop_event):
 def run_clock_threads(settings, threads, stop_event):
     run_clock(settings['B4SD'], threads, stop_event, 'B4SD')
 
+def run_rgb_threads(settings, threads, stop_event):
+    run_rgb_light(settings['BRGB'], threads, stop_event, 'BRGB')
+
 
 def run_all_threads(settings, threads, stop_event):
     run_dht_threads(settings, threads, stop_event)
@@ -61,6 +65,7 @@ def run_all_threads(settings, threads, stop_event):
     run_gyro_threads(settings, threads, stop_event)
     run_lcd_threads(settings, threads, stop_event)
     run_clock_threads(settings, threads, stop_event)
+    run_rgb_threads(settings, threads, stop_event)
     for thread in threads:
         thread.join()
 

@@ -1,5 +1,4 @@
 import threading
-import time
 import json
 import paho.mqtt.publish as publish
 from sensors.broker_settings import HOSTNAME, PORT
@@ -9,13 +8,6 @@ clock_batch = []
 publish_data_counter = 0
 publish_data_limit = 5
 counter_lock = threading.Lock()
-
-
-def lcd_callback():
-    global result
-    t = time.localtime()
-    print("=" * 20)
-    print(f"Timestamp: {time.strftime('%H:%M:%S', t)}")
 
 
 def display_callback(time_value, publish_event, settings, code, verbose=False):

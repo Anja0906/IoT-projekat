@@ -18,15 +18,13 @@ def print_color(value):
         7: "Light Blue"
     }
     color_name = colors.get(value, "Unknown")
-    print(f"Color: {color_name}")
+    return color_name
 
-def run_rgb_dioda_simulation():
-    try:
-        generator = generate_values()
-        while True:
-            value = next(generator)
-            print_color(value)
-            time.sleep(1)
-    except KeyboardInterrupt:
-        print("Simulation stopped.")
+def run_rgb_dioda_simulation(delay, callback, stop_event, publish_event, settings, code):
+    for value in generate_values():
+        time.sleep(delay)
+        color = print_color(value)
+        callback(color, publish_event, settings, code)
+        if stop_event.is_set():
+            break
 
