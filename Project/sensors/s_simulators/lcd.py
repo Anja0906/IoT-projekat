@@ -15,14 +15,10 @@ def generate_display_text():
         yield text
 
 
-def display_callback(text):
-    print(f"Prikazani tekst: {text}")
-
-
-def simulate_lcd_display(delay, stop_event):
+def simulate_lcd_display(delay, callback, stop_event, publish_event, settings, code):
     for text in generate_display_text():
         time.sleep(delay)
-        display_callback(text)
+        callback(text, publish_event, settings, code)
         if stop_event.is_set():
             break
 

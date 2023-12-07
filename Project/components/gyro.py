@@ -1,8 +1,4 @@
 import threading
-import time
-import random
-import threading
-import time
 import json
 import paho.mqtt.publish as publish
 from sensors.broker_settings import HOSTNAME, PORT

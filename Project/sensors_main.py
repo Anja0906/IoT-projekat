@@ -4,6 +4,7 @@ import threading
 from components.dht import run_dht
 from components.door_ultrasonic_sensor import run_dus
 from components.gyro import run_gyro
+from components.lcd import run_lcd
 from components.membrane_switch import run_dms
 from components.door_pir import run_dpir
 from components.door_button_sensor import run_ds
@@ -43,6 +44,9 @@ def run_ds_threads(settings, threads, stop_event):
 def run_gyro_threads(settings, threads, stop_event):
     run_gyro(settings['GSG'], threads, stop_event, 'GSG')
 
+def run_lcd_threads(settings, threads, stop_event):
+    run_lcd(settings['GLCD'], threads, stop_event, 'GLCD')
+
 
 def run_all_threads(settings, threads, stop_event):
     run_dht_threads(settings, threads, stop_event)
@@ -51,6 +55,7 @@ def run_all_threads(settings, threads, stop_event):
     run_dms_threads(settings, threads, stop_event)
     run_ds_threads(settings, threads, stop_event)
     run_gyro_threads(settings, threads, stop_event)
+    run_lcd_threads(settings, threads, stop_event)
     for thread in threads:
         thread.join()
 
