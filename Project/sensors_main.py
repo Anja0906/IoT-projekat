@@ -4,6 +4,7 @@ import threading
 from components.dht import run_dht
 from components.door_ultrasonic_sensor import run_dus
 from components.gyro import run_gyro
+from components.ir_receiver import run_ir_receiver
 from components.lcd import run_lcd
 from components.lcd_clock import run_clock
 from components.membrane_switch import run_dms
@@ -55,6 +56,9 @@ def run_clock_threads(settings, threads, stop_event):
 def run_rgb_threads(settings, threads, stop_event):
     run_rgb_light(settings['BRGB'], threads, stop_event, 'BRGB')
 
+def run_bir_threads(settings, threads, stop_event):
+    run_ir_receiver(settings['BIR'], threads, stop_event, 'BIR')
+
 
 def run_all_threads(settings, threads, stop_event):
     run_dht_threads(settings, threads, stop_event)
@@ -66,6 +70,7 @@ def run_all_threads(settings, threads, stop_event):
     run_lcd_threads(settings, threads, stop_event)
     run_clock_threads(settings, threads, stop_event)
     run_rgb_threads(settings, threads, stop_event)
+    run_bir_threads(settings, threads, stop_event)
     for thread in threads:
         thread.join()
 
