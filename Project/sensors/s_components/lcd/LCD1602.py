@@ -18,7 +18,7 @@ def get_time_now():  # get system time
     return datetime.now().strftime('    %H:%M:%S')
 
 
-def lcd_run():
+def run_clock_component():
     mcp.output(3, 1)  # turn on LCD backlight
     lcd.begin(16, 2)  # set number of LCD lines and columns
     while (True):
