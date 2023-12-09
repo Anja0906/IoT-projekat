@@ -23,21 +23,24 @@ mqtt_client = mqtt.Client()
 mqtt_client.connect("localhost", 1883, 60)
 mqtt_client.loop_start()
 
-
+topics = [
+    "Temperature",
+    "Humidity",
+    "Motion",
+    "DoorSensor",
+    "DoorUltraSonic",
+    "MembraneSwitch",
+    "Buzzer",
+    "DoorLight",
+    "Gyro",
+    "LCD",
+    "Clock",
+    "RGB",
+    "BedroomInfrared"
+]
 def on_connect(client, userdata, flags, rc):
-    client.subscribe("Temperature")
-    client.subscribe("Humidity")
-    client.subscribe("Motion")
-    client.subscribe("DoorSensor")
-    client.subscribe("DoorUltraSonic")
-    client.subscribe("MembraneSwitch")
-    client.subscribe("Buzzer")
-    client.subscribe("DoorLight")
-    client.subscribe("Gyro")
-    client.subscribe("LCD")
-    client.subscribe("Clock")
-    client.subscribe("RGB")
-    client.subscribe("BedroomInfrared")
+    for topic in topics:
+        client.subscribe(topic)
 
 
 mqtt_client.on_connect = on_connect
@@ -102,11 +105,24 @@ def retrieve_pi_names():
     return extract_runs_on_from_settings()
 
 
+@app.route('/topic_names', methods=['GET'])
+def retrieve_topic_names():
+    return topics
+
+
 @app.route('/component_data/<name>', methods=['GET'])
 def retrieve_component_data(name):
     query = f"""from(bucket: "{bucket}")
     |> range(start: -10m)
     |> filter(fn: (r) => r.name == "{name}")"""
+    return handle_influx_query(query)
+
+
+@app.route('/topic_data/<name>', methods=['GET'])
+def retrieve_topic_data(name):
+    query = f"""from(bucket: "{bucket}")
+    |> range(start: -10m)
+    |> filter(fn: (r) => r._measurement == "{name}")"""
     return handle_influx_query(query)
 
 

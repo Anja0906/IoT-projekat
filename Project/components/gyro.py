@@ -30,10 +30,12 @@ publisher_thread.start()
 
 def gyro_callback(data, publish_event, settings, code, verbose=False):
     global publish_data_counter, publish_data_limit
-    gyro_x, gyro_y, gyro_z = data
-    load = f"Gyroscope {code} - X: {gyro_x:.2f} d/s, Y: {gyro_y:.2f} d/s, Z: {gyro_z:.2f} d/s"
+    accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z = data
+    load = "a/g:%.2f g\t%.2f g\t%.2f g\t%.2f d/s\t%.2f d/s\t%.2f d/s"%(accel_x/16384.0,accel_y/16384.0,
+            accel_z/16384.0,gyro_x/131.0,gyro_y/131.0,gyro_z/131.0)
     if verbose:
-        print(f"Gyroscope {code} - X: {gyro_x:.2f} d/s, Y: {gyro_y:.2f} d/s, Z: {gyro_z:.2f} d/s")
+        print("a/g:%.2f g\t%.2f g\t%.2f g\t%.2f d/s\t%.2f d/s\t%.2f d/s"%(accel_x/16384.0,accel_y/16384.0,
+            accel_z/16384.0,gyro_x/131.0,gyro_y/131.0,gyro_z/131.0))
     gyro_payload = {
         "measurement": "Gyro",
         "simulated": settings['simulated'],
