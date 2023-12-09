@@ -59,7 +59,7 @@ def run_gyro(settings, threads, stop_event, code):
     else:
         from sensors.s_components.MPU6050.gyro import gyro_run
         print("Starting " + code + " loop")
-        gyro_thread = threading.Thread(target=gyro_run, args=())
+        gyro_thread = threading.Thread(target=gyro_run, args=(2, gyro_callback, stop_event, publish_event, settings, code))
         gyro_thread.start()
         threads.append(gyro_thread)
         print(code + " loop started")

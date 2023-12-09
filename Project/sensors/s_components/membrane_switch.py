@@ -2,7 +2,7 @@ import time
 import RPi.GPIO as GPIO
 
 
-def detect_motion(code, c1, c2, c3, c4, r1, r2, r3, r4):
+def detect_motion(code, c1, c2, c3, c4, r1, r2, r3, r4, callback, stop_event, publish_event, settings):
     R1 = int(r1)
     R2 = int(r2)
     R3 = int(r3)
@@ -37,6 +37,7 @@ def detect_motion(code, c1, c2, c3, c4, r1, r2, r3, r4):
         if GPIO.input(C4) == 1:
             print(characters[3])
         GPIO.output(line, GPIO.LOW)
+        callback(line, publish_event, settings, code)
 
         try:
             while True:

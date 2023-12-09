@@ -57,9 +57,9 @@ def run_lcd(settings, threads, stop_event, code):
         threads.append(lcd_thread)
         print(code + " simulator started\n")
     else:
-        from sensors.s_components.lcd.LCD1602 import lcd_run
+        from sensors.s_components.lcd.LCD1602 import run_clock_component
         print("Starting " + code + " loop")
-        dms_thread = threading.Thread(target=lcd_run(), args=())
+        dms_thread = threading.Thread(target=run_clock_component, args=(2, display_callback, stop_event, publish_event, settings, code))
         dms_thread.start()
         threads.append(dms_thread)
         print(code + " loop started")

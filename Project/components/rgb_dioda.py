@@ -55,7 +55,7 @@ def run_rgb_light(settings, threads, stop_event, code):
     else:
         from sensors.s_components.rgb_dioda import run_rgb_dioda
         print("Starting " + code + " loop")
-        rgb_thread = threading.Thread(target=run_rgb_dioda, args=())
+        rgb_thread = threading.Thread(target=run_rgb_dioda, args=(2, rgb_callback, stop_event, publish_event, settings, code))
         rgb_thread.start()
         threads.append(rgb_thread)
         print(code + " loop started")

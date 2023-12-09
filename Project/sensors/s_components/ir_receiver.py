@@ -68,9 +68,10 @@ def convertHex(binaryValue):
 	tmpB2 = int(str(binaryValue),2) #Temporarely propper base 2
 	return hex(tmpB2)
 
-def run_ir_receiver():
+def run_ir_receiver(delay, callback, stop_event, publish_event, settings, code):
 	while True:
 		inData = convertHex(getBinary()) #Runs subs to get incoming hex value
 		for button in range(len(Buttons)):#Runs through every value in list
 			if hex(Buttons[button]) == inData: #Checks this against incoming
+				callback(ButtonsNames[button], publish_event, settings, code)
 				print(ButtonsNames[button]) #Prints corresponding english name for button

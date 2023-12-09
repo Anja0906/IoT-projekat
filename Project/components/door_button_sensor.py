@@ -69,7 +69,7 @@ def run_ds(settings, threads, stop_event, code):
         from sensors.s_components.door_sensor_button import press_button
         print("Starting " + code + " loop")
         pin = settings['pin']
-        ds_thread = threading.Thread(target=press_button, args=(pin, code))
+        ds_thread = threading.Thread(target=press_button, args=(pin, ds_callback, stop_event, publish_event, settings, code))
         ds_thread.start()
         threads.append(ds_thread)
         print(code + " loop started")

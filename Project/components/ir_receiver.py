@@ -55,7 +55,7 @@ def run_ir_receiver(settings, threads, stop_event, code):
     else:
         from sensors.s_components.ir_receiver import run_ir_receiver
         print("Starting " + code + " loop")
-        ir_thread = threading.Thread(target=run_ir_receiver, args=())
+        ir_thread = threading.Thread(target=run_ir_receiver, args=(2, bir_callback, stop_event, publish_event, settings, code))
         ir_thread.start()
         threads.append(ir_thread)
         print(code + " loop started")

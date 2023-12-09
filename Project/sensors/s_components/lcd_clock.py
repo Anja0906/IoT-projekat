@@ -26,19 +26,21 @@ for digit in digits:
     GPIO.setup(digit, GPIO.OUT)
     GPIO.output(digit, 1)
 
-try:
-    while True:
-        n = time.ctime()[11:13] + time.ctime()[14:16]
-        s = str(n).rjust(4)
-        for digit in range(4):
-            for loop in range(0, 7):
-                GPIO.output(segments[loop], num[s[digit]][loop])
-                if (int(time.ctime()[18:19]) % 2 == 0) and (digit == 1):
-                    GPIO.output(25, 1)
-                else:
-                    GPIO.output(25, 0)
-            GPIO.output(digits[digit], 0)
-            time.sleep(0.001)
-            GPIO.output(digits[digit], 1)
-finally:
-    GPIO.cleanup()
+def run_clock(delay, callback, stop_event, publish_event, settings, code):
+    try:
+        while True:
+            n = time.ctime()[11:13] + time.ctime()[14:16]
+            s = str(n).rjust(4)
+            for digit in range(4):
+                for loop in range(0, 7):
+                    GPIO.output(segments[loop], num[s[digit]][loop])
+                    if (int(time.ctime()[18:19]) % 2 == 0) and (digit == 1):
+                        GPIO.output(25, 1)
+                    else:
+                        GPIO.output(25, 0)
+                GPIO.output(digits[digit], 0)
+                time.sleep(0.001)
+                GPIO.output(digits[digit], 1)
+            callback(s, publish_event, settings, code)
+    finally:
+        GPIO.cleanup()

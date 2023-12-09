@@ -18,7 +18,7 @@ def get_time_now():  # get system time
     return datetime.now().strftime('    %H:%M:%S')
 
 
-def run_clock_component():
+def run_clock_component(delay, callback, stop_event, publish_event, settings, code):
     mcp.output(3, 1)  # turn on LCD backlight
     lcd.begin(16, 2)  # set number of LCD lines and columns
     while (True):
@@ -26,6 +26,7 @@ def run_clock_component():
         lcd.setCursor(0, 0)  # set cursor position
         lcd.message('CPU: ' + get_cpu_temp() + '\n')  # display CPU temperature
         lcd.message(get_time_now())  # display the time
+        callback(get_time_now(), publish_event, settings, code)
         sleep(1)
 
 

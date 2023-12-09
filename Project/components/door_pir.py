@@ -63,10 +63,10 @@ def run_dpir(settings, threads, stop_event, code):
         threads.append(dpir_thread)
         print(code + " simulator started\n")
     else:
-        from sensors.s_components.door_sensor_pir import motion_detected
+        from sensors.s_components.door_sensor_pir import run_motion
         print("Starting " + code + " loop")
         pin = settings['pin']
-        pir_thread = threading.Thread(target=motion_detected, args=(pin, code))
+        pir_thread = threading.Thread(target=run_motion, args=(pin, 2, dpir_callback, stop_event, publish_event, settings, code))
         pir_thread.start()
         threads.append(pir_thread)
         print(code + " loop started")
