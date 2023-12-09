@@ -6,6 +6,8 @@ import json
 import os
 from dotenv import load_dotenv
 
+from project_settings.settings import load_settings
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -17,10 +19,10 @@ bucket = os.environ.get('BUCKET_NAME')
 influxdb_client = InfluxDBClient(url=url, token=influxdb_token, org=org)
 
 
-# MQTT Configuration
 mqtt_client = mqtt.Client()
 mqtt_client.connect("localhost", 1883, 60)
 mqtt_client.loop_start()
+
 
 def on_connect(client, userdata, flags, rc):
     client.subscribe("Temperature")
@@ -37,8 +39,20 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe("RGB")
     client.subscribe("BedroomInfrared")
 
+
 mqtt_client.on_connect = on_connect
 mqtt_client.on_message = lambda client, userdata, msg: save_to_db(json.loads(msg.payload.decode('utf-8')))
+
+
+def extract_keys_from_settings():
+    settings = load_settings()
+    return list(settings.keys())
+
+
+def extract_runs_on_from_settings():
+    settings = load_settings()
+    unique_runs_on = {settings[key]['runs_on'] for key in settings}
+    return list(unique_runs_on)
 
 
 def save_to_db(data):
@@ -53,7 +67,6 @@ def save_to_db(data):
     write_api.write(bucket=bucket, org=org, record=point)
 
 
-# Route to store dummy data
 @app.route('/store_data', methods=['POST'])
 def store_data():
     try:
@@ -79,20 +92,29 @@ def handle_influx_query(query):
         return jsonify({"status": "error", "message": str(e)})
 
 
-@app.route('/simple_query', methods=['GET'])
-def retrieve_simple_data():
+@app.route('/device_names', methods=['GET'])
+def retrieve_device_names():
+    return extract_keys_from_settings()
+
+
+@app.route('/pi_names', methods=['GET'])
+def retrieve_pi_names():
+    return extract_runs_on_from_settings()
+
+
+@app.route('/component_data/<name>', methods=['GET'])
+def retrieve_component_data(name):
     query = f"""from(bucket: "{bucket}")
     |> range(start: -10m)
-    |> filter(fn: (r) => r._measurement == "Humidity")"""
+    |> filter(fn: (r) => r.name == "{name}")"""
     return handle_influx_query(query)
 
 
-@app.route('/aggregate_query', methods=['GET'])
-def retrieve_aggregate_data():
+@app.route('/pi_data/<name>', methods=['GET'])
+def retrieve_pi_data(name):
     query = f"""from(bucket: "{bucket}")
     |> range(start: -10m)
-    |> filter(fn: (r) => r._measurement == "Humidity")
-    |> mean()"""
+    |> filter(fn: (r) => r.runs_on == "{name}")"""
     return handle_influx_query(query)
 
 
