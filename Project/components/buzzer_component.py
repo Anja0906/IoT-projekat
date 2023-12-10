@@ -59,6 +59,6 @@ def run_db(settings, threads, stop_event, code):
         threads.append(db_thread)
     else:
         pin = settings['pin']
-        db_thread = threading.Thread(target=buzz, args=pin)
+        db_thread = threading.Thread(target=buzz, args=(pin, db_callback, publish_event, settings, code))
         db_thread.start()
         threads.append(db_thread)

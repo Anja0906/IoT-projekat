@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 import time
 
 
-def get_distance(trigger_pin, echo_pin, code):
+def get_distance(trigger_pin, echo_pin):
     GPIO.setmode(GPIO.BCM)
     TRIG_PIN = int(trigger_pin)
     ECHO_PIN = int(echo_pin)
@@ -37,12 +37,13 @@ def get_distance(trigger_pin, echo_pin, code):
     return distance
 
 
-def run_uds(trigger_pin, echo_pin, code):
+def run_uds(trigger_pin, echo_pin, delay, callback, stop_event, publish_event, settings, code):
     try:
         while True:
-            distance = get_distance(trigger_pin, echo_pin, code)
+            distance = get_distance(trigger_pin, echo_pin)
             if distance is not None:
                 print(f'Distance: {distance} cm')
+                callback(distance, publish_event, settings, code)
             else:
                 print('Measurement timed out')
             time.sleep(1)

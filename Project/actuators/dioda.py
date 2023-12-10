@@ -8,11 +8,12 @@ def init_gpio(pin):
     GPIO.setup(pin, GPIO.OUT)
 
 
-def run_dl(pin, code):
+def run_dl(pin, callback, publish_event, settings, code):
     init_gpio(pin)
-
     print("Led On")
     GPIO.output(pin, GPIO.HIGH)
+    callback(publish_event, settings, code)
     time.sleep(1)
     print("Led Of")
     GPIO.output(pin, GPIO.LOW)
+    callback(publish_event, settings, code)

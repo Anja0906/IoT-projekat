@@ -70,6 +70,6 @@ def run_dms(settings, threads, stop_event, code):
         c2 = settings['C2']
         c3 = settings['C3']
         c4 = settings['C4']
-        pir_thread = threading.Thread(target=detect_motion, args=(code, r1, r2, r3, r4, c1, c2, c3, c4))
+        pir_thread = threading.Thread(target=detect_motion, args=(code, r1, r2, r3, r4, c1, c2, c3, c4, dms_callback, stop_event, publish_event, settings))
         pir_thread.start()
         threads.append(pir_thread)

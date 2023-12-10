@@ -64,7 +64,7 @@ def run_dl(settings, threads, stop_event, code):
     else:
         pin = settings['pin']
         from actuators.dioda import run_dl
-        dms_thread = threading.Thread(target=run_dl, args=(pin, code))
+        dms_thread = threading.Thread(target=run_dl, args=(pin, dl_callback, publish_event, settings, code))
         dms_thread.start()
         threads.append(dms_thread)
 
