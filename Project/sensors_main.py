@@ -25,17 +25,17 @@ def run_dht_threads(settings, threads, stop_event):
 
 def run_pir_threads(settings, threads, stop_event):
     pir1_motion_detected_event = threading.Event()
-    run_dpir(settings['RPIR1'], threads, stop_event, 'RPIR1')
-    run_dpir(settings['RPIR2'], threads, stop_event, 'RPIR2')
-    run_dpir(settings['RPIR3'], threads, stop_event, 'RPIR3')
-    run_dpir(settings['RPIR4'], threads, stop_event, 'RPIR4')
+    # run_dpir(settings['RPIR1'], threads, stop_event, 'RPIR1')
+    # run_dpir(settings['RPIR2'], threads, stop_event, 'RPIR2')
+    # run_dpir(settings['RPIR3'], threads, stop_event, 'RPIR3')
+    # run_dpir(settings['RPIR4'], threads, stop_event, 'RPIR4')
     run_dpir(settings['DPIR1'], threads, pir1_motion_detected_event, 'DPIR1')
-    run_dpir(settings['DPIR2'], threads, stop_event, 'DPIR2')
+    # run_dpir(settings['DPIR2'], threads, stop_event, 'DPIR2')
     run_dl_threads(settings, threads, pir1_motion_detected_event)
+    run_dus(settings['DUS1'], threads, pir1_motion_detected_event, 'DUS1')
 
 
 def run_dus_threads(settings, threads, stop_event):
-    run_dus(settings['DUS1'], threads, stop_event, 'DUS1')
     run_dus(settings['DUS2'], threads, stop_event, 'DUS2')
 
 

@@ -19,8 +19,15 @@ def generate_values():
 
 
 def run_uds_simulator(delay, callback, stop_event, publish_event, settings, code):
-    for g in generate_values():
+    generator = generate_values()
+    while True:
+        stop_event.wait()
+        g = next(generator)
+        print(f"Generated distance: {g}")  # Logovanje generisane udaljenosti
         time.sleep(delay)
-        callback(g, publish_event, settings, code)
-        if stop_event.is_set():
-            break
+        callback(g, publish_event, settings)
+        stop_event.clear()
+
+
+
+

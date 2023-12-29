@@ -9,6 +9,7 @@ dus_batch = []
 publish_data_counter = 0
 publish_data_limit = 5
 counter_lock = threading.Lock()
+broj_osoba_u_sobi, ulazak_ili_izlazak = 0,"ulazak"
 
 def publisher_task(event, dht_batch):
     global publish_data_counter, publish_data_limit
@@ -27,14 +28,10 @@ publisher_thread = threading.Thread(target=publisher_task, args=(publish_event, 
 publisher_thread.daemon = True
 publisher_thread.start()
 
-def dus_callback(distance, publish_event, settings, code, verbose=False):
+
+def dus_callback(distance, publish_event, settings):
     global publish_data_counter, publish_data_limit
-    if verbose:
-        t = time.localtime()
-        print("=" * 20)
-        print(f"Timestamp: {time.strftime('%H:%M:%S', t)}")
-        print(f"Code: {code}")
-        print(f"Distance: " + str(distance) + " cm")
+
     dus_payload = {
         "measurement": "DoorUltraSonic",
         "simulated": settings['simulated'],
@@ -50,10 +47,23 @@ def dus_callback(distance, publish_event, settings, code, verbose=False):
         publish_event.set()
 
 
+def dus_control_thread(distance, publish_event, settings):
+    global broj_osoba_u_sobi, ulazak_ili_izlazak
+
+    if distance < 150:
+            broj_osoba_u_sobi += 1
+            print("Osoba je ušla u sobu. Trenutni broj osoba: ", broj_osoba_u_sobi)
+    else:
+            broj_osoba_u_sobi = max(0, broj_osoba_u_sobi - 1)
+            print("Osoba je izašla iz sobe. Trenutni broj osoba: ", broj_osoba_u_sobi)
+    dus_callback(distance, publish_event, settings)
+
+
 def run_dus(settings, threads, stop_event, code):
     if settings['simulated']:
         print("Starting " + code + " simulator")
-        dus_thread = threading.Thread(target=run_uds_simulator, args=(5, dus_callback, stop_event, publish_event, settings, code))
+        dus_thread = threading.Thread(target=run_uds_simulator,
+                                      args=(5, dus_control_thread, stop_event, publish_event, settings, code))
         dus_thread.start()
         threads.append(dus_thread)
         print(code + " simulator started\n")
@@ -62,7 +72,8 @@ def run_dus(settings, threads, stop_event, code):
         print("Starting " + code + " loop")
         pin_trig = settings['pin_trig']
         pin_echo = settings['pin_echo']
-        dus_thread = threading.Thread(target=run_uds, args=(pin_trig, pin_echo, 5, dus_callback, stop_event, publish_event, settings, code))
+        dus_thread = threading.Thread(target=run_uds, args=(
+        pin_trig, pin_echo, 5, dus_callback, stop_event, publish_event, settings, code))
         dus_thread.start()
         threads.append(dus_thread)
         print(code + " loop started")
