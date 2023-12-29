@@ -12,6 +12,7 @@ publish_data_counter = 0
 publish_data_limit = 5
 counter_lock = threading.Lock()
 
+
 def publisher_task(event, batch):
     global publish_data_counter, publish_data_limit
     while True:
@@ -29,23 +30,19 @@ publisher_thread = threading.Thread(target=publisher_task, args=(publish_event, 
 publisher_thread.daemon = True
 publisher_thread.start()
 
+
 def dl_callback(publish_event, settings, code, verbose=False):
-    global result, publish_data_counter, publish_data_limit
+    global  publish_data_counter, publish_data_limit
     t = time.localtime()
+
     print("=" * 20)
     print(f"Timestamp: {time.strftime('%H:%M:%S', t)}")
-    if result:
-        result = False
-        print("Light is on\n")
-    else:
-        result = True
-        print("Light is off\n")
     dioda_payload = {
         "measurement": "DoorLight",
         "simulated": settings['simulated'],
         "runs_on": settings["runs_on"],
         "name": settings["name"],
-        "value": result
+        "value": verbose
     }
 
     with counter_lock:
@@ -56,9 +53,31 @@ def dl_callback(publish_event, settings, code, verbose=False):
         publish_event.set()
 
 
+def dioda_light_control(publish_event, settings, motion_detected_event, code):
+    timer = None
+
+    def turn_off_light():
+        nonlocal timer
+        print("Svetlo se gasi.")
+        dl_callback(publish_event, settings, code, verbose=False)
+
+    while True:
+        motion_detected_event.wait()
+        if timer is not None:
+            timer.cancel()
+        print("Svetlo se pali.")
+        dl_callback(publish_event, settings, code, verbose=True)
+
+        timer = threading.Timer(10, turn_off_light)
+        timer.start()
+
+        motion_detected_event.clear()
+
+
+
 def run_dl(settings, threads, stop_event, code):
     if settings['simulated']:
-        dl_thread = threading.Thread(target=dl_callback, args=(publish_event, settings, code))
+        dl_thread = threading.Thread(target=dioda_light_control, args=(publish_event, settings, stop_event, code))
         dl_thread.start()
         threads.append(dl_thread)
     else:
@@ -67,4 +86,3 @@ def run_dl(settings, threads, stop_event, code):
         dms_thread = threading.Thread(target=run_dl, args=(pin, dl_callback, publish_event, settings, code))
         dms_thread.start()
         threads.append(dms_thread)
-

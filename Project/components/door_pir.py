@@ -1,7 +1,5 @@
 import threading
 import time
-import threading
-import time
 import json
 import paho.mqtt.publish as publish
 from sensors.broker_settings import HOSTNAME, PORT
@@ -30,15 +28,11 @@ publisher_thread = threading.Thread(target=publisher_task, args=(publish_event, 
 publisher_thread.daemon = True
 publisher_thread.start()
 
-def dpir_callback(motion_detected, code, publish_event, dht_settings, verbose=False):
+def dpir_callback(motion_detected, code, motion_detected_event, publish_event, dht_settings):
     global publish_data_counter, publish_data_limit
-    if verbose:
-        if motion_detected:
-            t = time.localtime()
-            print("=" * 20)
-            print(f"Timestamp: {time.strftime('%H:%M:%S', t)}")
-            print(f"Code: {code}")
-            print(f"Motion detected\n")
+    if motion_detected:
+        motion_detected_event.set()
+        print("Desio se pokret na " + str(code))
 
     pir_payload = {
         "measurement": "Motion",
@@ -54,11 +48,11 @@ def dpir_callback(motion_detected, code, publish_event, dht_settings, verbose=Fa
         publish_event.set()
 
 
-def run_dpir(settings, threads, stop_event, code):
+def run_dpir(settings, threads, motion_detected_event, code):
     if settings['simulated']:
         print("Starting " + code + " simulator")
         dpir_thread = threading.Thread(target=run_pir_simulator,
-                                      args=(2, dpir_callback, stop_event, publish_event, settings, code))
+                                      args=(20, dpir_callback, motion_detected_event, publish_event, settings, code))
         dpir_thread.start()
         threads.append(dpir_thread)
         print(code + " simulator started\n")
@@ -66,7 +60,7 @@ def run_dpir(settings, threads, stop_event, code):
         from sensors.s_components.door_sensor_pir import run_motion
         print("Starting " + code + " loop")
         pin = settings['pin']
-        pir_thread = threading.Thread(target=run_motion, args=(pin, 2, dpir_callback, stop_event, publish_event, settings, code))
+        pir_thread = threading.Thread(target=run_motion, args=(pin, 2, dpir_callback, motion_detected_event, publish_event, settings, code))
         pir_thread.start()
         threads.append(pir_thread)
         print(code + " loop started")
