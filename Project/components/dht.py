@@ -1,3 +1,4 @@
+from components.lcd import display_callback
 from sensors.s_simulators.dht import run_dht_simulator
 import threading
 import time
@@ -54,6 +55,9 @@ def dht_callback(humidity, temperature, publish_event, dht_settings, code="DHTLI
         "value": humidity
     }
 
+    text = str(temperature)+"°C"+ " " + str(humidity)+"%"
+    display_callback(text,publish_event, dht_settings, code)
+
     with counter_lock:
         dht_batch.append(('Temperature', json.dumps(temp_payload), 0, True))
         dht_batch.append(('Humidity', json.dumps(humidity_payload), 0, True))
@@ -66,7 +70,7 @@ def dht_callback(humidity, temperature, publish_event, dht_settings, code="DHTLI
 def run_dht(settings, threads, stop_event, code):
     if settings['simulated']:
         print("Starting " + code + " simulator")
-        dht_thread = threading.Thread(target = run_dht_simulator, args=(2, dht_callback, stop_event, publish_event, settings))
+        dht_thread = threading.Thread(target = run_dht_simulator, args=(10, dht_callback, stop_event, publish_event, settings))
         dht_thread.start()
         threads.append(dht_thread)
         print(code + " simulator started\n")

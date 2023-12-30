@@ -16,21 +16,21 @@ from project_settings.settings import load_settings
 
 
 def run_dht_threads(settings, threads, stop_event):
-    run_dht(settings['RDHT1'], threads, stop_event, 'RDHT1')
-    run_dht(settings['RDHT2'], threads, stop_event, 'RDHT2')
-    run_dht(settings['RDHT3'], threads, stop_event, 'RDHT3')
-    run_dht(settings['RDHT4'], threads, stop_event, 'RDHT4')
+    # run_dht(settings['RDHT1'], threads, stop_event, 'RDHT1')
+    # run_dht(settings['RDHT2'], threads, stop_event, 'RDHT2')
+    # run_dht(settings['RDHT3'], threads, stop_event, 'RDHT3')
+    # run_dht(settings['RDHT4'], threads, stop_event, 'RDHT4')
     run_dht(settings['GDHT'], threads, stop_event, 'GDHT')
 
 
 def run_pir_threads(settings, threads, stop_event):
     pir1_motion_detected_event = threading.Event()
-    # run_dpir(settings['RPIR1'], threads, stop_event, 'RPIR1')
-    # run_dpir(settings['RPIR2'], threads, stop_event, 'RPIR2')
-    # run_dpir(settings['RPIR3'], threads, stop_event, 'RPIR3')
-    # run_dpir(settings['RPIR4'], threads, stop_event, 'RPIR4')
+    run_dpir(settings['RPIR1'], threads, stop_event, 'RPIR1')
+    run_dpir(settings['RPIR2'], threads, stop_event, 'RPIR2')
+    run_dpir(settings['RPIR3'], threads, stop_event, 'RPIR3')
+    run_dpir(settings['RPIR4'], threads, stop_event, 'RPIR4')
     run_dpir(settings['DPIR1'], threads, pir1_motion_detected_event, 'DPIR1')
-    # run_dpir(settings['DPIR2'], threads, stop_event, 'DPIR2')
+    run_dpir(settings['DPIR2'], threads, stop_event, 'DPIR2')
     run_dl_threads(settings, threads, pir1_motion_detected_event)
     run_dus(settings['DUS1'], threads, pir1_motion_detected_event, 'DUS1')
 
@@ -53,7 +53,8 @@ def run_gyro_threads(settings, threads, stop_event):
 
 
 def run_lcd_threads(settings, threads, stop_event):
-    run_lcd(settings['GLCD'], threads, stop_event, 'GLCD')
+    pass
+    # run_lcd(settings['GLCD'], threads, stop_event, 'GLCD')
 
 
 def run_clock_threads(settings, threads, stop_event):

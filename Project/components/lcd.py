@@ -11,7 +11,7 @@ publish_data_limit = 5
 counter_lock = threading.Lock()
 
 
-def display_callback(text, publish_event, settings, code, verbose=False):
+def display_callback(text, publish_event, settings, code, verbose=True):
     global publish_data_counter, publish_data_limit
     if verbose:
         print(f"Prikazani tekst: {text}")
@@ -22,6 +22,8 @@ def display_callback(text, publish_event, settings, code, verbose=False):
         "name": settings["name"],
         "value": text
     }
+
+
     with counter_lock:
         lcd_batch.append(('LCD', json.dumps(lcd_payload), 0, True))
         publish_data_counter += 1
