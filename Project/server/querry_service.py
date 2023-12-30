@@ -29,6 +29,38 @@ def query_ds_sensor(name):
     return check_values_true_last_seconds(query_data, 5)
 
 
+def query_gyro_sensor():
+    query = f"""from(bucket: "{bucket}")
+            |> range(start: -10m)
+            |> filter(fn: (r) => r.name == "GSG")
+            |> tail(n: 6)"""
+    query_data = handle_flux_query(influxdb_client, query, org, bucket)
+    if significant_movement(query_data):
+        print("Značajan pokret detektovan")
+    else:
+        print("Nema značajnog pokreta")
+
+
+def extract_values(value_str):
+    clean_str = value_str.replace('a/g:', '').replace('g', '').replace('d/s', '')
+    parts = clean_str.split('\t')
+    a_values = [float(parts[i]) for i in range(3)]
+    g_values = [float(parts[i]) for i in range(3, 6)]
+    return a_values, g_values
+
+
+def significant_movement(data, accel_threshold=3.0, gyro_threshold=400.0):
+    prev_accel, prev_gyro = extract_values(data[0]["_value"])
+
+    for entry in data[1:]:
+        current_accel, current_gyro = extract_values(entry["_value"])
+        accel_diff = [abs(current - prev) for current, prev in zip(current_accel, prev_accel)]
+        gyro_diff = [abs(current - prev) for current, prev in zip(current_gyro, prev_gyro)]
+        if any(diff > accel_threshold for diff in accel_diff) or any(diff > gyro_threshold for diff in gyro_diff):
+            return True
+        prev_accel, prev_gyro = current_accel, current_gyro
+    return False
+
 def check_values_true_last_seconds(data, seconds):
     if not data:
         return False
@@ -44,15 +76,19 @@ def check_values_true_last_seconds(data, seconds):
         item['_value']
         for item in data if '_time' in item and '_value' in item
     )
+
+
 def continuously_query_sensor():
     while True:
         result1 = query_ds_sensor("DS1")
         result2 = query_ds_sensor("DS2")
+        query_gyro_sensor()
         if result1:
             print(f"Alarm at {datetime.datetime.now()} for DS1: {result1}")
         if result2:
             print(f"Alarm at {datetime.datetime.now()} for DS2: {result2}")
         time.sleep(5)  # Wait for 5 seconds before the next query
+
 
 if __name__ == '__main__':
     continuously_query_sensor()

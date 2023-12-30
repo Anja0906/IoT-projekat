@@ -13,8 +13,8 @@ def generate_gyro_data():
 
 
 def simulate_gyroscope(delay, callback, stop_event, publish_event, settings, code):
-    for gyro_data in generate_gyro_data():
-        callback(gyro_data, publish_event, settings, code)
+    generator = generate_gyro_data()
+    while True:
+        gyro_data = next(generator)
         time.sleep(delay)
-        if stop_event.is_set():
-            break
+        callback(gyro_data, publish_event, settings, code)
