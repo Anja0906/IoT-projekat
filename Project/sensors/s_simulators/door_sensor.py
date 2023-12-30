@@ -9,8 +9,8 @@ def generate_value():
 
 
 def run_ds_simulator(delay, callback, stop_event, publish_event, settings, code):
-    for motion in generate_value():
-        time.sleep(delay)
-        callback(motion, publish_event, settings, code)
-        if stop_event.is_set():
-            break
+        generator = generate_value()
+        while True:
+            motion = next(generator)
+            time.sleep(delay)
+            callback(motion, publish_event, settings, code)

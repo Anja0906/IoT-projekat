@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 import paho.mqtt.client as mqtt
@@ -10,7 +11,9 @@ from project_settings.settings import load_settings
 
 load_dotenv()
 
+
 app = Flask(__name__)
+CORS(app)
 
 influxdb_token = os.environ.get('INFLUXDB_TOKEN')
 org = os.environ.get('ORGANIZATION')
@@ -97,7 +100,8 @@ def handle_influx_query(query):
 
 @app.route('/device_names', methods=['GET'])
 def retrieve_device_names():
-    return extract_keys_from_settings()
+    device_names = extract_keys_from_settings()
+    return jsonify(device_names)
 
 
 @app.route('/pi_names', methods=['GET'])
