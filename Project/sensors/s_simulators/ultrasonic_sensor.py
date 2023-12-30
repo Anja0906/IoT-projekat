@@ -25,7 +25,7 @@ def run_uds_simulator(delay, callback, stop_event, publish_event, settings, code
         g = next(generator)
         print(f"Generated distance: {g}")  # Logovanje generisane udaljenosti
         time.sleep(delay)
-        callback(g, publish_event, settings)
+        callback(g, publish_event, settings,code)
         stop_event.clear()
 
 

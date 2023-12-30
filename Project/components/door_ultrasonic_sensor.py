@@ -9,7 +9,8 @@ dus_batch = []
 publish_data_counter = 0
 publish_data_limit = 5
 counter_lock = threading.Lock()
-broj_osoba_u_sobi, ulazak_ili_izlazak = 0,"ulazak"
+broj_osoba_u_sobi1, ulazak_ili_izlazak, broj_osoba_u_sobi2 = 0, "ulazak", 0
+
 
 def publisher_task(event, dht_batch):
     global publish_data_counter, publish_data_limit
@@ -47,15 +48,24 @@ def dus_callback(distance, publish_event, settings):
         publish_event.set()
 
 
-def dus_control_thread(distance, publish_event, settings):
-    global broj_osoba_u_sobi, ulazak_ili_izlazak
+def dus_control_thread(distance, publish_event, settings, code):
+    global broj_osoba_u_sobi1, ulazak_ili_izlazak, broj_osoba_u_sobi2
 
-    if distance < 150:
-            broj_osoba_u_sobi += 1
-            print("Osoba je ušla u sobu. Trenutni broj osoba: ", broj_osoba_u_sobi)
+    if code == "DUS1":
+        if distance < 150:
+            broj_osoba_u_sobi1 += 1
+            print("Trenutni broj osoba u sobi 1: ", broj_osoba_u_sobi1)
+        else:
+            broj_osoba_u_sobi1 = max(0, broj_osoba_u_sobi1 - 1)
+            print("Trenutni broj osoba u sobi 1: ", broj_osoba_u_sobi1)
     else:
-            broj_osoba_u_sobi = max(0, broj_osoba_u_sobi - 1)
-            print("Osoba je izašla iz sobe. Trenutni broj osoba: ", broj_osoba_u_sobi)
+        if distance < 150:
+            broj_osoba_u_sobi2 += 1
+            print("Trenutni broj osoba u sobi 2: ", broj_osoba_u_sobi2)
+        else:
+            broj_osoba_u_sobi2 = max(0, broj_osoba_u_sobi2 - 1)
+            print("Trenutni broj osoba u sobi 2: ", broj_osoba_u_sobi2)
+
     dus_callback(distance, publish_event, settings)
 
 
@@ -73,7 +83,7 @@ def run_dus(settings, threads, stop_event, code):
         pin_trig = settings['pin_trig']
         pin_echo = settings['pin_echo']
         dus_thread = threading.Thread(target=run_uds, args=(
-        pin_trig, pin_echo, 5, dus_callback, stop_event, publish_event, settings, code))
+            pin_trig, pin_echo, 5, dus_callback, stop_event, publish_event, settings, code))
         dus_thread.start()
         threads.append(dus_thread)
         print(code + " loop started")

@@ -32,7 +32,6 @@ def dpir_callback(motion_detected, code, motion_detected_event, publish_event, d
     global publish_data_counter, publish_data_limit
     if motion_detected:
         motion_detected_event.set()
-        print("Desio se pokret na " + str(code))
 
     pir_payload = {
         "measurement": "Motion",
