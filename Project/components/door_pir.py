@@ -51,7 +51,7 @@ def run_dpir(settings, threads, motion_detected_event, code):
     if settings['simulated']:
         print("Starting " + code + " simulator")
         dpir_thread = threading.Thread(target=run_pir_simulator,
-                                      args=(11, dpir_callback, motion_detected_event, publish_event, settings, code))
+                                      args=(4, dpir_callback, motion_detected_event, publish_event, settings, code))
         dpir_thread.start()
         threads.append(dpir_thread)
         print(code + " simulator started\n")

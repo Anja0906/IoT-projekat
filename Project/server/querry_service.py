@@ -29,6 +29,15 @@ def query_ds_sensor(name):
     return check_values_true_last_seconds(query_data, 5)
 
 
+def query_dus_sensor(name):
+    query = f"""from(bucket: "{bucket}")
+        |> range(start: -5s)
+        |> filter(fn: (r) => r.name == "{name}")"""
+    query_data = handle_flux_query(influxdb_client, query, org, bucket)
+    print(len(query_data))
+
+
+
 def query_gyro_sensor():
     query = f"""from(bucket: "{bucket}")
             |> range(start: -10m)
@@ -82,11 +91,12 @@ def continuously_query_sensor():
     while True:
         result1 = query_ds_sensor("DS1")
         result2 = query_ds_sensor("DS2")
+        query_dus_sensor("DUS1")
         query_gyro_sensor()
-        if result1:
-            print(f"Alarm at {datetime.datetime.now()} for DS1: {result1}")
-        if result2:
-            print(f"Alarm at {datetime.datetime.now()} for DS2: {result2}")
+        # if result1:
+        #     print(f"Alarm at {datetime.datetime.now()} for DS1: {result1}")
+        # if result2:
+        #     print(f"Alarm at {datetime.datetime.now()} for DS2: {result2}")
         time.sleep(5)  # Wait for 5 seconds before the next query
 
 

@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-from flask_cors import CORS
+# from flask_cors import CORS
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 import paho.mqtt.client as mqtt
@@ -13,7 +13,7 @@ load_dotenv()
 
 
 app = Flask(__name__)
-CORS(app)
+# CORS(app)
 
 influxdb_token = os.environ.get('INFLUXDB_TOKEN')
 org = os.environ.get('ORGANIZATION')

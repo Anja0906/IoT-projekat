@@ -73,7 +73,7 @@ def run_dus(settings, threads, stop_event, code):
     if settings['simulated']:
         print("Starting " + code + " simulator")
         dus_thread = threading.Thread(target=run_uds_simulator,
-                                      args=(5, dus_control_thread, stop_event, publish_event, settings, code))
+                                      args=(1, dus_control_thread, stop_event, publish_event, settings, code))
         dus_thread.start()
         threads.append(dus_thread)
         print(code + " simulator started\n")
