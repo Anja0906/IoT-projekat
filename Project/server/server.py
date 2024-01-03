@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-# from flask_cors import CORS
+from flask_cors import CORS
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 import paho.mqtt.client as mqtt
@@ -8,12 +8,14 @@ import os
 from dotenv import load_dotenv
 
 from project_settings.settings import load_settings
+from sensors.s_simulators.ir_receiver import set_current_hex
+
 
 load_dotenv()
 
 
 app = Flask(__name__)
-# CORS(app)
+CORS(app)
 
 influxdb_token = os.environ.get('INFLUXDB_TOKEN')
 org = os.environ.get('ORGANIZATION')
@@ -49,7 +51,8 @@ def on_connect(client, userdata, flags, rc):
 mqtt_client.on_connect = on_connect
 mqtt_client.on_message = lambda client, userdata, msg: save_to_db(json.loads(msg.payload.decode('utf-8')))
 
-
+def get_server_values():
+    return influxdb_client, org
 def extract_keys_from_settings():
     settings = load_settings()
     return list(settings.keys())
@@ -102,6 +105,17 @@ def handle_influx_query(query):
 def retrieve_device_names():
     device_names = extract_keys_from_settings()
     return jsonify(device_names)
+
+
+@app.route('/ir_remote/<path:hex_value>', methods=['PUT'])
+def process_hex(hex_value):
+    int_value = int(hex_value, 16)
+    try:
+        set_current_hex(int_value)
+    except ValueError:
+        return jsonify({"error": "Hexadecimal value not found in the list"}), 404
+
+    return jsonify({"message": "Hexadecimal string received", "value": hex_value}), 200
 
 
 @app.route('/pi_names', methods=['GET'])

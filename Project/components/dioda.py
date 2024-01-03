@@ -32,7 +32,7 @@ publisher_thread.start()
 
 
 def dl_callback(publish_event, settings, code, verbose=False):
-    global  publish_data_counter, publish_data_limit
+    global publish_data_counter, publish_data_limit
 
     dioda_payload = {
         "measurement": "DoorLight",
@@ -52,15 +52,15 @@ def dl_callback(publish_event, settings, code, verbose=False):
 
 def dioda_light_control(publish_event, settings, motion_detected_event, code):
     timer = None
+
     def turn_off_light():
         nonlocal timer
-        print("Svetlo se gasi.")
         dl_callback(publish_event, settings, code, verbose=False)
+
     while True:
         motion_detected_event.wait()
         if timer is not None:
             timer.cancel()
-        print("Svetlo se pali.")
         dl_callback(publish_event, settings, code, verbose=True)
         timer = threading.Timer(10, turn_off_light)
         timer.start()

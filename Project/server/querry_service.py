@@ -3,7 +3,9 @@ import time
 
 from dateutil import parser
 
-from server import influxdb_client, org
+from server.server import get_server_values
+
+influxdb_client, org = get_server_values()
 
 
 def handle_flux_query(influxdb_client, query, org):
@@ -27,6 +29,7 @@ def query_ds_sensor(name):
         |> filter(fn: (r) => r.name == "{name}")"""
     query_data = handle_flux_query(influxdb_client, query, org)
     return check_values_true_last_seconds(query_data, 5)
+
 
 def query_dus_sensor(i_client, organization, name):
     query = f"""from(bucket: "example_db")
@@ -52,13 +55,12 @@ def analyze_movement(measurements):
     leaving = 0
 
     for i in range(len(measurements) - 1):
-        if measurements[i+1] < measurements[i]:
+        if measurements[i + 1] < measurements[i]:
             entering += 1
-        elif measurements[i+1] > measurements[i]:
+        elif measurements[i + 1] > measurements[i]:
             leaving += 1
 
     return entering > leaving
-
 
 
 def query_gyro_sensor():
@@ -92,6 +94,7 @@ def significant_movement(data, accel_threshold=3.0, gyro_threshold=400.0):
             return True
         prev_accel, prev_gyro = current_accel, current_gyro
     return False
+
 
 def check_values_true_last_seconds(data, seconds):
     if not data:

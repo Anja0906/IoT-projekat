@@ -1,4 +1,3 @@
-from components.lcd import display_callback
 from sensors.s_simulators.dht import run_dht_simulator
 import threading
 import time
@@ -10,6 +9,7 @@ dht_batch = []
 publish_data_counter = 0
 publish_data_limit = 5
 counter_lock = threading.Lock()
+lcd_txt = ""
 
 def publisher_task(event, dht_batch):
     global publish_data_counter, publish_data_limit
@@ -28,16 +28,11 @@ publisher_thread = threading.Thread(target=publisher_task, args=(publish_event, 
 publisher_thread.daemon = True
 publisher_thread.start()
 
-def dht_callback(humidity, temperature, publish_event, dht_settings, code="DHTLIB_OK", verbose=False):
-    global publish_data_counter, publish_data_limit
+def get_lcd_text():
+    return lcd_txt
 
-    if verbose:
-        t = time.localtime()
-        print("="*20)
-        print(f"Timestamp: {time.strftime('%H:%M:%S', t)}")
-        print(f"Code: {code}")
-        print(f"Humidity: {humidity}%")
-        print(f"Temperature: {temperature}°C")
+def dht_callback(humidity, temperature, publish_event, dht_settings, code):
+    global publish_data_counter, publish_data_limit, lcd_txt
 
     temp_payload = {
         "measurement": "Temperature",
@@ -55,9 +50,8 @@ def dht_callback(humidity, temperature, publish_event, dht_settings, code="DHTLI
         "value": humidity
     }
 
-    if(code is "GDHT"):
-        text = str(temperature)+"°C"+ " " + str(humidity)+"%"
-        display_callback(text,publish_event, dht_settings, code)
+    if code == "GDHT":
+        lcd_txt = str(temperature)+"°C"+ " " + str(humidity)+"%"
 
     with counter_lock:
         dht_batch.append(('Temperature', json.dumps(temp_payload), 0, True))
@@ -71,7 +65,7 @@ def dht_callback(humidity, temperature, publish_event, dht_settings, code="DHTLI
 def run_dht(settings, threads, stop_event, code):
     if settings['simulated']:
         print("Starting " + code + " simulator")
-        dht_thread = threading.Thread(target = run_dht_simulator, args=(10, dht_callback, stop_event, publish_event, settings))
+        dht_thread = threading.Thread(target = run_dht_simulator, args=(10, dht_callback, stop_event, publish_event, settings, code))
         dht_thread.start()
         threads.append(dht_thread)
         print(code + " simulator started\n")

@@ -8,21 +8,24 @@ rgb_batch = []
 publish_data_counter = 0
 publish_data_limit = 5
 counter_lock = threading.Lock()
+rgb_state = False
 
-def rgb_callback(color, publish_event, settings, code, verbose=False):
-    global publish_data_counter, publish_data_limit
-    if verbose:
-        print(color)
-    rgb_payload = {
-        "measurement": "RGB",
-        "simulated": settings['simulated'],
-        "runs_on": settings["runs_on"],
-        "name": settings["name"],
-        "value": color
-    }
-    with counter_lock:
-        rgb_batch.append(('RGB', json.dumps(rgb_payload), 0, True))
-        publish_data_counter += 1
+def rgb_callback(color, publish_event, settings, code):
+    global publish_data_counter, publish_data_limit, rgb_state
+    if color == "Off":
+        rgb_state = False
+    else:
+        rgb_state = True
+        rgb_payload = {
+            "measurement": "RGB",
+            "simulated": settings['simulated'],
+            "runs_on": settings["runs_on"],
+            "name": settings["name"],
+            "value": color
+        }
+        with counter_lock:
+            rgb_batch.append(('RGB', json.dumps(rgb_payload), 0, True))
+            publish_data_counter += 1
 
     if publish_data_counter >= publish_data_limit:
         publish_event.set()
@@ -45,17 +48,17 @@ publisher_thread.daemon = True
 publisher_thread.start()
 
 
-def run_rgb_light(settings, threads, stop_event, code):
+def run_rgb_light(settings, threads, ir_changed_event, code):
     if settings['simulated']:
         print("Starting " + code + " simulator")
-        rgb_thread = threading.Thread(target=run_rgb_dioda_simulation, args=(2, rgb_callback, stop_event, publish_event, settings, code))
+        rgb_thread = threading.Thread(target=run_rgb_dioda_simulation, args=(5, rgb_callback, ir_changed_event, publish_event, settings, code))
         rgb_thread.start()
         threads.append(rgb_thread)
         print(code + " simulator started\n")
     else:
         from sensors.s_components.rgb_dioda import run_rgb_dioda
         print("Starting " + code + " loop")
-        rgb_thread = threading.Thread(target=run_rgb_dioda, args=(2, rgb_callback, stop_event, publish_event, settings, code))
+        rgb_thread = threading.Thread(target=run_rgb_dioda, args=(5, rgb_callback, ir_changed_event, publish_event, settings, code))
         rgb_thread.start()
         threads.append(rgb_thread)
         print(code + " loop started")

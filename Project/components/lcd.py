@@ -11,10 +11,8 @@ publish_data_limit = 5
 counter_lock = threading.Lock()
 
 
-def display_callback(text, publish_event, settings, code, verbose=False):
+def display_callback(text, publish_event, settings, code):
     global publish_data_counter, publish_data_limit
-    if verbose:
-        print(f"Prikazani tekst: {text}")
     lcd_payload = {
         "measurement": "LCD",
         "simulated": settings['simulated'],
@@ -22,7 +20,6 @@ def display_callback(text, publish_event, settings, code, verbose=False):
         "name": settings["name"],
         "value": text
     }
-
 
     with counter_lock:
         lcd_batch.append(('LCD', json.dumps(lcd_payload), 0, True))
@@ -54,14 +51,15 @@ def run_lcd(settings, threads, stop_event, code):
     if settings['simulated']:
         print("Starting " + code + " simulator")
         lcd_thread = threading.Thread(target=simulate_lcd_display,
-                                      args=(2, display_callback, stop_event, publish_event, settings, code))
+                                      args=(10, display_callback, stop_event, publish_event, settings, code))
         lcd_thread.start()
         threads.append(lcd_thread)
         print(code + " simulator started\n")
     else:
         from sensors.s_components.lcd.LCD1602 import run_clock_component
         print("Starting " + code + " loop")
-        dms_thread = threading.Thread(target=run_clock_component, args=(2, display_callback, stop_event, publish_event, settings, code))
+        dms_thread = threading.Thread(target=run_clock_component,
+                                      args=(2, display_callback, stop_event, publish_event, settings, code))
         dms_thread.start()
         threads.append(dms_thread)
         print(code + " loop started")

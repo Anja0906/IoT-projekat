@@ -25,10 +25,12 @@ def publisher_task(event, batch):
         publish.multiple(local_pir_batch, hostname=HOSTNAME, port=PORT)
         event.clear()
 
+
 publish_event = threading.Event()
 publisher_thread = threading.Thread(target=publisher_task, args=(publish_event, pir_batch))
 publisher_thread.daemon = True
 publisher_thread.start()
+
 
 def dpir_callback(motion_detected, code, motion_detected_event, publish_event, dht_settings):
     global publish_data_counter, publish_data_limit
@@ -36,8 +38,9 @@ def dpir_callback(motion_detected, code, motion_detected_event, publish_event, d
         motion_detected_event.set()
         print("Desio se pokret na " + str(code))
         if code.startswith("RPIR"):
-            if broj_osoba_u_sobi <=0:
+            if broj_osoba_u_sobi <= 0:
                 print("ALAAARM na RPIRu\n")
+                print(f"Broj osoba: {broj_osoba_u_sobi}")
 
     pir_payload = {
         "measurement": "Motion",
@@ -57,7 +60,7 @@ def run_dpir(settings, threads, motion_detected_event, code):
     if settings['simulated']:
         print("Starting " + code + " simulator")
         dpir_thread = threading.Thread(target=run_pir_simulator,
-                                      args=(4, dpir_callback, motion_detected_event, publish_event, settings, code))
+                                       args=(4, dpir_callback, motion_detected_event, publish_event, settings, code))
         dpir_thread.start()
         threads.append(dpir_thread)
         print(code + " simulator started\n")
@@ -65,7 +68,8 @@ def run_dpir(settings, threads, motion_detected_event, code):
         from sensors.s_components.door_sensor_pir import run_motion
         print("Starting " + code + " loop")
         pin = settings['pin']
-        pir_thread = threading.Thread(target=run_motion, args=(pin, 2, dpir_callback, motion_detected_event, publish_event, settings, code))
+        pir_thread = threading.Thread(target=run_motion, args=(
+        pin, 2, dpir_callback, motion_detected_event, publish_event, settings, code))
         pir_thread.start()
         threads.append(pir_thread)
         print(code + " loop started")

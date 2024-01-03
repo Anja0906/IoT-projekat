@@ -2,6 +2,8 @@ import time
 import random
 import string
 
+from components.dht import get_lcd_text
+
 
 def generate_random_characters(length):
     characters = string.ascii_letters + string.digits + string.punctuation + string.whitespace
@@ -15,10 +17,9 @@ def generate_display_text():
 
 
 def simulate_lcd_display(delay, callback, stop_event, publish_event, settings, code):
-    for text in generate_display_text():
-        time.sleep(delay)
-        callback(text, publish_event, settings, code)
-        if stop_event.is_set():
-            break
-
-
+    while True:
+        lcd_txt = get_lcd_text()
+        if lcd_txt != "":
+            print(f"LCD TEXT: {lcd_txt}")
+            callback(lcd_txt, publish_event, settings, code)
+            time.sleep(delay)

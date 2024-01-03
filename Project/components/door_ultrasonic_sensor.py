@@ -5,7 +5,7 @@ import paho.mqtt.publish as publish
 from sensors.broker_settings import HOSTNAME, PORT
 from sensors.s_simulators.ultrasonic_sensor import run_uds_simulator
 from server.querry_service import query_dus_sensor
-from server.server import influxdb_client, org, bucket
+from server.server import get_server_values
 
 dus_batch = []
 publish_data_counter = 0
@@ -61,7 +61,8 @@ def run_dus_checker(delay, read_from_db_event_dus, code):
     global broj_osoba_u_sobi
     while True:
         read_from_db_event_dus.wait()
-        if query_dus_sensor(influxdb_client, org, code):
+        i_client, org = get_server_values()
+        if query_dus_sensor(i_client, org, code):
             broj_osoba_u_sobi += 1
         else:
             broj_osoba_u_sobi = max(0, broj_osoba_u_sobi - 1)
@@ -70,11 +71,13 @@ def run_dus_checker(delay, read_from_db_event_dus, code):
         time.sleep(delay)
         read_from_db_event_dus.clear()
 
+
 def run_dus(settings, threads, pir_motion_detected_event, read_from_db_event, code):
     if settings['simulated']:
         print("Starting " + code + " simulator")
         dus_thread = threading.Thread(target=run_uds_simulator,
-                                      args=(5, dus_control_thread, pir_motion_detected_event, publish_event, settings, read_from_db_event, code))
+                                      args=(5, dus_control_thread, pir_motion_detected_event, publish_event, settings,
+                                            read_from_db_event, code))
         dus_thread.start()
         dus_checker_thread = threading.Thread(target=run_dus_checker, args=(5, read_from_db_event, code))
         dus_checker_thread.start()
@@ -87,7 +90,7 @@ def run_dus(settings, threads, pir_motion_detected_event, read_from_db_event, co
         pin_trig = settings['pin_trig']
         pin_echo = settings['pin_echo']
         dus_thread = threading.Thread(target=run_uds, args=(
-        pin_trig, pin_echo, 5, dus_callback, pir_motion_detected_event, publish_event, settings, code))
+            pin_trig, pin_echo, 5, dus_callback, pir_motion_detected_event, publish_event, settings, code))
         dus_thread.start()
         threads.append(dus_thread)
         print(code + " loop started")
