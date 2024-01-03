@@ -11,7 +11,7 @@ publish_data_limit = 5
 counter_lock = threading.Lock()
 
 
-def display_callback(text, publish_event, settings, code, verbose=True):
+def display_callback(text, publish_event, settings, code, verbose=False):
     global publish_data_counter, publish_data_limit
     if verbose:
         print(f"Prikazani tekst: {text}")

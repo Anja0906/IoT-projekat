@@ -55,8 +55,9 @@ def dht_callback(humidity, temperature, publish_event, dht_settings, code="DHTLI
         "value": humidity
     }
 
-    text = str(temperature)+"°C"+ " " + str(humidity)+"%"
-    display_callback(text,publish_event, dht_settings, code)
+    if(code is "GDHT"):
+        text = str(temperature)+"°C"+ " " + str(humidity)+"%"
+        display_callback(text,publish_event, dht_settings, code)
 
     with counter_lock:
         dht_batch.append(('Temperature', json.dumps(temp_payload), 0, True))

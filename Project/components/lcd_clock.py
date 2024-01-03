@@ -30,7 +30,7 @@ def display_callback(delay, publish_event, settings, code):
 
         if publish_data_counter >= publish_data_limit:
             publish_event.set()
-        print(load+ " MRNJAAAAU")
+        print(f"Current time is: {load}")
         time.sleep(delay)
 
 
