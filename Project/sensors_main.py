@@ -1,5 +1,6 @@
 import sys
 import threading
+import time
 
 from components.dht import run_dht
 from components.dioda import run_dl
@@ -25,6 +26,8 @@ def run_dht_threads(settings, threads, stop_event):
 
 def run_pir_threads(settings, threads, stop_event):
     pir1_motion_detected_event = threading.Event()
+    read_from_db_event_dus1 = threading.Event()
+    read_from_db_event_dus2 = threading.Event()
     run_dpir(settings['RPIR1'], threads, stop_event, 'RPIR1')
     run_dpir(settings['RPIR2'], threads, stop_event, 'RPIR2')
     run_dpir(settings['RPIR3'], threads, stop_event, 'RPIR3')
@@ -32,12 +35,8 @@ def run_pir_threads(settings, threads, stop_event):
     run_dpir(settings['DPIR1'], threads, pir1_motion_detected_event, 'DPIR1')
     run_dpir(settings['DPIR2'], threads, stop_event, 'DPIR2')
     run_dl_threads(settings, threads, pir1_motion_detected_event)
-    run_dus(settings['DUS1'], threads, pir1_motion_detected_event, 'DUS1')
-
-
-def run_dus_threads(settings, threads, stop_event):
-    run_dus(settings['DUS2'], threads, stop_event, 'DUS2')
-
+    run_dus(settings['DUS1'], threads, pir1_motion_detected_event, read_from_db_event_dus1, 'DUS1')
+    run_dus(settings['DUS2'], threads, stop_event, read_from_db_event_dus2,'DUS2')
 
 def run_dms_threads(settings, threads, stop_event):
     run_dms(settings['DMS'], threads, stop_event, 'DMS')
@@ -81,7 +80,6 @@ def run_dl_threads(settings, threads, stop_event):
 def run_all_threads(settings, threads, stop_event):
     run_dht_threads(settings, threads, stop_event)
     run_pir_threads(settings, threads, stop_event)
-    run_dus_threads(settings, threads, stop_event)
     run_dms_threads(settings, threads, stop_event)
     run_ds_threads(settings, threads, stop_event)
     run_gyro_threads(settings, threads, stop_event)

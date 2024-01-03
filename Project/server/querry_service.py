@@ -3,10 +3,10 @@ import time
 
 from dateutil import parser
 
-from server import bucket, org, influxdb_client
+from server import influxdb_client, org
 
 
-def handle_flux_query(influxdb_client, query, org, bucket):
+def handle_flux_query(influxdb_client, query, org):
     try:
         query_api = influxdb_client.query_api()
         tables = query_api.query(query, org=org)
@@ -22,19 +22,51 @@ def handle_flux_query(influxdb_client, query, org, bucket):
 
 
 def query_ds_sensor(name):
-    query = f"""from(bucket: "{bucket}")
+    query = f"""from(bucket: "example_db")
         |> range(start: -5s)
         |> filter(fn: (r) => r.name == "{name}")"""
-    query_data = handle_flux_query(influxdb_client, query, org, bucket)
+    query_data = handle_flux_query(influxdb_client, query, org)
     return check_values_true_last_seconds(query_data, 5)
 
 
+def query_dus_sensor(i_client, organization, name):
+    query = f"""from(bucket: "example_db")
+        |> range(start: -10m)
+        |> filter(fn: (r) => r.name == "{name}")
+        |> tail(n: 10)"""
+    query_data = handle_flux_query(i_client, query, organization)
+    return check_dus_for_entering_or_leaving(query_data)
+
+
+def check_dus_for_entering_or_leaving(query_data):
+    values = []
+    for d in query_data:
+        values.append(d["_value"])
+    if analyze_movement(values):
+        return True
+    else:
+        return False
+
+
+def analyze_movement(measurements):
+    entering = 0
+    leaving = 0
+
+    for i in range(len(measurements) - 1):
+        if measurements[i+1] < measurements[i]:
+            entering += 1
+        elif measurements[i+1] > measurements[i]:
+            leaving += 1
+
+    return entering > leaving
+
+
 def query_gyro_sensor():
-    query = f"""from(bucket: "{bucket}")
+    query = f"""from(bucket: "example_db")
             |> range(start: -10m)
             |> filter(fn: (r) => r.name == "GSG")
             |> tail(n: 6)"""
-    query_data = handle_flux_query(influxdb_client, query, org, bucket)
+    query_data = handle_flux_query(influxdb_client, query, org)
     if significant_movement(query_data):
         print("Značajan pokret detektovan")
     else:

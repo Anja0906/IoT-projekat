@@ -2,6 +2,8 @@ import threading
 import time
 import json
 import paho.mqtt.publish as publish
+
+from components.door_ultrasonic_sensor import broj_osoba_u_sobi
 from sensors.broker_settings import HOSTNAME, PORT
 
 from sensors.s_simulators.pir import run_pir_simulator
@@ -33,6 +35,9 @@ def dpir_callback(motion_detected, code, motion_detected_event, publish_event, d
     if motion_detected:
         motion_detected_event.set()
         print("Desio se pokret na " + str(code))
+        if code.startswith("RPIR"):
+            if broj_osoba_u_sobi <=0:
+                print("ALAAARM na RPIRu\n")
 
     pir_payload = {
         "measurement": "Motion",
