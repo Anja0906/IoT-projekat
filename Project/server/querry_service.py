@@ -3,7 +3,7 @@ import time
 
 from dateutil import parser
 
-from server.server import get_server_values
+from server import get_server_values
 
 influxdb_client, org = get_server_values()
 
@@ -117,13 +117,13 @@ def continuously_query_sensor():
     while True:
         result1 = query_ds_sensor("DS1")
         result2 = query_ds_sensor("DS2")
-        query_dus_sensor("DUS1")
-        query_gyro_sensor()
-        # if result1:
-        #     print(f"Alarm at {datetime.datetime.now()} for DS1: {result1}")
-        # if result2:
-        #     print(f"Alarm at {datetime.datetime.now()} for DS2: {result2}")
-        time.sleep(5)  # Wait for 5 seconds before the next query
+        # query_dus_sensor("DUS1")
+        # query_gyro_sensor()
+        if result1:
+            print(f"Alarm at {datetime.datetime.now()} for DS1: {result1}")
+        if result2:
+            print(f"Alarm at {datetime.datetime.now()} for DS2: {result2}")
+        # time.sleep(5)  # Wait for 5 seconds before the next query
 
 
 if __name__ == '__main__':

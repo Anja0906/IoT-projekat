@@ -1,5 +1,7 @@
 import sys
 import threading
+import time
+
 from components.dht import run_dht
 from components.dioda import run_dl
 from components.door_ultrasonic_sensor import run_dus
@@ -41,8 +43,12 @@ def run_dms_threads(settings, threads, stop_event):
 
 
 def run_ds_threads(settings, threads, stop_event):
-    run_ds(settings['DS1'], threads, stop_event, 'DS1')
-    run_ds(settings['DS2'], threads, stop_event, 'DS2')
+    ds1_pressed_event = threading.Event()
+    ds2_pressed_event = threading.Event()
+    run_ds(settings['DS1'], threads, ds1_pressed_event, 'DS1')
+    run_ds(settings['DS2'], threads, ds2_pressed_event, 'DS2')
+    run_button_awaiter(ds1_pressed_event, threads, 'a')
+    run_button_awaiter(ds2_pressed_event, threads, 'b')
 
 
 def run_gyro_threads(settings, threads, stop_event):
@@ -52,6 +58,19 @@ def run_gyro_threads(settings, threads, stop_event):
 def run_lcd_threads(settings, threads, stop_event):
     run_lcd(settings['GLCD'], threads, stop_event, 'GLCD')
 
+
+def wait_for_button_press(stop_event, delay, char):
+    while True:
+        input_char = input(f"Pritisnite '{char}' za aktivaciju: ")
+        if input_char.lower() == char:
+            stop_event.set()
+        time.sleep(delay)
+
+def run_button_awaiter(stop_event, threads, char):
+    awaiter_thread = threading.Thread(target=wait_for_button_press,
+                                  args=(stop_event, 5, char))
+    awaiter_thread.start()
+    threads.append(awaiter_thread)
 
 def run_clock_threads(settings, threads, stop_event):
     run_clock(settings['B4SD'], threads, stop_event, 'B4SD')

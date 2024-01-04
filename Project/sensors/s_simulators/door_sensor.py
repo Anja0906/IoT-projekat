@@ -1,16 +1,14 @@
 import time
-import random
 
-
-def generate_value():
-    while True:
-        rnd = random.randint(0, 1)
-        yield rnd
+from server.querry_service import query_ds_sensor
 
 
 def run_ds_simulator(delay, callback, stop_event, publish_event, settings, code):
-        generator = generate_value()
-        while True:
-            motion = next(generator)
-            time.sleep(delay)
-            callback(motion, publish_event, settings, code)
+    while True:
+        stop_event.wait()
+        callback(1, publish_event, settings, code)
+        time.sleep(1)
+        if query_ds_sensor(code):
+            print(f"Alarm: dugme {code} je pritisnuto duže od 5 sekundi")
+        time.sleep(delay)
+        stop_event.clear()
