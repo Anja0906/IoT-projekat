@@ -27,6 +27,7 @@ def bir_callback(button_name, publish_event, settings, code):
     if publish_data_counter >= publish_data_limit:
         publish_event.set()
 
+
 def publisher_task(event, batch):
     global publish_data_counter, publish_data_limit
     while True:
@@ -43,17 +44,21 @@ publish_event = threading.Event()
 publisher_thread = threading.Thread(target=publisher_task, args=(publish_event, bir_batch))
 publisher_thread.daemon = True
 publisher_thread.start()
+
+
 def run_ir_receiver(settings, threads, activate_rgb_dioda_event, code):
     if settings['simulated']:
         print("Starting " + code + " simulator")
-        ir_thread = threading.Thread(target=run_simulation,args=(5, bir_callback, activate_rgb_dioda_event, publish_event, settings, code))
+        ir_thread = threading.Thread(target=run_simulation,
+                                     args=(5, bir_callback, activate_rgb_dioda_event, publish_event, settings, code))
         ir_thread.start()
         threads.append(ir_thread)
         print(code + " simulator started\n")
     else:
         from sensors.s_components.ir_receiver import run_ir_receiver
         print("Starting " + code + " loop")
-        ir_thread = threading.Thread(target=run_ir_receiver, args=(5, bir_callback, activate_rgb_dioda_event, publish_event, settings, code))
+        ir_thread = threading.Thread(target=run_ir_receiver,
+                                     args=(5, bir_callback, activate_rgb_dioda_event, publish_event, settings, code))
         ir_thread.start()
         threads.append(ir_thread)
         print(code + " loop started")

@@ -3,7 +3,7 @@ import time
 
 from dateutil import parser
 
-from server import get_server_values
+from server.server import get_server_values
 
 influxdb_client, org = get_server_values()
 

@@ -48,7 +48,7 @@ def run_ds_threads(settings, threads, stop_event):
     run_ds(settings['DS1'], threads, ds1_pressed_event, 'DS1')
     run_ds(settings['DS2'], threads, ds2_pressed_event, 'DS2')
     run_button_awaiter(ds1_pressed_event, threads, 'a')
-    run_button_awaiter(ds2_pressed_event, threads, 'b')
+    # run_button_awaiter(ds2_pressed_event, threads, 'b')
 
 
 def run_gyro_threads(settings, threads, stop_event):
@@ -64,7 +64,7 @@ def wait_for_button_press(stop_event, delay, char):
         input_char = input(f"Pritisnite '{char}' za aktivaciju: ")
         if input_char.lower() == char:
             stop_event.set()
-        time.sleep(delay)
+        time.sleep(1)
 
 def run_button_awaiter(stop_event, threads, char):
     awaiter_thread = threading.Thread(target=wait_for_button_press,
@@ -88,13 +88,13 @@ def run_dl_threads(settings, threads, stop_event):
 
 
 def run_all_threads(settings, threads, stop_event):
-    run_dht_threads(settings, threads, stop_event)
-    run_pir_threads(settings, threads, stop_event)
-    run_dms_threads(settings, threads, stop_event)
-    run_ds_threads(settings, threads, stop_event)
-    run_gyro_threads(settings, threads, stop_event)
-    run_lcd_threads(settings, threads, stop_event)
-    run_clock_threads(settings, threads, stop_event)
+    # run_dht_threads(settings, threads, stop_event)
+    # run_pir_threads(settings, threads, stop_event)
+    # run_dms_threads(settings, threads, stop_event)
+    # run_ds_threads(settings, threads, stop_event)
+    # run_gyro_threads(settings, threads, stop_event)
+    # run_lcd_threads(settings, threads, stop_event)
+    # run_clock_threads(settings, threads, stop_event)
     run_bir_and_dioda_threads(settings, threads)
 
     for thread in threads:

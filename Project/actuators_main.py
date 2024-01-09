@@ -16,7 +16,7 @@ def run_dl_threads(settings, threads, stop_event):
 
 
 def run_db_threads(settings, threads, stop_event, choice):
-    if choice==1:
+    if choice == 1:
         run_db(settings["DB"], threads, stop_event, "DB")
     else:
         run_db(settings["BB"], threads, stop_event, "BB")
@@ -27,26 +27,33 @@ def run_menu_thread(threads, stop_event):
     thread.start()
     threads.append(thread)
 
+
 def wait_for_button_press(stop_event, delay, char):
     while True:
-        input_char = input(f"Pritisnite '{char}' i pritisnite enter za aktivaciju: ")
-        if input_char and input_char[0].lower() == char:
-            stop_event.set()
+        with print_lock:
+            input_char = input(f"Pritisnite '{char}' i pritisnite enter za aktivaciju: ")
+            if input_char and input_char[0].lower() == char:
+                stop_event.set()
         time.sleep(delay)
+
 
 def run_button_awaiter(stop_event, threads, char):
     awaiter_thread = threading.Thread(target=wait_for_button_press,
-                                      args=(stop_event, 5, char))
+                                      args=(stop_event, 1, char))
     awaiter_thread.start()
     threads.append(awaiter_thread)
+
 
 def run_ds_threads(settings, threads, stop_event):
     ds1_pressed_event = threading.Event()
     ds2_pressed_event = threading.Event()
+
     run_ds(settings['DS1'], threads, ds1_pressed_event, 'DS1')
     run_ds(settings['DS2'], threads, ds2_pressed_event, 'DS2')
     run_button_awaiter(ds1_pressed_event, threads, 'a')
     run_button_awaiter(ds2_pressed_event, threads, 'b')
+
+
 def display_menu():
     print("Menu Options:")
     print("Press l to control Door Light")

@@ -1,5 +1,8 @@
+import threading
+from queue import Queue
+
 from flask import Flask, jsonify, request
-from flask_cors import CORS
+# from flask_cors import CORS
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 import paho.mqtt.client as mqtt
@@ -8,21 +11,18 @@ import os
 from dotenv import load_dotenv
 
 from project_settings.settings import load_settings
-from sensors.s_simulators.ir_receiver import set_current_hex
-
 
 load_dotenv()
 
-
 app = Flask(__name__)
-CORS(app)
+# CORS(app)
+
 
 influxdb_token = os.environ.get('INFLUXDB_TOKEN')
 org = os.environ.get('ORGANIZATION')
 url = os.environ.get('URL')
 bucket = os.environ.get('BUCKET_NAME')
 influxdb_client = InfluxDBClient(url=url, token=influxdb_token, org=org)
-
 
 mqtt_client = mqtt.Client()
 mqtt_client.connect("localhost", 1883, 60)
@@ -43,6 +43,8 @@ topics = [
     "RGB",
     "BedroomInfrared"
 ]
+
+
 def on_connect(client, userdata, flags, rc):
     for topic in topics:
         client.subscribe(topic)
@@ -51,8 +53,11 @@ def on_connect(client, userdata, flags, rc):
 mqtt_client.on_connect = on_connect
 mqtt_client.on_message = lambda client, userdata, msg: save_to_db(json.loads(msg.payload.decode('utf-8')))
 
+
 def get_server_values():
     return influxdb_client, org
+
+
 def extract_keys_from_settings():
     settings = load_settings()
     return list(settings.keys())
@@ -68,10 +73,10 @@ def save_to_db(data):
     write_api = influxdb_client.write_api(write_options=SYNCHRONOUS)
     point = (
         Point(data["measurement"])
-        .tag("simulated", data["simulated"])
-        .tag("runs_on", data["runs_on"])
-        .tag("name", data["name"])
-        .field("measurement", data["value"])
+            .tag("simulated", data["simulated"])
+            .tag("runs_on", data["runs_on"])
+            .tag("name", data["name"])
+            .field("measurement", data["value"])
     )
     write_api.write(bucket=bucket, org=org, record=point)
 
@@ -109,13 +114,17 @@ def retrieve_device_names():
 
 @app.route('/ir_remote/<path:hex_value>', methods=['PUT'])
 def process_hex(hex_value):
-    int_value = int(hex_value, 16)
     try:
-        set_current_hex(int_value)
-    except ValueError:
-        return jsonify({"error": "Hexadecimal value not found in the list"}), 404
+        int_value = int(hex_value, 16)
 
-    return jsonify({"message": "Hexadecimal string received", "value": hex_value}), 200
+        mqtt_message = json.dumps({"hex_value": hex_value})
+        mqtt_client.publish("simulator/changeRgbColor", mqtt_message)
+
+        return jsonify({"message": "Hexadecimal string received", "value": hex_value}), 200
+    except ValueError:
+        return jsonify({"error": "Invalid hexadecimal value"}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 @app.route('/pi_names', methods=['GET'])
