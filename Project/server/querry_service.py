@@ -3,9 +3,6 @@ import time
 
 from dateutil import parser
 
-from server.server import get_server_values
-
-influxdb_client, org = get_server_values()
 
 
 def handle_flux_query(influxdb_client, query, org):
@@ -27,13 +24,13 @@ def query_ds_sensor(name):
     query = f"""from(bucket: "example_db")
         |> range(start: -5s)
         |> filter(fn: (r) => r.name == "{name}")"""
-    query_data = handle_flux_query(influxdb_client, query, org)
-    return check_values_true_last_seconds(query_data, 5)
+    # query_data = handle_flux_query(influxdb_client, query, org)
+    # return check_values_true_last_seconds(query_data, 5)
 
 
 def query_dus_sensor(i_client, organization, name):
     query = f"""from(bucket: "example_db")
-        |> range(start: -10m)
+        |> range(start: -5s)
         |> filter(fn: (r) => r.name == "{name}")
         |> tail(n: 10)"""
     query_data = handle_flux_query(i_client, query, organization)
@@ -68,11 +65,11 @@ def query_gyro_sensor():
             |> range(start: -10m)
             |> filter(fn: (r) => r.name == "GSG")
             |> tail(n: 6)"""
-    query_data = handle_flux_query(influxdb_client, query, org)
-    if significant_movement(query_data):
-        print("Značajan pokret detektovan")
-    else:
-        print("Nema značajnog pokreta")
+    # query_data = handle_flux_query(influxdb_client, query, org)
+    # if significant_movement(query_data):
+    #     print("Značajan pokret detektovan")
+    # else:
+    #     print("Nema značajnog pokreta")
 
 
 def extract_values(value_str):

@@ -1,0 +1,19 @@
+import time
+
+def buzz_simulation(pin, pitch, duration, callback, publish_event, settings, code, stop_event):
+    period = 1.0 / pitch
+    delay = period / 2
+
+    while not stop_event.is_set():
+        for i in range(int(duration * pitch)):
+            print(f"Pin {pin} ON")
+            callback(publish_event, settings, code)
+            time.sleep(delay)
+
+            print(f"Pin {pin} OFF")
+            callback(publish_event, settings, code)
+            time.sleep(delay)
+
+        time.sleep(1)
+
+    print("Cleaning up GPIO (simulated)")

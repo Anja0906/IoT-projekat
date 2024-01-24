@@ -1,114 +1,127 @@
 import sys
 import threading
-import time
-
-from components.dht import run_dht
-from components.dioda import run_dl
-from components.door_ultrasonic_sensor import run_dus
-from components.gyro import run_gyro
-from components.ir_receiver import run_ir_receiver
-from components.lcd import run_lcd
-from components.lcd_clock import run_clock
-from components.membrane_switch import run_dms
-from components.door_pir import run_dpir
-from components.door_button_sensor import run_ds
-from components.rgb_dioda import run_rgb_light
+from components.actuators.Dioda.dioda_component import run_dl
+from components.sensors.Button.button_component import run_ds
+from components.sensors.Clock.clock_component import run_clock
+from components.sensors.DHT.dht_component import run_dht
+from components.sensors.DUS.dus_component import run_dus
+from components.sensors.Gyro.gyro_component import run_gyro
+from components.sensors.IR.ir_component import run_ir_receiver
+from components.sensors.LCD.lcd_component import run_lcd
+from components.sensors.MembraneSwitch.membrane_switch_component import run_dms
+from components.sensors.PIR.pir_component import run_dpir
+from components.sensors.RGB_Dioda.rgb_component import run_rgb_light
 from project_settings.settings import load_settings
+import paho.mqtt.client as mqtt
+#MQTT ------------------------------------------------------------
+mqtt_client = mqtt.Client()
+mqtt_client.connect("localhost", 1883, 60)
+mqtt_client.loop_start()
 
-def run_dht_threads(settings, threads, stop_event):
-    run_dht(settings['RDHT1'], threads, stop_event, 'RDHT1')
-    run_dht(settings['RDHT2'], threads, stop_event, 'RDHT2')
-    run_dht(settings['RDHT3'], threads, stop_event, 'RDHT3')
-    run_dht(settings['RDHT4'], threads, stop_event, 'RDHT4')
-    run_dht(settings['GDHT'], threads, stop_event, 'GDHT')
-
-
-def run_pir_threads(settings, threads, stop_event):
-    pir1_motion_detected_event = threading.Event()
-    pir2_motion_detected_event = threading.Event()
-    read_from_db_event_dus1 = threading.Event()
-    read_from_db_event_dus2 = threading.Event()
-    run_dpir(settings['RPIR1'], threads, stop_event, 'RPIR1')
-    run_dpir(settings['RPIR2'], threads, stop_event, 'RPIR2')
-    run_dpir(settings['RPIR3'], threads, stop_event, 'RPIR3')
-    run_dpir(settings['RPIR4'], threads, stop_event, 'RPIR4')
-    run_dpir(settings['DPIR1'], threads, pir1_motion_detected_event, 'DPIR1')
-    run_dpir(settings['DPIR2'], threads, pir2_motion_detected_event, 'DPIR2')
-    run_dl_threads(settings, threads, pir1_motion_detected_event)
-    run_dus(settings['DUS1'], threads, pir1_motion_detected_event, read_from_db_event_dus1, 'DUS1')
-    run_dus(settings['DUS2'], threads, pir2_motion_detected_event, read_from_db_event_dus2,'DUS2')
-
-def run_dms_threads(settings, threads, stop_event):
-    run_dms(settings['DMS'], threads, stop_event, 'DMS')
+topics = [
+    "Temperature/Sensors",
+    "Humidity/Sensors",
+    "Motion/Sensors",
+    "DoorSensor/Sensors",
+    "DoorUltraSonic/Sensors",
+    "MembraneSwitch/Sensors",
+    "Buzzer/Sensors",
+    "DoorLight/Sensors",
+    "Gyro/Sensors",
+    "LCD/Sensors",
+    "Clock/Sensors",
+    "RGB/Sensors",
+    "BedroomInfrared/Sensors"
+]
 
 
-def run_ds_threads(settings, threads, stop_event):
-    ds1_pressed_event = threading.Event()
-    ds2_pressed_event = threading.Event()
-    run_ds(settings['DS1'], threads, ds1_pressed_event, 'DS1')
-    run_ds(settings['DS2'], threads, ds2_pressed_event, 'DS2')
-    run_button_awaiter(ds1_pressed_event, threads, 'a')
-    # run_button_awaiter(ds2_pressed_event, threads, 'b')
+ds1_pressed_event = threading.Event()
+alarm_event = threading.Event()
+read_from_db_event_dus1 = threading.Event()
+pir1_motion_detected_event = threading.Event()
+
+ds2_pressed_event = threading.Event()
+pir2_motion_detected_event = threading.Event()
+read_from_db_event_dus2 = threading.Event()
+
+ir_changed_event = threading.Event()
+alarm_clock = threading.Event()
+
+def on_message(client, userdata, message):
+    if message.topic == "alarm":
+        alarm_event.set()
+        print(f"Topic: {message.topic}\nPoruka: {message.payload.decode()}")
+
+# Dodavanje callback funkcije za pristigle poruke
+mqtt_client.on_message = on_message
+mqtt_client.subscribe("alarm")
+def on_connect(client, userdata, flags, rc):
+    for topic in topics:
+        client.subscribe(topic)
+
+mqtt_client = mqtt.Client()
+mqtt_client.connect("localhost", 1883, 60)
+mqtt_client.loop_start()
+mqtt_client.on_connect = on_connect
+#MQTT ------------------------------------------------------------
 
 
-def run_gyro_threads(settings, threads, stop_event):
-    run_gyro(settings['GSG'], threads, stop_event, 'GSG')
-
-
-def run_lcd_threads(settings, threads, stop_event):
-    run_lcd(settings['GLCD'], threads, stop_event, 'GLCD')
-
-
-def wait_for_button_press(stop_event, delay, char):
+#PI Functions ---------------------------------------------------------------------------
+def run_pi_1(settings, threads, stop_event,mqtt_client):
+    run_ds(settings['DS1'], threads, ds1_pressed_event, 'DS1',mqtt_client)
+    run_dl(settings["DL"], threads, pir1_motion_detected_event, "DL",mqtt_client)
+    run_dus(settings['DUS1'], threads, 'DUS1')
+    run_dpir(settings['DPIR1'], threads, pir1_motion_detected_event, 'DPIR1',mqtt_client)
+    # run_dms(settings['DMS'], threads, stop_event, 'DMS',mqtt_client)
+    # run_dpir(settings['RPIR1'], threads, stop_event, 'RPIR1',mqtt_client)
+    # run_dpir(settings['RPIR2'], threads, stop_event, 'RPIR2',mqtt_client)
+    # run_dht(settings['RDHT1'], threads, stop_event, 'RDHT1',mqtt_client)
+    # run_dht(settings['RDHT2'], threads, stop_event, 'RDHT2',mqtt_client)
+    # run db
     while True:
-        input_char = input(f"Pritisnite '{char}' za aktivaciju: ")
-        if input_char.lower() == char:
-            stop_event.set()
-        time.sleep(1)
+        alarm_event.wait()
+        print("\n Oglasio see!!!!!!!!!!!!")
+        alarm_event.clear()
 
-def run_button_awaiter(stop_event, threads, char):
-    awaiter_thread = threading.Thread(target=wait_for_button_press,
-                                  args=(stop_event, 5, char))
-    awaiter_thread.start()
-    threads.append(awaiter_thread)
-
-def run_clock_threads(settings, threads, stop_event):
-    run_clock(settings['B4SD'], threads, stop_event, 'B4SD')
-
-
-def run_bir_and_dioda_threads(settings, threads):
-    ir_changed_event = threading.Event()
-    run_ir_receiver(settings['BIR'], threads, ir_changed_event, 'BIR')
-    run_rgb_light(settings['BRGB'], threads, ir_changed_event, 'BRGB')
+#Todo: Napraviti globalnu promenljivu za button_pressed koja simulira stisak dugmeta i setuje ds1_pressed_event
+def run_pi_2(settings, threads, stop_event,mqtt_client):
+    # run_ds(settings['DS2'], threads, ds2_pressed_event, 'DS2',mqtt_client)
+    run_dus(settings['DUS2'], threads, 'DUS2')
+    run_dpir(settings['DPIR2'], threads, pir1_motion_detected_event, 'DPIR2', mqtt_client)
+    run_dht(settings['GDHT'], threads, 'GDHT',mqtt_client)
+    run_lcd(settings['GLCD'], threads, 'GLCD',mqtt_client)
+    # run_gyro(settings['GSG'], threads, stop_event, 'GSG',mqtt_client)
+    # run_dpir(settings['RPIR3'], threads, stop_event, 'RPIR3',mqtt_client)
+    # run_dht(settings['RDHT3'], threads, stop_event, 'RDHT3',mqtt_client)
 
 
-def run_dl_threads(settings, threads, stop_event):
-    dl_settings = settings["DL"]
-    run_dl(dl_settings, threads, stop_event, "DL")
+def run_pi_3(settings, threads, stop_event,mqtt_client):
+    run_dpir(settings['RPIR4'], threads, stop_event, 'RPIR4',mqtt_client)
+    run_dht(settings['RDHT4'], threads, stop_event, 'RDHT4',mqtt_client)
+    run_clock(settings['B4SD'], threads, alarm_clock, 'B4SD',mqtt_client)
+    run_ir_receiver(settings['BIR'], threads, ir_changed_event, 'BIR',mqtt_client)
+    run_rgb_light(settings['BRGB'], threads, ir_changed_event, 'BRGB',mqtt_client)
+    # run BB
 
 
-def run_all_threads(settings, threads, stop_event):
-    # run_dht_threads(settings, threads, stop_event)
-    # run_pir_threads(settings, threads, stop_event)
-    # run_dms_threads(settings, threads, stop_event)
-    # run_ds_threads(settings, threads, stop_event)
-    # run_gyro_threads(settings, threads, stop_event)
-    # run_lcd_threads(settings, threads, stop_event)
-    # run_clock_threads(settings, threads, stop_event)
-    run_bir_and_dioda_threads(settings, threads)
-
+def run_system(settings, threads, stop_event,mqtt_client):
+    run_pi_1(settings, threads, stop_event,mqtt_client)
+    run_pi_2(settings, threads, stop_event,mqtt_client)
+    # run_pi_3(settings, threads, stop_event,mqtt_client)
     for thread in threads:
         thread.join()
+#PI Functions ---------------------------------------------------------------------------
 
 
 if __name__ == "__main__":
+
     settings = load_settings()
     threads = []
     stop_event = threading.Event()
 
     try:
         while True:
-            run_all_threads(settings, threads, stop_event)
+            run_system(settings, threads, stop_event,mqtt_client)
             stop_event.clear()
             threads = []
 
