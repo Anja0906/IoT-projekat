@@ -1,3 +1,4 @@
+import datetime
 import threading
 from queue import Queue
 
@@ -147,6 +148,28 @@ def handle_influx_query(query):
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
+@app.route('/set_clock_timer', methods=['POST'])
+def set_clock_timer():
+    data = request.get_json()  # Pretpostavlja se da se podaci šalju kao JSON
+    alarm_time = data.get('time')
+    if not alarm_time:
+        return jsonify({"error": "Vreme nije poslato"}), 400
+
+    # Parsiranje vremena
+    try:
+
+        mqtt_client.publish("clock", str(alarm_time))
+        return jsonify({"status": "uspešno", "time": alarm_time}), 200
+    except ValueError:
+        return jsonify({"error": "Neispravan format vremena"}), 400
+
+@app.route('/delete_clock_timer', methods=['POST'])
+def delete_clock_timer():
+    try:
+        mqtt_client.publish("clock_turn_off", "Gasenje alarma")
+        return jsonify({"status": "uspešno ugaseno", "time": datetime.datetime.now()}), 200
+    except ValueError:
+        return jsonify({"error": "Nije ugaseno"}), 400
 
 @app.route('/device_names', methods=['GET'])
 def retrieve_device_names():

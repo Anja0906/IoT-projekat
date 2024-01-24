@@ -114,8 +114,8 @@ def run_pi_3(settings, threads, stop_event,mqtt_client):
 
 
 def run_system(settings, threads, stop_event,mqtt_client):
-    run_pi_1(settings, threads, stop_event,mqtt_client)
-    run_pi_2(settings, threads, stop_event,mqtt_client)
+    # run_pi_1(settings, threads, stop_event,mqtt_client)
+    # run_pi_2(settings, threads, stop_event,mqtt_client)
     run_pi_3(settings, threads, stop_event,mqtt_client)
     for thread in threads:
         thread.join()
