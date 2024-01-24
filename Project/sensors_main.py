@@ -50,11 +50,20 @@ alarm_clock = threading.Event()
 def on_message(client, userdata, message):
     if message.topic == "alarm":
         alarm_event.set()
+        # alarm_clock.set()
+        print(f"Topic: {message.topic}\nPoruka: {message.payload.decode()}")
+    if message.topic == "ds1":
+        ds1_pressed_event.set()
+        print(f"Topic: {message.topic}\nPoruka: {message.payload.decode()}")
+    if message.topic == "ds2":
+        ds2_pressed_event.set()
         print(f"Topic: {message.topic}\nPoruka: {message.payload.decode()}")
 
 # Dodavanje callback funkcije za pristigle poruke
 mqtt_client.on_message = on_message
 mqtt_client.subscribe("alarm")
+mqtt_client.subscribe("ds1")
+mqtt_client.subscribe("ds2")
 def on_connect(client, userdata, flags, rc):
     for topic in topics:
         client.subscribe(topic)
@@ -69,14 +78,14 @@ mqtt_client.on_connect = on_connect
 #PI Functions ---------------------------------------------------------------------------
 def run_pi_1(settings, threads, stop_event,mqtt_client):
     run_ds(settings['DS1'], threads, ds1_pressed_event, 'DS1',mqtt_client)
-    run_dl(settings["DL"], threads, pir1_motion_detected_event, "DL",mqtt_client)
+    run_dl(settings["DL"], threads, pir1_motion_detected_event, "DL")
     run_dus(settings['DUS1'], threads, 'DUS1')
-    run_dpir(settings['DPIR1'], threads, pir1_motion_detected_event, 'DPIR1',mqtt_client)
-    # run_dms(settings['DMS'], threads, stop_event, 'DMS',mqtt_client)
-    # run_dpir(settings['RPIR1'], threads, stop_event, 'RPIR1',mqtt_client)
-    # run_dpir(settings['RPIR2'], threads, stop_event, 'RPIR2',mqtt_client)
-    # run_dht(settings['RDHT1'], threads, stop_event, 'RDHT1',mqtt_client)
-    # run_dht(settings['RDHT2'], threads, stop_event, 'RDHT2',mqtt_client)
+    run_dpir(settings['DPIR1'], threads, pir1_motion_detected_event, 'DPIR1')
+    run_dms(settings['DMS'], threads, stop_event, 'DMS')
+    run_dpir(settings['RPIR1'], threads, stop_event, 'RPIR1')
+    run_dpir(settings['RPIR2'], threads, stop_event, 'RPIR2')
+    run_dht(settings['RDHT1'], threads, 'RDHT1')
+    run_dht(settings['RDHT2'], threads, 'RDHT2')
     # run db
     while True:
         alarm_event.wait()
@@ -85,29 +94,29 @@ def run_pi_1(settings, threads, stop_event,mqtt_client):
 
 #Todo: Napraviti globalnu promenljivu za button_pressed koja simulira stisak dugmeta i setuje ds1_pressed_event
 def run_pi_2(settings, threads, stop_event,mqtt_client):
-    # run_ds(settings['DS2'], threads, ds2_pressed_event, 'DS2',mqtt_client)
+    run_ds(settings['DS2'], threads, ds2_pressed_event, 'DS2',mqtt_client)
     run_dus(settings['DUS2'], threads, 'DUS2')
-    run_dpir(settings['DPIR2'], threads, pir1_motion_detected_event, 'DPIR2', mqtt_client)
-    run_dht(settings['GDHT'], threads, 'GDHT',mqtt_client)
-    run_lcd(settings['GLCD'], threads, 'GLCD',mqtt_client)
-    # run_gyro(settings['GSG'], threads, stop_event, 'GSG',mqtt_client)
-    # run_dpir(settings['RPIR3'], threads, stop_event, 'RPIR3',mqtt_client)
-    # run_dht(settings['RDHT3'], threads, stop_event, 'RDHT3',mqtt_client)
+    run_dpir(settings['DPIR2'], threads, pir1_motion_detected_event, 'DPIR2')
+    run_dht(settings['GDHT'], threads, 'GDHT')
+    run_lcd(settings['GLCD'], threads, 'GLCD')
+    run_gyro(settings['GSG'], threads, stop_event, 'GSG')
+    run_dpir(settings['RPIR3'], threads, stop_event, 'RPIR3')
+    run_dht(settings['RDHT3'], threads, 'RDHT3')
 
 
 def run_pi_3(settings, threads, stop_event,mqtt_client):
-    run_dpir(settings['RPIR4'], threads, stop_event, 'RPIR4',mqtt_client)
-    run_dht(settings['RDHT4'], threads, stop_event, 'RDHT4',mqtt_client)
-    run_clock(settings['B4SD'], threads, alarm_clock, 'B4SD',mqtt_client)
+    run_dpir(settings['RPIR4'], threads, stop_event, 'RPIR4')
+    run_dht(settings['RDHT4'], threads, 'RDHT4')
+    run_clock(settings['B4SD'], threads, alarm_clock, 'B4SD')
     run_ir_receiver(settings['BIR'], threads, ir_changed_event, 'BIR',mqtt_client)
     run_rgb_light(settings['BRGB'], threads, ir_changed_event, 'BRGB',mqtt_client)
     # run BB
 
 
 def run_system(settings, threads, stop_event,mqtt_client):
-    run_pi_1(settings, threads, stop_event,mqtt_client)
-    run_pi_2(settings, threads, stop_event,mqtt_client)
-    # run_pi_3(settings, threads, stop_event,mqtt_client)
+    # run_pi_1(settings, threads, stop_event,mqtt_client)
+    # run_pi_2(settings, threads, stop_event,mqtt_client)
+    run_pi_3(settings, threads, stop_event,mqtt_client)
     for thread in threads:
         thread.join()
 #PI Functions ---------------------------------------------------------------------------

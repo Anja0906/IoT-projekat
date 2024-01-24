@@ -52,7 +52,7 @@ def dms_callback(result, publish_event, settings, code, verbose=False):
         publish_event.set()
 
 
-def run_dms(settings, threads, stop_event, code,client):
+def run_dms(settings, threads, stop_event, code):
     if settings['simulated']:
         print("Starting " + code + " simulator")
         dms_thread = threading.Thread(target=run_keypad_simulator,

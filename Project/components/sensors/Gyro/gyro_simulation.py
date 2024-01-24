@@ -12,7 +12,7 @@ def generate_gyro_data():
         yield accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z
 
 
-def simulate_gyroscope(delay, callback, stop_event, publish_event, settings, code):
+def simulate_gyroscope(delay, callback, publish_event, settings, code):
     generator = generate_gyro_data()
     while True:
         gyro_data = next(generator)

@@ -12,15 +12,15 @@ publish_data_limit = 5
 counter_lock = threading.Lock()
 
 
-def display_callback(delay, publish_event, settings, code):
+def display_callback(time, publish_event, settings, code):
     global publish_data_counter, publish_data_limit
-    load = datetime.now().strftime("%H:%M:%S")
+    print("Vreme je: " + time)
     clock_payload = {
         "measurement": "Clock",
         "simulated": settings['simulated'],
         "runs_on": settings["runs_on"],
         "name": settings["name"],
-        "value": load
+        "value": time
     }
     with counter_lock:
         clock_batch.append(('Clock', json.dumps(clock_payload), 0, True))
@@ -28,7 +28,6 @@ def display_callback(delay, publish_event, settings, code):
 
     if publish_data_counter >= publish_data_limit:
         publish_event.set()
-    print(f"Current time is: {load}")
 
 
 def publisher_task(event, batch):
@@ -52,10 +51,10 @@ publisher_thread.start()
 def run_clock(settings, threads, alarm_event, code):
     if settings['simulated']:
         print("Starting " + code + " simulator")
-        lcd_thread = threading.Thread(target=run_display_simulator,
-                                      args=(2, display_callback, alarm_event, publish_event, settings, code))
-        lcd_thread.start()
-        threads.append(lcd_thread)
+        clock_thread = threading.Thread(target=run_display_simulator,
+                                      args=(1, display_callback, alarm_event, publish_event, settings, code))
+        clock_thread.start()
+        threads.append(clock_thread)
         print(code + " simulator started\n")
     else:
         from clock_pi import run_clock

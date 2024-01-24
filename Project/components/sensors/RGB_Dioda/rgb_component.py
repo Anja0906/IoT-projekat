@@ -48,17 +48,17 @@ publisher_thread.daemon = True
 publisher_thread.start()
 
 
-def run_rgb_light(settings, threads, ir_changed_event, code,client):
+def run_rgb_light(settings, threads, ir_changed_event, code):
     if settings['simulated']:
         print("Starting " + code + " simulator")
-        rgb_thread = threading.Thread(target=run_rgb_dioda_simulation, args=(5, rgb_callback, ir_changed_event, publish_event, settings, code,client))
+        rgb_thread = threading.Thread(target=run_rgb_dioda_simulation, args=(5, rgb_callback, ir_changed_event, publish_event, settings, code))
         rgb_thread.start()
         threads.append(rgb_thread)
         print(code + " simulator started\n")
     else:
         from components.sensors.RGB_Dioda.rgb_pi import run_rgb_dioda
         print("Starting " + code + " loop")
-        rgb_thread = threading.Thread(target=run_rgb_dioda, args=(5, rgb_callback, ir_changed_event, publish_event, settings, code, client))
+        rgb_thread = threading.Thread(target=run_rgb_dioda, args=(5, rgb_callback, ir_changed_event, publish_event, settings, code))
         rgb_thread.start()
         threads.append(rgb_thread)
         print(code + " loop started")

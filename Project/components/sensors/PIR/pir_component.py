@@ -10,7 +10,6 @@ pir_batch = []
 publish_data_counter = 0
 publish_data_limit = 5
 counter_lock = threading.Lock()
-broj_osoba_u_sobi = 0
 
 def publisher_task(event, batch):
     global publish_data_counter, publish_data_limit
@@ -35,10 +34,6 @@ def dpir_callback(motion_detected, code, motion_detected_event, publish_event, d
     if motion_detected:
         motion_detected_event.set()
         print("Desio se pokret na " + str(code))
-        if code.startswith("RPIR"):
-            if broj_osoba_u_sobi <= 0:
-                print("ALAAARM na RPIRu\n")
-                print(f"Broj osoba: {broj_osoba_u_sobi}")
 
     pir_payload = {
         "measurement": "Motion",
@@ -54,7 +49,7 @@ def dpir_callback(motion_detected, code, motion_detected_event, publish_event, d
         publish_event.set()
 
 
-def run_dpir(settings, threads, motion_detected_event, code,client):
+def run_dpir(settings, threads, motion_detected_event, code):
     if settings['simulated']:
         print("Starting " + code + " simulator")
         dpir_thread = threading.Thread(target=run_pir_simulator,

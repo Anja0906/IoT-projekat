@@ -1,6 +1,5 @@
 import time
 
-
 def run_ds_simulator(delay, callback, stop_event, publish_event, settings, code, client):
     while True:
         stop_event.wait()

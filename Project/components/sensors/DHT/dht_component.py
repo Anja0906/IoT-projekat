@@ -60,7 +60,7 @@ def dht_callback(humidity, temperature, publish_event, dht_settings, code):
         publish_event.set()
 
 
-def run_dht(settings, threads, code,client):
+def run_dht(settings, threads, code):
     if settings['simulated']:
         print("Starting " + code + " simulator")
         dht_thread = threading.Thread(target = run_dht_simulator, args=(9, dht_callback, publish_event, settings, code))

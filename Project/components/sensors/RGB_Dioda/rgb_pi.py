@@ -72,7 +72,7 @@ def lightBlue(callback, stop_event, publish_event, settings, code):
     callback("Light Blue", publish_event, settings, code)
 
 
-def run_rgb_dioda(delay, callback, stop_event, publish_event, settings, code, client):
+def run_rgb_dioda(delay, callback, stop_event, publish_event, settings, code):
     try:
         while True:
             turnOff(callback, stop_event, publish_event, settings, code)

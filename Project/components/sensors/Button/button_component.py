@@ -43,7 +43,6 @@ def ds_callback(stop_event,motion, publish_event, settings, code):
 
     if publish_data_counter >= publish_data_limit:
         publish_event.set()
-        #TODO: Uraditi slanje mqtt na server kad god se detektuje pokret da se proveri poslednjih 5 sekundi i aktivira alarm
     stop_event.clear()
 
 def run_ds(settings, threads, stop_event, code, client):

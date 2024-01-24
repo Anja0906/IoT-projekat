@@ -2,9 +2,11 @@ import json
 import threading
 import paho.mqtt.client as mqtt
 
+from components.broker_settings import HOSTNAME, PORT
+
 client = mqtt.Client()
 
-client.connect("localhost", 1883, 60)
+client.connect(HOSTNAME, PORT, 60)
 client.subscribe("simulator/changeRgbColor")
 client.loop_start()
 on_message_thread_event = threading.Event()

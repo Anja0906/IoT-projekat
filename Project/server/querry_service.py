@@ -20,12 +20,12 @@ def handle_flux_query(influxdb_client, query, org):
         return []
 
 
-def query_ds_sensor(name):
+def query_ds_sensor(i_client, organization, name):
     query = f"""from(bucket: "example_db")
         |> range(start: -5s)
         |> filter(fn: (r) => r.name == "{name}")"""
-    # query_data = handle_flux_query(influxdb_client, query, org)
-    # return check_values_true_last_seconds(query_data, 5)
+    query_data = handle_flux_query(i_client, query, organization)
+    return check_values_true_last_seconds(query_data, 5)
 
 
 def query_dus_sensor(i_client, organization, name):
@@ -60,17 +60,13 @@ def analyze_movement(measurements):
     return entering > leaving
 
 
-def query_gyro_sensor():
+def query_gyro_sensor(i_client, organization):
     query = f"""from(bucket: "example_db")
             |> range(start: -10m)
             |> filter(fn: (r) => r.name == "GSG")
             |> tail(n: 6)"""
-    # query_data = handle_flux_query(influxdb_client, query, org)
-    # if significant_movement(query_data):
-    #     print("Značajan pokret detektovan")
-    # else:
-    #     print("Nema značajnog pokreta")
-
+    query_data = handle_flux_query(i_client, query, organization)
+    return significant_movement(query_data)
 
 def extract_values(value_str):
     clean_str = value_str.replace('a/g:', '').replace('g', '').replace('d/s', '')
@@ -108,20 +104,3 @@ def check_values_true_last_seconds(data, seconds):
         item['_value']
         for item in data if '_time' in item and '_value' in item
     )
-
-
-def continuously_query_sensor():
-    while True:
-        result1 = query_ds_sensor("DS1")
-        result2 = query_ds_sensor("DS2")
-        # query_dus_sensor("DUS1")
-        # query_gyro_sensor()
-        if result1:
-            print(f"Alarm at {datetime.datetime.now()} for DS1: {result1}")
-        if result2:
-            print(f"Alarm at {datetime.datetime.now()} for DS2: {result2}")
-        # time.sleep(5)  # Wait for 5 seconds before the next query
-
-
-if __name__ == '__main__':
-    continuously_query_sensor()

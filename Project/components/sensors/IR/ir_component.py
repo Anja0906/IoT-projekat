@@ -6,7 +6,7 @@ from components.sensors.IR.ir_simulation import run_simulation
 
 bir_batch = []
 publish_data_counter = 0
-publish_data_limit = 5
+publish_data_limit = 1
 counter_lock = threading.Lock()
 
 

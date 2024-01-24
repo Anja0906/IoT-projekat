@@ -11,8 +11,8 @@ import os
 from dotenv import load_dotenv
 import paho.mqtt.publish as publish
 
-from Project.project_settings.settings import load_settings
-from querry_service import query_dus_sensor
+from project_settings.settings import load_settings
+from querry_service import query_dus_sensor, query_ds_sensor, query_gyro_sensor
 
 load_dotenv()
 
@@ -45,34 +45,34 @@ topics = [
     "RGB",
     "BedroomInfrared"
 ]
-
-
-def handle_temperature(data):
-    print(f"Obrada podataka o temperaturi: {data}")
-
-
-def handle_humidity(data):
-    print(f"Obrada podataka o vlažnosti: {data}")
-
+def handle_gyro(data):
+    result = query_gyro_sensor(influxdb_client, org)
+    print("Result: ", result)
+    if result:
+        mqtt_client.publish("alarm", "Oglasio se alarm na: " + data["name"])
+    else:
+        print("Nema alarma na gyro komponenti")
 
 def handle_motion(data):
     global broj_osoba_u_objektu
-    if (data["name"] == "DPIR1" or data["name"] == "DPIR2"):
+    if data["name"] == "DPIR1" or data["name"] == "DPIR2":
         dus = "DUS1" if data["name"] == "DPIR1" else "DUS2"
         is_entering = query_dus_sensor(influxdb_client, org, dus)
         if is_entering:
             broj_osoba_u_objektu += 1
         elif broj_osoba_u_objektu > 0:
             broj_osoba_u_objektu -= 1
-    elif (broj_osoba_u_objektu == 0):
-        mqtt_client.publish("Alarm", "Oglasio se alarm na: " + data["name"])
-
-
-# Todo:Aktiviraj alarm
-
+    elif broj_osoba_u_objektu == 0:
+        mqtt_client.publish("alarm", "Oglasio se alarm na: " + data["name"])
 
 def handle_door_sensor(data):
-    print(f"Obrada podataka sa senzora vrata: {data}")
+    ds_name = data["name"]
+    result = query_ds_sensor(influxdb_client, org, ds_name)
+    print("Result: ", result)
+    if result:
+        mqtt_client.publish("alarm", "Oglasio se alarm na: " + data["name"])
+    else:
+        print("Nema alarma na: " + ds_name)
 
 
 def on_connect(client, userdata, flags, rc):
@@ -81,20 +81,15 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_message(client, userdata, msg):
-    batch_data = json.loads(msg.payload.decode('utf-8'))
     data = json.loads(msg.payload.decode('utf-8'))
     save_to_db(data)
     topic = data['measurement']
-    # print(topic)
     if topic == "Motion":
         handle_motion(data)
-
-    # mqtt_client.publish()
-    # print(topic)
-    # if topic and topic in topic_functions:
-    #     topic_functions[topic](data)
-    # else:
-    #     print(f"Nepoznat ili nedostajući topic: {topic}")
+    elif topic == "DoorSensor":
+        handle_door_sensor(data)
+    elif topic == "Gyro":
+        handle_gyro(data)
 
 
 mqtt_client.on_connect = on_connect
@@ -163,6 +158,21 @@ def retrieve_device_names():
 def simulate_alarm():
     message = "Alarm aktiviran"
     mqtt_client.publish("alarm", message)
+    print(f"Poslata poruka: {message}")
+    return jsonify({"ok": str("Ok")}), 200
+
+
+@app.route('/simulate_ds1', methods=['GET'])
+def simulate_ds1():
+    message = "DS1 pressed"
+    mqtt_client.publish("ds1", message)
+    print(f"Poslata poruka: {message}")
+    return jsonify({"ok": str("Ok")}), 200
+
+@app.route('/simulate_ds2', methods=['GET'])
+def simulate_ds2():
+    message = "DS2 pressed"
+    mqtt_client.publish("ds2", message)
     print(f"Poslata poruka: {message}")
     return jsonify({"ok": str("Ok")}), 200
 

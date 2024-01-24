@@ -1,6 +1,8 @@
 import time
 import random
 
+from components.sensors.IR.ir_simulation import get_current_button_name
+
 ButtonsNames = ["LEFT", "RIGHT", "UP", "DOWN", "2", "3", "1", "OK", "4", "5", "6", "7", "8", "9", "*", "0",
                 "#"]
 def print_color(value):
@@ -16,7 +18,7 @@ def print_color(value):
     }
     return colors.get(value, "Unknown")
 
-def run_rgb_dioda_simulation(delay, callback, ir_changed_event, publish_event, settings, code,client):
+def run_rgb_dioda_simulation(delay, callback, ir_changed_event, publish_event, settings, code):
     while True:
         ir_changed_event.wait()
         color = print_color(get_current_button_name())

@@ -47,7 +47,7 @@ def dl_callback(publish_event, settings, code, is_on):
         publish_event.set()
 
 
-def run_dl(settings, threads, motion_detected_event, code,client):
+def run_dl(settings, threads, motion_detected_event, code):
     if settings['simulated']:
         dl_thread = threading.Thread(target=dioda_light_control, args=(dl_callback, publish_event, settings, motion_detected_event, code))
         dl_thread.start()

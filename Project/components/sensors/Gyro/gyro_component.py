@@ -53,7 +53,7 @@ def gyro_callback(data, publish_event, settings, code, verbose=False):
 def run_gyro(settings, threads, stop_event, code):
     if settings['simulated']:
         print("Starting " + code + " simulator")
-        gyro_thread = threading.Thread(target=simulate_gyroscope, args=(5, gyro_callback, stop_event, publish_event, settings, code))
+        gyro_thread = threading.Thread(target=simulate_gyroscope, args=(5, gyro_callback, publish_event, settings, code))
         gyro_thread.start()
         threads.append(gyro_thread)
         print(code + " simulator started\n")

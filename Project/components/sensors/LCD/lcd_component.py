@@ -46,7 +46,7 @@ publisher_thread.daemon = True
 publisher_thread.start()
 
 
-def run_lcd(settings, threads, code,client):
+def run_lcd(settings, threads, code):
     if settings['simulated']:
         print("Starting " + code + " simulator")
         lcd_thread = threading.Thread(target=simulate_lcd_display,
