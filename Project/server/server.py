@@ -10,7 +10,8 @@ import json
 import os
 from dotenv import load_dotenv
 import paho.mqtt.publish as publish
-from project_settings.settings import load_settings
+
+from Project.project_settings.settings import load_settings
 from querry_service import query_dus_sensor
 
 load_dotenv()
