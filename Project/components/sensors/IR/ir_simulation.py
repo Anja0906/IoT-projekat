@@ -1,14 +1,14 @@
 import json
 import threading
+
 import paho.mqtt.client as mqtt
 
 from components.broker_settings import HOSTNAME, PORT
-
 client = mqtt.Client()
-
 client.connect(HOSTNAME, PORT, 60)
 client.subscribe("simulator/changeRgbColor")
 client.loop_start()
+
 on_message_thread_event = threading.Event()
 
 SimulatedButtons = [0x300ff22dd, 0x300ffc23d, 0x300ff629d, 0x300ffa857, 0x300ff9867, 0x300ffb04f, 0x300ff6897,
@@ -32,7 +32,6 @@ def get_button_name(button_hex):
 
 
 def on_message(client, userdata, message):
-    # Dekodiranje JSON stringa i ekstrakcija heksadecimalne vrijednosti
     data = json.loads(message.payload.decode())
     hex_value = data.get('hex_value')
     if hex_value is not None:
@@ -41,15 +40,11 @@ def on_message(client, userdata, message):
     else:
         print("Hex value not found in the message")
 
-
 client.on_message = on_message
-
-
 def set_current_hex(button_hex):
     global current_button_name, current_button_hex
     current_button_hex = button_hex
     current_button_name = get_button_name(button_hex)
-    print("setovano : " + get_current_button_name())
     on_message_thread_event.set()
 
 

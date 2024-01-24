@@ -7,6 +7,8 @@ from flask_cors import CORS
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 import paho.mqtt.client as mqtt
+
+
 import json
 import os
 from dotenv import load_dotenv
@@ -44,8 +46,10 @@ topics = [
     "LCD",
     "Clock",
     "RGB",
-    "BedroomInfrared"
+    "BedroomInfrared",
 ]
+
+
 def handle_gyro(data):
     result = query_gyro_sensor(influxdb_client, org)
     print("Result: ", result)
@@ -53,6 +57,7 @@ def handle_gyro(data):
         mqtt_client.publish("alarm", "Oglasio se alarm na: " + data["name"])
     else:
         print("Nema alarma na gyro komponenti")
+
 
 def handle_motion(data):
     global broj_osoba_u_objektu
@@ -66,6 +71,7 @@ def handle_motion(data):
     elif broj_osoba_u_objektu == 0:
         mqtt_client.publish("alarm", "Oglasio se alarm na: " + data["name"])
 
+
 def handle_door_sensor(data):
     ds_name = data["name"]
     result = query_ds_sensor(influxdb_client, org, ds_name)
@@ -75,6 +81,8 @@ def handle_door_sensor(data):
     else:
         print("Nema alarma na: " + ds_name)
 
+def handle_changed_color(data):
+    mqtt_client.publish("RGBChanged",data['value'])
 
 def on_connect(client, userdata, flags, rc):
     for topic in topics:
@@ -83,14 +91,17 @@ def on_connect(client, userdata, flags, rc):
 
 def on_message(client, userdata, msg):
     data = json.loads(msg.payload.decode('utf-8'))
-    save_to_db(data)
     topic = data['measurement']
+    save_to_db(data)
+
     if topic == "Motion":
         handle_motion(data)
     elif topic == "DoorSensor":
         handle_door_sensor(data)
     elif topic == "Gyro":
         handle_gyro(data)
+    elif topic == "BedroomInfrared":
+        handle_changed_color(data)
 
 
 mqtt_client.on_connect = on_connect
@@ -192,6 +203,7 @@ def simulate_ds1():
     print(f"Poslata poruka: {message}")
     return jsonify({"ok": str("Ok")}), 200
 
+
 @app.route('/simulate_ds2', methods=['GET'])
 def simulate_ds2():
     message = "DS2 pressed"
@@ -199,11 +211,11 @@ def simulate_ds2():
     print(f"Poslata poruka: {message}")
     return jsonify({"ok": str("Ok")}), 200
 
+
 @app.route('/ir_remote/<path:hex_value>', methods=['PUT'])
 def process_hex(hex_value):
     try:
         int_value = int(hex_value, 16)
-
         mqtt_message = json.dumps({"hex_value": hex_value})
         mqtt_client.publish("simulator/changeRgbColor", mqtt_message)
 

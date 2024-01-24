@@ -1,8 +1,15 @@
+import json
+import threading
 import time
 import random
-
+ir_changed_event1 = threading.Event()
 from components.sensors.IR.ir_simulation import get_current_button_name
-
+import paho.mqtt.client as mqtt
+mqtt_client = mqtt.Client()
+mqtt_client.connect("localhost", 1883, 60)
+mqtt_client.loop_start()
+mqtt_client.subscribe("RGBChanged")
+from project_settings.settings import load_settings
 ButtonsNames = ["LEFT", "RIGHT", "UP", "DOWN", "2", "3", "1", "OK", "4", "5", "6", "7", "8", "9", "*", "0",
                 "#"]
 def print_color(value):
@@ -18,12 +25,18 @@ def print_color(value):
     }
     return colors.get(value, "Unknown")
 
+def on_message(client, userdata, msg):
+    ir_changed_event1.set()
+
+mqtt_client.on_message = on_message
+
+
 def run_rgb_dioda_simulation(delay, callback, ir_changed_event, publish_event, settings, code):
     while True:
-        ir_changed_event.wait()
+        ir_changed_event1.wait()
         color = print_color(get_current_button_name())
+        print(color)
         if color != "Unknown":
             callback(color, publish_event, settings, code)
-        print(color + "----------------------------")
         time.sleep(delay)
-        ir_changed_event.clear()
+        ir_changed_event1.clear()
