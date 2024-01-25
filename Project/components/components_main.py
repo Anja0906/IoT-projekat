@@ -101,17 +101,17 @@ def run_pi_2(settings, threads, stop_event, mqtt_client):
 
 
 def run_pi_3(settings, threads, stop_event, mqtt_client):
-    run_dpir(settings['RPIR4'], threads, stop_event, 'RPIR4')
-    run_dht(settings['RDHT4'], threads, 'RDHT4')
-    run_clock(settings['B4SD'], threads, alarm_clock, 'B4SD')
+    # run_dpir(settings['RPIR4'], threads, stop_event, 'RPIR4')
+    # run_dht(settings['RDHT4'], threads, 'RDHT4')
+    # run_clock(settings['B4SD'], threads, alarm_clock, 'B4SD')
     run_ir_receiver(settings['BIR'], threads, ir_changed_event, 'BIR')
     run_rgb_light(settings['BRGB'], threads, ir_changed_event, 'BRGB')
-    run_db(settings['BB'], threads, alarm_event, code)
+    # run_db(settings['BB'], threads, alarm_event, code)
 
 
 def run_system(settings, threads, stop_event, mqtt_client):
-    run_pi_1(settings, threads, stop_event, mqtt_client)
-    run_pi_2(settings, threads, stop_event,mqtt_client)
+    # run_pi_1(settings, threads, stop_event, mqtt_client)
+    # run_pi_2(settings, threads, stop_event,mqtt_client)
     run_pi_3(settings, threads, stop_event,mqtt_client)
     for thread in threads:
         thread.join()

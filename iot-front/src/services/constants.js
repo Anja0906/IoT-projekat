@@ -24,3 +24,6 @@ export const urlGraphs = {
     "BIR" : "http://localhost:3000/d-solo/d91657a8-cb74-4596-8765-67b2ff2dd441/odbrana?orgId=1&from=1703801069384&to=1703801369384&panelId=23",
     "BRGB" : "http://localhost:3000/d-solo/d91657a8-cb74-4596-8765-67b2ff2dd441/odbrana?orgId=1&from=1703801149882&to=1703801449882&panelId=24",
 }
+
+export const SimulatedButtons = [0x300ff22dd, 0x300ffc23d, 0x300ff629d, 0x300ffa857, 0x300ff9867, 0x300ffb04f, 0x300ff6897, 0x300ff02fd, 0x300ff30cf, 0x300ff18e7, 0x300ff7a85, 0x300ff10ef, 0x300ff38c7, 0x300ff5aa5, 0x300ff42bd, 0x300ff4ab5, 0x300ff52ad];
+export const ButtonNames = ["LEFT", "RIGHT", "UP", "DOWN", "2", "3", "1", "OK", "4", "5", "6", "7", "8", "9", "*", "0", "#"];

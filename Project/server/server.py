@@ -1,18 +1,13 @@
 import datetime
-import threading
-from queue import Queue
-
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 import paho.mqtt.client as mqtt
 
-
 import json
 import os
 from dotenv import load_dotenv
-import paho.mqtt.publish as publish
 
 from project_settings.settings import load_settings
 from querry_service import query_dus_sensor, query_ds_sensor, query_gyro_sensor
@@ -216,7 +211,7 @@ def process_hex(hex_value):
         int_value = int(hex_value, 16)
         mqtt_message = json.dumps({"hex_value": hex_value})
         mqtt_client.publish("simulator/changeRgbColor", mqtt_message)
-
+        print("hex je: " + hex_value)
         return jsonify({"message": "Hexadecimal string received", "value": hex_value}), 200
     except ValueError:
         return jsonify({"error": "Invalid hexadecimal value"}), 400
@@ -237,8 +232,9 @@ def retrieve_topic_names():
 @app.route('/component_data/<name>', methods=['GET'])
 def retrieve_component_data(name):
     query = f"""from(bucket: "{bucket}")
-    |> range(start: -10m)
-    |> filter(fn: (r) => r.name == "{name}")"""
+    |> range(start: -1h)
+    |> filter(fn: (r) => r.name == "{name}")
+    |> last()"""
     return handle_influx_query(query)
 
 
