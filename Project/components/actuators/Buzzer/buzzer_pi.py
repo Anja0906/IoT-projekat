@@ -1,6 +1,6 @@
 import time
 
-def buzz(pin, pitch, duration, callback, publish_event, settings, code, stop_event):
+def buzz(pin, pitch, duration, callback, publish_event, settings, code, stop_event,budilnik_event):
     import RPi.GPIO as GPIO
     pin = int(pin)
     GPIO.setmode(GPIO.BCM)
@@ -9,7 +9,7 @@ def buzz(pin, pitch, duration, callback, publish_event, settings, code, stop_eve
     delay = period / 2
 
     while True:
-        if stop_event.is_set():
+        if stop_event.is_set() or budilnik_event.is_set():
             for i in range(int(duration * pitch)):
                 GPIO.output(pin, True)
                 callback(publish_event, settings, code)

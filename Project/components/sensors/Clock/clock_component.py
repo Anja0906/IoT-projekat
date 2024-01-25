@@ -29,6 +29,7 @@ def on_message(client, userdata, msg):
         is_turned_off = False  # Resetujte is_turned_off svaki put kada se postavi novi alarm
         alarm_time = parsed_time
     elif msg.topic == "clock_turn_off":
+        mqtt_client.publish("budilnik/off", "")
         is_turned_off = True
         is_set = False
 
@@ -77,6 +78,7 @@ def clock_awaiter(delay, alarm_event):
             print("BUDILNIIIIK")
             alarm_event.set()
             is_set = True  # Postavite is_set na False nakon aktiviranja alarma
+            mqtt_client.publish("budilnik/on",str(current_time))
         else:
             alarm_event.clear()
         time.sleep(delay)
