@@ -95,6 +95,10 @@ def handle_budilnik_socket(data):
     print(data)
     socketio.emit('budilnik_data', data)
 
+def handle_alarm_socket(data):
+    print(data)
+    socketio.emit('alarm_data', data["value"])
+
 
 def on_connect(client, userdata, flags, rc):
     for topic in topics:
@@ -102,6 +106,8 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_message(client, userdata, msg):
+    # global broj_osoba_u_objektu
+    # print(broj_osoba_u_objektu)
     if msg.topic != "budilnik/on":
         data = json.loads(msg.payload.decode('utf-8'))
         topic = data['measurement']
@@ -114,8 +120,11 @@ def on_message(client, userdata, msg):
             handle_gyro(data)
         elif topic == "BedroomInfrared":
             handle_changed_color(data)
+        elif topic == "AlarmEventSet":
+            handle_alarm_socket(data)
     else:
         handle_budilnik_socket(msg.payload.decode())
+
 
 
 mqtt_client.on_connect = on_connect
