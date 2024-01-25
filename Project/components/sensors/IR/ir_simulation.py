@@ -4,6 +4,7 @@ import threading
 import paho.mqtt.client as mqtt
 
 from components.broker_settings import HOSTNAME, PORT
+
 client = mqtt.Client()
 client.connect(HOSTNAME, PORT, 60)
 client.subscribe("simulator/changeRgbColor")
@@ -40,11 +41,15 @@ def on_message(client, userdata, message):
     else:
         print("Hex value not found in the message")
 
+
 client.on_message = on_message
+
+
 def set_current_hex(button_hex):
     global current_button_name, current_button_hex
     current_button_hex = button_hex
     current_button_name = get_button_name(button_hex)
+    client.publish("RGBSet", current_button_name)
     on_message_thread_event.set()
 
 
