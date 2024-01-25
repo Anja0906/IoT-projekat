@@ -1,5 +1,8 @@
+import json
 import sys
 import threading
+
+from paho.mqtt import publish
 
 from components.actuators.Buzzer.buzzer_component import run_db
 from components.actuators.Dioda.dioda_component import run_dl
@@ -23,6 +26,7 @@ mqtt_client.connect(HOSTNAME, PORT, 60)
 mqtt_client.loop_start()
 
 mqtt_client.subscribe("alarm")
+mqtt_client.subscribe("alarm/off")
 mqtt_client.subscribe("ds1")
 mqtt_client.subscribe("ds2")
 mqtt_client.subscribe("CodeChanged")
@@ -47,18 +51,38 @@ code = ""
 
 
 def on_message(client, userdata, message):
+    alarm_payload = {
+        "measurement": "AlarmEventSet",
+        "simulated": True,
+        "runs_on": "PI",
+        "name": "ALARM",
+        "value": True
+    }
+    alarm_payload_clear = {
+        "measurement": "AlarmEventClear",
+        "simulated": True,
+        "runs_on": "PI",
+        "name": "ALARM",
+        "value": False
+    }
     global code
-    # if message.topic == "alarm":
-    #     alarm_event.set()
-    #     print(f"Topic: {message.topic}\nPoruka: {message.payload.decode()}")
+    if message.topic == "alarm":
+        alarm_event.set()
+        publish.single("AlarmEventSet", json.dumps(alarm_payload), hostname=HOSTNAME, port=PORT)
+        print(f"Topic: {message.topic}\nPoruka: {message.payload.decode()}")
+    if message.topic == "alarm/off":
+        alarm_event.clear()
+        publish.single("AlarmEventClear", json.dumps(alarm_payload_clear))
     if message.topic == "ds1":
         ds1_pressed_event.set()
         if changed_code.is_set():
             alarm_event.set()
+            publish.single("AlarmEventSet", json.dumps(alarm_payload))
         print(f"Topic: {message.topic}\nPoruka: {message.payload.decode()}")
     if message.topic == "ds2":
         ds2_pressed_event.set()
         if changed_code.is_set():
+            publish.single("AlarmEventSet", json.dumps(alarm_payload))
             alarm_event.set()
         print(f"Topic: {message.topic}\nPoruka: {message.payload.decode()}")
     if message.topic == "budilnik/on":
@@ -71,9 +95,11 @@ def on_message(client, userdata, message):
             changed_code.set()
         elif code == message.payload.decode():
             changed_code.clear()
-            if alarm_event.is_set(): alarm_event.clear()
-        else:
-            print("UPALIO SAM ALARM")
+            if alarm_event.is_set():
+                alarm_event.clear()
+                publish.single("AlarmEventClear", json.dumps(alarm_payload_clear))
+        if changed_code.is_set() and code != message.payload.decode():
+            mqtt_client.publish("AlarmEventSet", json.dumps(alarm_payload))
             alarm_event.set()
 
 

@@ -78,7 +78,7 @@ def clock_awaiter(delay, alarm_event):
             print("BUDILNIIIIK")
             alarm_event.set()
             is_set = True  # Postavite is_set na False nakon aktiviranja alarma
-            mqtt_client.publish("budilnik/on","")
+            mqtt_client.publish("budilnik/on",str(current_time))
         else:
             alarm_event.clear()
         time.sleep(delay)

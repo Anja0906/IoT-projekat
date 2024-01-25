@@ -2,12 +2,13 @@ import datetime
 import threading
 from queue import Queue
 
+import sock as sock
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 import paho.mqtt.client as mqtt
-
+from flask_socketio import SocketIO
 
 import json
 import os
@@ -21,6 +22,7 @@ load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
+socketio = SocketIO(app)
 broj_osoba_u_objektu = 0
 
 influxdb_token = os.environ.get('INFLUXDB_TOKEN')
@@ -47,6 +49,9 @@ topics = [
     "Clock",
     "RGB",
     "BedroomInfrared",
+    "budilnik/on",
+    "AlarmEventSet",
+    "AlarmEventClear"
 ]
 
 
@@ -81,8 +86,15 @@ def handle_door_sensor(data):
     else:
         print("Nema alarma na: " + ds_name)
 
+
 def handle_changed_color(data):
-    mqtt_client.publish("RGBChanged",data['value'])
+    mqtt_client.publish("RGBChanged", data['value'])
+
+
+def handle_budilnik_socket(data):
+    print(data)
+    socketio.emit('budilnik_data', data)
+
 
 def on_connect(client, userdata, flags, rc):
     for topic in topics:
@@ -90,18 +102,20 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_message(client, userdata, msg):
-    data = json.loads(msg.payload.decode('utf-8'))
-    topic = data['measurement']
-    save_to_db(data)
-
-    if topic == "Motion":
-        handle_motion(data)
-    elif topic == "DoorSensor":
-        handle_door_sensor(data)
-    elif topic == "Gyro":
-        handle_gyro(data)
-    elif topic == "BedroomInfrared":
-        handle_changed_color(data)
+    if msg.topic != "budilnik/on":
+        data = json.loads(msg.payload.decode('utf-8'))
+        topic = data['measurement']
+        save_to_db(data)
+        if topic == "Motion":
+            handle_motion(data)
+        elif topic == "DoorSensor":
+            handle_door_sensor(data)
+        elif topic == "Gyro":
+            handle_gyro(data)
+        elif topic == "BedroomInfrared":
+            handle_changed_color(data)
+    else:
+        handle_budilnik_socket(msg.payload.decode())
 
 
 mqtt_client.on_connect = on_connect
@@ -159,6 +173,7 @@ def handle_influx_query(query):
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
+
 @app.route('/set_clock_timer', methods=['POST'])
 def set_clock_timer():
     data = request.get_json()  # Pretpostavlja se da se podaci šalju kao JSON
@@ -172,6 +187,7 @@ def set_clock_timer():
     except ValueError:
         return jsonify({"error": "Neispravan format vremena"}), 400
 
+
 @app.route('/delete_clock_timer', methods=['POST'])
 def delete_clock_timer():
     try:
@@ -179,6 +195,7 @@ def delete_clock_timer():
         return jsonify({"status": "uspešno ugaseno", "time": datetime.datetime.now()}), 200
     except ValueError:
         return jsonify({"error": "Nije ugaseno"}), 400
+
 
 @app.route('/device_names', methods=['GET'])
 def retrieve_device_names():
@@ -257,6 +274,7 @@ def retrieve_pi_data(name):
     |> filter(fn: (r) => r.runs_on == "{name}")"""
     return handle_influx_query(query)
 
+
 @app.route('/set_code', methods=['POST'])
 def handle_post():
     data = request.get_json()
@@ -265,6 +283,12 @@ def handle_post():
         return jsonify({"error": "Parametar 'code' je obavezan"}), 400
     mqtt_client.publish("CodeChanged", my_param)
     return jsonify({"message": f"Primljeni parametar: {my_param}"}), 200
+
+
+@app.route('/set_off_alarm', methods=['GET'])
+def turn_off_alarm():
+    mqtt_client.publish("alarm/off", "")
+    return jsonify({"message": f"Alarm ugasen"}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
