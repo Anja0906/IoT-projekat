@@ -26,16 +26,8 @@ publisher_thread = threading.Thread(target=publisher_task, args=(publish_event, 
 publisher_thread.daemon = True
 publisher_thread.start()
 
-# key_sequence, publish_event, settings, code
-def dms_callback(result, publish_event, settings, code, verbose=False):
+def dms_callback(result, set_alarm_event, publish_event, settings, code):
     global publish_data_counter, publish_data_limit
-
-    if verbose:
-        t = time.localtime()
-        print("=" * 20)
-        print(f"Timestamp: {time.strftime('%H:%M:%S', t)}")
-        print(f"Code: {code}")
-        print(f"User entered: " + str(result))
     ms_payload = {
         "measurement": "MembraneSwitch",
         "simulated": settings['simulated'],
@@ -51,6 +43,10 @@ def dms_callback(result, publish_event, settings, code, verbose=False):
     if publish_data_counter >= publish_data_limit:
         publish_event.set()
 
+    if not settings['simulated'] and len(result) == 4:
+        publish.single("CodeChanged", result, hostname=HOSTNAME, port=PORT)
+        time.sleep(10)
+        set_alarm_event.set()
 
 def run_dms(settings, threads, stop_event, code):
     if settings['simulated']:

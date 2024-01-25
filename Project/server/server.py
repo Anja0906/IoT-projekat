@@ -165,8 +165,6 @@ def set_clock_timer():
     alarm_time = data.get('time')
     if not alarm_time:
         return jsonify({"error": "Vreme nije poslato"}), 400
-
-    # Parsiranje vremena
     try:
 
         mqtt_client.publish("clock", str(alarm_time))
@@ -259,6 +257,14 @@ def retrieve_pi_data(name):
     |> filter(fn: (r) => r.runs_on == "{name}")"""
     return handle_influx_query(query)
 
+@app.route('/set_code', methods=['POST'])
+def handle_post():
+    data = request.get_json()
+    my_param = data.get('code')
+    if not my_param:
+        return jsonify({"error": "Parametar 'code' je obavezan"}), 400
+    mqtt_client.publish("CodeChanged", my_param)
+    return jsonify({"message": f"Primljeni parametar: {my_param}"}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)

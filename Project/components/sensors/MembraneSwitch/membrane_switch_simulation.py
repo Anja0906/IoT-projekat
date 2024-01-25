@@ -1,19 +1,30 @@
-import random
+import threading
 import time
 
+import paho.mqtt.client as mqtt
 
-def generate_key_presses(max_length=8):
+from components.broker_settings import HOSTNAME, PORT
+changed_code = threading.Event()
+mqtt_client = mqtt.Client()
+mqtt_client.connect(HOSTNAME, PORT, 60)
+mqtt_client.loop_start()
+mqtt_client.subscribe("CodeChanged")
+
+dms_code = ""
+def on_message(client, userdata, message):
+    global dms_code
+    dms_code = message.payload.decode()
+    if len(dms_code) == 4:
+        changed_code.set()
+
+mqtt_client.on_message = on_message
+def run_keypad_simulator(delay, callback, set_is_alarm_active_event, code, publish_event, settings):
+    global dms_code
     while True:
-        key_presses = [str(random.randint(0, 9)) for _ in range(random.randint(1, max_length))]
-        yield ''.join(key_presses)
+        changed_code.wait()
+        if settings["simulated"]:
+            time.sleep(10)
+            set_is_alarm_active_event.set()
+            callback(dms_code, set_is_alarm_active_event, publish_event, settings, code)
+        changed_code.clear()
 
-def run_keypad_simulator(delay, callback, stop_event, code, publish_event, settings):
-    for key_sequence in generate_key_presses():
-        time.sleep(delay)
-        callback(key_sequence, publish_event, settings, code)
-        if stop_event.is_set():
-            break
-
-
-def keypad_callback(key_sequence, code):
-    print(f"Uneta šifra: {key_sequence}")

@@ -45,11 +45,11 @@ def ds_callback(stop_event,motion, publish_event, settings, code):
         publish_event.set()
     stop_event.clear()
 
-def run_ds(settings, threads, stop_event, code, client):
+def run_ds(settings, threads, stop_event, code):
     if settings['simulated']:
         from components.sensors.Button.button_simulation import run_ds_simulator
         print("Starting " + code + " simulator")
-        ds_thread = threading.Thread(target=run_ds_simulator, args=(0.7, ds_callback, stop_event, publish_event, settings, code, client))
+        ds_thread = threading.Thread(target=run_ds_simulator, args=(0.7, ds_callback, stop_event, publish_event, settings, code))
         ds_thread.start()
         threads.append(ds_thread)
         print(code + " simulator started\n")
@@ -57,7 +57,7 @@ def run_ds(settings, threads, stop_event, code, client):
         from components.sensors.Button.button_pi import press_button
         print("Starting " + code + " loop")
         pin = settings['pin']
-        ds_thread = threading.Thread(target=press_button, args=(pin, ds_callback, stop_event, publish_event, settings, code, client))
+        ds_thread = threading.Thread(target=press_button, args=(pin, ds_callback, stop_event, publish_event, settings, code))
         ds_thread.start()
         threads.append(ds_thread)
         print(code + " loop started")

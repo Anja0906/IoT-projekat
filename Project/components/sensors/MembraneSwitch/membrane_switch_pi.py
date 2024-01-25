@@ -37,7 +37,7 @@ def detect_motion(code, c1, c2, c3, c4, r1, r2, r3, r4, callback, stop_event, pu
         if GPIO.input(C4) == 1:
             print(characters[3])
         GPIO.output(line, GPIO.LOW)
-        callback(line, publish_event, settings, code)
+        callback(line, stop_event, publish_event, settings, code)
 
         try:
             while True:
