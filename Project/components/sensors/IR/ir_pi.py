@@ -1,7 +1,16 @@
+import json
+import threading
+
 import RPi.GPIO as GPIO
 from datetime import datetime
 import time
+from components.broker_settings import HOSTNAME, PORT
+import paho.mqtt.client as mqtt
 
+client = mqtt.Client()
+client.connect(HOSTNAME, PORT, 60)
+client.subscribe("simulator/changeRgbColor")
+client.loop_start()
 # Static program vars
 pin = 17
 Buttons = [0x300ff22dd, 0x300ffc23d, 0x300ff629d, 0x300ffa857, 0x300ff9867, 0x300ffb04f, 0x300ff6897, 0x300ff02fd,
@@ -9,7 +18,8 @@ Buttons = [0x300ff22dd, 0x300ffc23d, 0x300ff629d, 0x300ffa857, 0x300ff9867, 0x30
            0x300ff52ad]  # HEX code list
 ButtonsNames = ["LEFT", "RIGHT", "UP", "DOWN", "2", "3", "1", "OK", "4", "5", "6", "7", "8", "9", "*", "0",
                 "#"]  # String list in same order as HEX list
-
+function = ""
+ir_event = threading.Event()
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(pin, GPIO.IN)
 
@@ -66,6 +76,17 @@ def getBinary():
     return binary
 
 
+def on_message(client, userdata, message):
+    global function
+    data = json.loads(message.payload.decode())
+    function = data.get('hex_value')
+    ir_event.set()
+
+
+client.on_message = on_message
+
+
+
 # Convert value to hex
 def convertHex(binaryValue):
     tmpB2 = int(str(binaryValue), 2)  # Temporarely propper base 2
@@ -73,8 +94,13 @@ def convertHex(binaryValue):
 
 
 def run_ir_receiver(delay, callback, stop_event, publish_event, settings, code):
+    global function
     while True:
-        inData = convertHex(getBinary())  # Runs subs to get incoming hex value
+        if(ir_event.is_set()):
+            inData = function
+            ir_event.clear()
+        else:
+            inData = convertHex(getBinary())  # Runs subs to get incoming hex value
         for button in range(len(Buttons)):  # Runs through every value in list
             if hex(Buttons[button]) == inData:  # Checks this against incoming
                 callback(ButtonsNames[button], publish_event, settings, code)
