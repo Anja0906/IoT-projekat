@@ -26,7 +26,10 @@ mqtt_client.subscribe("alarm")
 mqtt_client.subscribe("ds1")
 mqtt_client.subscribe("ds2")
 mqtt_client.subscribe("CodeChanged")
+mqtt_client.subscribe("budilnik/on")
+mqtt_client.subscribe("budilnik/off")
 
+budilnik_event = threading.Event()
 ds1_pressed_event = threading.Event()
 alarm_event = threading.Event()
 read_from_db_event_dus1 = threading.Event()
@@ -45,9 +48,9 @@ code = ""
 
 def on_message(client, userdata, message):
     global code
-    if message.topic == "alarm":
-        alarm_event.set()
-        print(f"Topic: {message.topic}\nPoruka: {message.payload.decode()}")
+    # if message.topic == "alarm":
+    #     alarm_event.set()
+    #     print(f"Topic: {message.topic}\nPoruka: {message.payload.decode()}")
     if message.topic == "ds1":
         ds1_pressed_event.set()
         if changed_code.is_set():
@@ -58,6 +61,10 @@ def on_message(client, userdata, message):
         if changed_code.is_set():
             alarm_event.set()
         print(f"Topic: {message.topic}\nPoruka: {message.payload.decode()}")
+    if message.topic == "budilnik/on":
+        budilnik_event.set()
+    if message.topic == "budilnik/off":
+        budilnik_event.clear()
     if message.topic == "CodeChanged":
         if not changed_code.is_set():
             code = message.payload.decode()
@@ -84,8 +91,7 @@ def run_pi_1(settings, threads, stop_event, mqtt_client):
     run_dpir(settings['RPIR2'], threads, stop_event, 'RPIR2')
     run_dht(settings['RDHT1'], threads, 'RDHT1')
     run_dht(settings['RDHT2'], threads, 'RDHT2')
-    run_db(settings['DB'], threads, alarm_event, code)
-
+    run_db(settings['DB'], threads, alarm_event, alarm_event, "DB")
 
 
 # Todo: Napraviti globalnu promenljivu za button_pressed koja simulira stisak dugmeta i setuje ds1_pressed_event
@@ -106,13 +112,13 @@ def run_pi_3(settings, threads, stop_event, mqtt_client):
     run_clock(settings['B4SD'], threads, alarm_clock, 'B4SD')
     run_ir_receiver(settings['BIR'], threads, ir_changed_event, 'BIR')
     run_rgb_light(settings['BRGB'], threads, ir_changed_event, 'BRGB')
-    run_db(settings['BB'], threads, alarm_event, code)
+    run_db(settings['BB'], threads, alarm_event, budilnik_event, "BB")
 
 
 def run_system(settings, threads, stop_event, mqtt_client):
     run_pi_1(settings, threads, stop_event, mqtt_client)
-    run_pi_2(settings, threads, stop_event,mqtt_client)
-    run_pi_3(settings, threads, stop_event,mqtt_client)
+    run_pi_2(settings, threads, stop_event, mqtt_client)
+    run_pi_3(settings, threads, stop_event, mqtt_client)
     for thread in threads:
         thread.join()
 

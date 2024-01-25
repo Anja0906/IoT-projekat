@@ -47,15 +47,15 @@ def db_callback(publish_event, settings, code):
     if publish_data_counter >= publish_data_limit:
         publish_event.set()
 
-def run_db(settings, threads, stop_event, code):
+def run_db(settings, threads, stop_event,budilnik_event, code):
     pin = settings['pin']
     if settings['simulated']:
-        db_thread = threading.Thread(target=buzz_simulation, args=(pin,10,2, db_callback, publish_event, settings, code, stop_event))
+        db_thread = threading.Thread(target=buzz_simulation, args=(pin,10,2, db_callback, publish_event, settings, code, stop_event,budilnik_event))
         db_thread.start()
         threads.append(db_thread)
 
     else:
-        db_thread = threading.Thread(target=buzz, args=(pin,330,2, db_callback, publish_event, settings, code, stop_event))
+        db_thread = threading.Thread(target=buzz, args=(pin,330,2, db_callback, publish_event, settings, code, stop_event,budilnik_event))
         db_thread.start()
         threads.append(db_thread)
 
