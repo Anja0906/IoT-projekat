@@ -8,15 +8,16 @@ def buzz(pin, pitch, duration, callback, publish_event, settings, code, stop_eve
     period = 1.0 / pitch
     delay = period / 2
 
-    while not stop_event.is_set():
-        for i in range(int(duration * pitch)):
-            GPIO.output(pin, True)
-            callback(publish_event, settings, code)
-            time.sleep(delay)
-            GPIO.output(pin, False)
-            callback(publish_event, settings, code)
-            time.sleep(delay)
+    while True:
+        if stop_event.is_set():
+            for i in range(int(duration * pitch)):
+                GPIO.output(pin, True)
+                callback(publish_event, settings, code)
+                time.sleep(delay)
+                GPIO.output(pin, False)
+                callback(publish_event, settings, code)
+                time.sleep(delay)
 
-        time.sleep(1)
+            time.sleep(1)
 
-    GPIO.cleanup()
+    # GPIO.cleanup()

@@ -23,6 +23,7 @@ def run_keypad_simulator(delay, callback, set_is_alarm_active_event, code, publi
     while True:
         changed_code.wait()
         if settings["simulated"]:
+            print(dms_code)
             time.sleep(10)
             set_is_alarm_active_event.set()
             callback(dms_code, set_is_alarm_active_event, publish_event, settings, code)

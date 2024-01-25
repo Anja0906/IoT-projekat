@@ -2,11 +2,14 @@ import json
 import threading
 import time
 import random
+
+from components.broker_settings import HOSTNAME, PORT
+
 ir_changed_event1 = threading.Event()
 from components.sensors.IR.ir_simulation import get_current_button_name
 import paho.mqtt.client as mqtt
 mqtt_client = mqtt.Client()
-mqtt_client.connect("localhost", 1883, 60)
+mqtt_client.connect(HOSTNAME, PORT, 60)
 mqtt_client.loop_start()
 mqtt_client.subscribe("RGBChanged")
 from project_settings.settings import load_settings

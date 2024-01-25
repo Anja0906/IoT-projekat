@@ -1,6 +1,9 @@
 import sys
 import threading
+
+from components.actuators.Buzzer.buzzer_component import run_db
 from components.actuators.Dioda.dioda_component import run_dl
+from components.broker_settings import HOSTNAME, PORT
 from components.sensors.Button.button_component import run_ds
 from components.sensors.Clock.clock_component import run_clock
 from components.sensors.DHT.dht_component import run_dht
@@ -16,7 +19,7 @@ import paho.mqtt.client as mqtt
 
 # MQTT ------------------------------------------------------------
 mqtt_client = mqtt.Client()
-mqtt_client.connect("localhost", 1883, 60)
+mqtt_client.connect(HOSTNAME, PORT, 60)
 mqtt_client.loop_start()
 
 mqtt_client.subscribe("alarm")
@@ -63,6 +66,7 @@ def on_message(client, userdata, message):
             changed_code.clear()
             if alarm_event.is_set(): alarm_event.clear()
         else:
+            print("UPALIO SAM ALARM")
             alarm_event.set()
 
 
@@ -72,19 +76,16 @@ mqtt_client.on_message = on_message
 # PI Functions ---------------------------------------------------------------------------
 def run_pi_1(settings, threads, stop_event, mqtt_client):
     run_ds(settings['DS1'], threads, ds1_pressed_event, 'DS1')
-    # run_dl(settings["DL"], threads, pir1_motion_detected_event, "DL")
-    # run_dus(settings['DUS1'], threads, 'DUS1')
-    # run_dpir(settings['DPIR1'], threads, pir1_motion_detected_event, 'DPIR1')
+    run_dl(settings["DL"], threads, pir1_motion_detected_event, "DL")
+    run_dus(settings['DUS1'], threads, 'DUS1')
+    run_dpir(settings['DPIR1'], threads, pir1_motion_detected_event, 'DPIR1')
     run_dms(settings['DMS'], threads, changed_code, 'DMS')
-    # run_dpir(settings['RPIR1'], threads, stop_event, 'RPIR1')
-    # run_dpir(settings['RPIR2'], threads, stop_event, 'RPIR2')
-    # run_dht(settings['RDHT1'], threads, 'RDHT1')
-    # run_dht(settings['RDHT2'], threads, 'RDHT2')
-    # run db
-    while True:
-        alarm_event.wait()
-        print("\n Oglasio see!!!!!!!!!!!!")
-        alarm_event.clear()
+    run_dpir(settings['RPIR1'], threads, stop_event, 'RPIR1')
+    run_dpir(settings['RPIR2'], threads, stop_event, 'RPIR2')
+    run_dht(settings['RDHT1'], threads, 'RDHT1')
+    run_dht(settings['RDHT2'], threads, 'RDHT2')
+    run_db(settings['DB'], threads, alarm_event, code)
+
 
 
 # Todo: Napraviti globalnu promenljivu za button_pressed koja simulira stisak dugmeta i setuje ds1_pressed_event
@@ -105,26 +106,21 @@ def run_pi_3(settings, threads, stop_event, mqtt_client):
     run_clock(settings['B4SD'], threads, alarm_clock, 'B4SD')
     run_ir_receiver(settings['BIR'], threads, ir_changed_event, 'BIR')
     run_rgb_light(settings['BRGB'], threads, ir_changed_event, 'BRGB')
-    # run BB
+    run_db(settings['BB'], threads, alarm_event, code)
 
 
 def run_system(settings, threads, stop_event, mqtt_client):
     run_pi_1(settings, threads, stop_event, mqtt_client)
-    # run_pi_2(settings, threads, stop_event,mqtt_client)
-    # run_pi_3(settings, threads, stop_event,mqtt_client)
+    run_pi_2(settings, threads, stop_event,mqtt_client)
+    run_pi_3(settings, threads, stop_event,mqtt_client)
     for thread in threads:
         thread.join()
 
 
-# PI Functions ---------------------------------------------------------------------------
-
-
 if __name__ == "__main__":
-
     settings = load_settings()
     threads = []
     stop_event = threading.Event()
-
     try:
         while True:
             run_system(settings, threads, stop_event, mqtt_client)
