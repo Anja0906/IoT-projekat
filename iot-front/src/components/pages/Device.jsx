@@ -1,18 +1,24 @@
 import React, { useEffect, useState } from "react";
 import {
+  deleteClockTimer,
   getComponentData,
   getDeviceNames,
   sendHexValue,
   setClockTimer,
   setCode,
   simulateDevice,
+  turnOffAlarm,
 } from "../../services/DeviceService";
 import {
   CenteredContainer,
   StyledOption,
   StyledSelect,
 } from "../styled/SelectStyled";
-import { ButtonNames, SimulatedButtons, urlGraphs } from "../../services/constants";
+import {
+  ButtonNames,
+  SimulatedButtons,
+  urlGraphs,
+} from "../../services/constants";
 import ComponentDataTable from "../shared/ComponentDataTable";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -23,6 +29,8 @@ const Device = () => {
   const [componentData, setComponentData] = useState(null);
   const [selectedTime, setSelectedTime] = useState(new Date());
   const [inputValue, setInputValue] = useState("");
+  const [responseMessage, setResponseMessage] = useState('');
+  const [error, setError] = useState('');
 
   const handleSelectChange = async (event) => {
     const newDevice = event.target.value;
@@ -37,6 +45,13 @@ const Device = () => {
   const handleActivateDevice = async () => {
     const formattedTime = formatTimeForRequest(selectedTime);
     const response = await setClockTimer(formattedTime);
+    if (response && response.status === "uspešno") {
+      console.log("Vreme uspešno postavljeno:", response.time);
+    }
+  };
+
+  const handleAlarm = async () => {
+    const response = await turnOffAlarm();
     if (response && response.status === "uspešno") {
       console.log("Vreme uspešno postavljeno:", response.time);
     }
@@ -80,7 +95,16 @@ const Device = () => {
       console.log("Neispravan unos!");
     }
   };
-
+  const handleDeleteClockTimer = async () => {
+    try {
+      const response = await deleteClockTimer();
+      setResponseMessage(response.status || "Uspešno ugašeno"); // Obrada odgovora
+      setError(""); // Resetovanje greške
+    } catch (err) {
+      setError("Došlo je do greške"); // Obrada greške
+      setResponseMessage(""); // Resetovanje odgovora
+    }
+  };
   useEffect(() => {
     const fetchData = async () => {
       const data = await getDeviceNames();
@@ -100,7 +124,7 @@ const Device = () => {
           </StyledOption>
         ))}
       </StyledSelect>
-
+      <button onClick={handleAlarm}>Turn Off Alarm</button>
       {selectedDevice && (
         <>
           <h2>Selected Device: {selectedDevice}</h2>
@@ -128,6 +152,9 @@ const Device = () => {
             dateFormat="Pp"
           />
           <button onClick={handleActivateDevice}>Set Clock Timer</button>
+          <button onClick={handleDeleteClockTimer}>Ugasi Tajmer</button>
+          {responseMessage && <p>{responseMessage}</p>}
+          {error && <p style={{ color: "red" }}>{error}</p>}
         </div>
       )}
       {(selectedDevice === "DS1" || selectedDevice === "DS2") && (
@@ -147,12 +174,15 @@ const Device = () => {
       )}
       {selectedDevice === "BIR" && (
         <div className="remote-control">
-        {ButtonNames.map((name, index) => (
-          <button key={index} onClick={() => handleRemoteButtonClick(SimulatedButtons[index])}>
-            {name}
-          </button>
-        ))}
-      </div>
+          {ButtonNames.map((name, index) => (
+            <button
+              key={index}
+              onClick={() => handleRemoteButtonClick(SimulatedButtons[index])}
+            >
+              {name}
+            </button>
+          ))}
+        </div>
       )}
     </CenteredContainer>
   );

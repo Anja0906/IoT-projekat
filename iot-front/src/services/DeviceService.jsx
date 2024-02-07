@@ -41,6 +41,16 @@ export const setClockTimer = async (time) => {
   }
 };
 
+export const turnOffAlarm = async (time) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/set_off_alarm`,  {});
+    return response.data;
+  } catch (error) {
+    console.error("Error:", error);
+    return null;
+  }
+};
+
 export const simulateDevice = async (deviceName) => {
   try {
     const endpoint = deviceName === 'DS1' ? 'simulate_ds1' : 'simulate_ds2';
@@ -69,6 +79,16 @@ export const sendHexValue = async (hexValue) => {
     return response.data;
   } catch (error) {
     console.error("Error sending hex value:", error);
+    return null;
+  }
+};
+
+export const deleteClockTimer = async () => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/delete_clock_timer`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting clock timer:", error);
     return null;
   }
 };
