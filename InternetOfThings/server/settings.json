@@ -1,0 +1,161 @@
+{
+  "DHT1": {
+    "name": "RDH1",
+    "simulated": true,
+    "pin": 26,
+    "runs_on": "PI1"
+  },
+  "DHT2": {
+    "name": "RDH2",
+    "simulated": true,
+    "pin": 6,
+    "runs_on": "PI1"
+  },
+  "DUS1": {
+    "name": "DUS1",
+    "simulated": true,
+    "echo_pin": 23,
+    "trig_pin": 24,
+    "max_iter": 100,
+    "runs_on": "PI1"
+  },
+  "RPIR1": {
+    "name": "RPIR1",
+    "simulated": true,
+    "pin": 10,
+    "runs_on": "PI1"
+  },
+  "RPIR2": {
+    "name": "RPIR2",
+    "simulated": true,
+    "pin": 3,
+    "runs_on": "PI1"
+  },
+  "DPIR1": {
+    "name": "DPIR1",
+    "simulated": true,
+    "pin": 17,
+    "runs_on": "PI1"
+  },
+  "DS1": {
+    "name": "DS1",
+    "simulated": true,
+    "pin": 27,
+    "runs_on": "PI1"
+  },
+  "DMS": {
+    "name": "DMS",
+    "simulated": true,
+    "R1": 25,
+    "R2": 8,
+    "R3": 7,
+    "R4": 1,
+    "C1": 12,
+    "C2": 16,
+    "C3": 20,
+    "C4": 21,
+    "runs_on": "PI1"
+  },
+  "DB": {
+    "name": "DB",
+    "simulated": true,
+    "pin": 5,
+    "runs_on": "PI1"
+  },
+  "DL": {
+    "name": "DL",
+    "simulated": true,
+    "pin": 22,
+    "runs_on": "PI1"
+  },
+  "GDHT": {
+    "name": "GDHT",
+    "simulated": true,
+    "pin": 26,
+    "runs_on": "PI2"
+  },
+  "GLCD": {
+    "name": "GLCD",
+    "simulated": true,
+    "pin_rs": 25,
+    "pin_e": 24,
+    "pins_db": [23, 17, 21, 22],
+    "runs_on": "PI2"
+  },
+  "RDHT3": {
+    "name": "RDHT3",
+    "simulated": true,
+    "pin": 6,
+    "runs_on": "PI2"
+  },
+  "DUS2": {
+    "name": "DUS2",
+    "simulated": true,
+    "echo_pin": 5,
+    "trig_pin": 16,
+    "max_iter": 100,
+    "runs_on": "PI2"
+  },
+  "RPIR3": {
+    "name": "RPIR3",
+    "simulated": true,
+    "pin": 10,
+    "runs_on": "PI2"
+  },
+  "DPIR2": {
+    "name": "DPIR2",
+    "simulated": true,
+    "pin": 3,
+    "runs_on": "PI2"
+  },
+  "DS2": {
+    "name": "DS2",
+    "simulated": true,
+    "pin": 27,
+    "runs_on": "PI2"
+  },
+  "GSG": {
+    "name": "GSG",
+    "simulated": true,
+    "runs_on": "PI2"
+  },
+  "BB": {
+    "name": "BB",
+    "simulated": true,
+    "pin": 5,
+    "runs_on": "PI3"
+  },
+  "RPIR4": {
+    "name": "RPIR4",
+    "simulated": true,
+    "pin": 19,
+    "runs_on": "PI3"
+  },
+  "RDHT4": {
+    "name": "RDHT4",
+    "simulated": true,
+    "pin": 6,
+    "runs_on": "PI3"
+  },
+  "BIR": {
+    "name": "BIR",
+    "simulated": true,
+    "pin": 13,
+    "runs_on": "PI3"
+  },
+  "BRGB": {
+    "name": "BRGB",
+    "simulated": true,
+    "red_pin": 16,
+    "blue_pin": 12,
+    "green_pin": 26,
+    "runs_on": "PI3"
+  },
+  "B4SD": {
+    "name": "B4SD",
+    "simulated": true,
+    "segments": [11, 4, 23, 8, 7, 10, 18, 25],
+    "digits": [22, 27, 17, 24],
+    "runs_on": "PI3"
+  }
+}
