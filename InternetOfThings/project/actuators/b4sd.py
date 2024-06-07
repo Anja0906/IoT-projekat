@@ -17,9 +17,9 @@ def update_data(topic, data):
     elif topic == "front-bb-off":
         delay = 0.001
 
-def connect_mqtt():
+def connect_mqtt(hostname,port):
     mqtt_client = mqtt.Client()
-    mqtt_client.connect("localhost", 1883, 60)
+    mqtt_client.connect(hostname, port, 60)
     mqtt_client.loop_start()
     mqtt_client.on_connect = on_connect
     mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))
@@ -67,8 +67,8 @@ class B4SD:
         return "{}:{}".format(n[0:2], n[2:])
 
 
-def run_b4sd_loop(b4sd, delay, callback, stop_event, publish_event, settings):
-    connect_mqtt()
+def run_b4sd_loop(b4sd, delay, callback, stop_event, publish_event, settings,hostname,port):
+    connect_mqtt(hostname,port)
     while True:
         value = b4sd.show_value()
         callback(value, publish_event, settings)

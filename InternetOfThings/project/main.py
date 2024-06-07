@@ -17,7 +17,7 @@ from components.lcd import run_lcd
 from components.b4sd import run_b4sd
 from components.IR import run_infrared
 from components.rgb import run_rgb
-from settings.settings import load_settings
+from settings.settings import load_settings,HOSTNAME,PORT
 
 try:
     import RPi.GPIO as GPIO
@@ -42,7 +42,7 @@ mqtt_client.on_connect = on_connect
 mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))
 
 def connect_mqtt():
-    mqtt_client.connect("localhost", 1883, 60)
+    mqtt_client.connect(HOSTNAME, PORT, 60)
     mqtt_client.loop_start()
 
 def menu():
@@ -172,9 +172,9 @@ def run_pi3(settings, threads, stop_event, buzzer_stop_event):
     if bir_settings:
         run_infrared(bir_settings, threads, stop_event)
     if brgb_settings:
-        run_rgb(brgb_settings, threads, stop_event)
+        run_rgb(brgb_settings, threads, stop_event,HOSTNAME,PORT)
     if b4sd_settings:
-        run_b4sd(b4sd_settings, threads, stop_event)
+        run_b4sd(b4sd_settings, threads, stop_event,HOSTNAME,PORT)
 
     alarm_clock_thread = threading.Thread(target=run_alarm_clock, args=(bb_settings, threads, buzzer_stop_event))
     alarm_clock_thread.start()

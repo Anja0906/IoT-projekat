@@ -469,6 +469,22 @@
         "documentation": {}
     },
     {
+        "label": "HOSTNAME",
+        "importPath": "settings.settings",
+        "description": "settings.settings",
+        "isExtraImport": true,
+        "detail": "settings.settings",
+        "documentation": {}
+    },
+    {
+        "label": "PORT",
+        "importPath": "settings.settings",
+        "description": "settings.settings",
+        "isExtraImport": true,
+        "detail": "settings.settings",
+        "documentation": {}
+    },
+    {
         "label": "run_ir_simulator",
         "importPath": "simulations.IR",
         "description": "simulations.IR",
@@ -973,7 +989,7 @@
         "kind": 2,
         "importPath": "InternetOfThings.project.actuators.b4sd",
         "description": "InternetOfThings.project.actuators.b4sd",
-        "peekOfCode": "def update_data(topic, data):\n    global delay\n    print(\"bb data: \", data, \"received from topic \" + topic)\n    if topic == \"front-bb-on\":\n        delay = 0.5\n    elif topic == \"front-bb-off\":\n        delay = 0.001\ndef connect_mqtt():\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(\"localhost\", 1883, 60)",
+        "peekOfCode": "def update_data(topic, data):\n    global delay\n    print(\"bb data: \", data, \"received from topic \" + topic)\n    if topic == \"front-bb-on\":\n        delay = 0.5\n    elif topic == \"front-bb-off\":\n        delay = 0.001\ndef connect_mqtt(hostname,port):\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(hostname, port, 60)",
         "detail": "InternetOfThings.project.actuators.b4sd",
         "documentation": {}
     },
@@ -982,7 +998,7 @@
         "kind": 2,
         "importPath": "InternetOfThings.project.actuators.b4sd",
         "description": "InternetOfThings.project.actuators.b4sd",
-        "peekOfCode": "def connect_mqtt():\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(\"localhost\", 1883, 60)\n    mqtt_client.loop_start()\n    mqtt_client.on_connect = on_connect\n    mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\nclass B4SD:\n    def __init__(self, settings):\n        # GPIO ports for the 7seg pins\n        self.segments = settings[\"segments\"]",
+        "peekOfCode": "def connect_mqtt(hostname,port):\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(hostname, port, 60)\n    mqtt_client.loop_start()\n    mqtt_client.on_connect = on_connect\n    mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\nclass B4SD:\n    def __init__(self, settings):\n        # GPIO ports for the 7seg pins\n        self.segments = settings[\"segments\"]",
         "detail": "InternetOfThings.project.actuators.b4sd",
         "documentation": {}
     },
@@ -991,7 +1007,7 @@
         "kind": 2,
         "importPath": "InternetOfThings.project.actuators.b4sd",
         "description": "InternetOfThings.project.actuators.b4sd",
-        "peekOfCode": "def run_b4sd_loop(b4sd, delay, callback, stop_event, publish_event, settings):\n    connect_mqtt()\n    while True:\n        value = b4sd.show_value()\n        callback(value, publish_event, settings)\n        if stop_event.is_set():\n            GPIO.cleanup()\n            break",
+        "peekOfCode": "def run_b4sd_loop(b4sd, delay, callback, stop_event, publish_event, settings,hostname,port):\n    connect_mqtt(hostname,port)\n    while True:\n        value = b4sd.show_value()\n        callback(value, publish_event, settings)\n        if stop_event.is_set():\n            GPIO.cleanup()\n            break",
         "detail": "InternetOfThings.project.actuators.b4sd",
         "documentation": {}
     },
@@ -1054,7 +1070,7 @@
         "kind": 6,
         "importPath": "InternetOfThings.project.actuators.rgb",
         "description": "InternetOfThings.project.actuators.rgb",
-        "peekOfCode": "class RGB:\n    def __init__(self, settings):\n        self.red_pin = settings['red_pin']\n        self.blue_pin = settings['blue_pin']\n        self.green_pin = settings['green_pin']\n        self.status = \"off\"\n        self.name = settings['name']\n        GPIO.setup(self.red_pin, GPIO.OUT)\n        GPIO.setup(self.blue_pin, GPIO.OUT)\n        GPIO.setup(self.green_pin, GPIO.OUT)",
+        "peekOfCode": "class RGB:\n    def __init__(self, settings,hostname,port):\n        self.red_pin = settings['red_pin']\n        self.blue_pin = settings['blue_pin']\n        self.green_pin = settings['green_pin']\n        self.status = \"off\"\n        self.name = settings['name']\n        GPIO.setup(self.red_pin, GPIO.OUT)\n        GPIO.setup(self.blue_pin, GPIO.OUT)\n        GPIO.setup(self.green_pin, GPIO.OUT)",
         "detail": "InternetOfThings.project.actuators.rgb",
         "documentation": {}
     },
@@ -1072,7 +1088,7 @@
         "kind": 2,
         "importPath": "InternetOfThings.project.actuators.rgb",
         "description": "InternetOfThings.project.actuators.rgb",
-        "peekOfCode": "def on_connect(client, userdata, flags, rc):\n    client.subscribe(\"data/ir\")\n    client.subscribe(\"change/rgb\")\ndef update_data(topic, data):\n    global new_action\n    print(\"rgb data: \", data, \"received from topic \" + topic)\n    new_action = change_color(data[\"value\"])\ndef connect_mqtt():\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(\"localhost\", 1883, 60)",
+        "peekOfCode": "def on_connect(client, userdata, flags, rc):\n    client.subscribe(\"data/ir\")\n    client.subscribe(\"change/rgb\")\ndef update_data(topic, data):\n    global new_action\n    print(\"rgb data: \", data, \"received from topic \" + topic)\n    new_action = change_color(data[\"value\"])\ndef connect_mqtt(hostname,port):\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(hostname, port, 60)",
         "detail": "InternetOfThings.project.actuators.rgb",
         "documentation": {}
     },
@@ -1081,7 +1097,7 @@
         "kind": 2,
         "importPath": "InternetOfThings.project.actuators.rgb",
         "description": "InternetOfThings.project.actuators.rgb",
-        "peekOfCode": "def update_data(topic, data):\n    global new_action\n    print(\"rgb data: \", data, \"received from topic \" + topic)\n    new_action = change_color(data[\"value\"])\ndef connect_mqtt():\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(\"localhost\", 1883, 60)\n    mqtt_client.loop_start()\n    mqtt_client.on_connect = on_connect\n    mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))",
+        "peekOfCode": "def update_data(topic, data):\n    global new_action\n    print(\"rgb data: \", data, \"received from topic \" + topic)\n    new_action = change_color(data[\"value\"])\ndef connect_mqtt(hostname,port):\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(hostname, port, 60)\n    mqtt_client.loop_start()\n    mqtt_client.on_connect = on_connect\n    mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))",
         "detail": "InternetOfThings.project.actuators.rgb",
         "documentation": {}
     },
@@ -1090,7 +1106,7 @@
         "kind": 2,
         "importPath": "InternetOfThings.project.actuators.rgb",
         "description": "InternetOfThings.project.actuators.rgb",
-        "peekOfCode": "def connect_mqtt():\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(\"localhost\", 1883, 60)\n    mqtt_client.loop_start()\n    mqtt_client.on_connect = on_connect\n    mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\nclass RGB:\n    def __init__(self, settings):\n        self.red_pin = settings['red_pin']\n        self.blue_pin = settings['blue_pin']",
+        "peekOfCode": "def connect_mqtt(hostname,port):\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(hostname, port, 60)\n    mqtt_client.loop_start()\n    mqtt_client.on_connect = on_connect\n    mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\nclass RGB:\n    def __init__(self, settings,hostname,port):\n        self.red_pin = settings['red_pin']\n        self.blue_pin = settings['blue_pin']",
         "detail": "InternetOfThings.project.actuators.rgb",
         "documentation": {}
     },
@@ -1108,7 +1124,7 @@
         "kind": 2,
         "importPath": "InternetOfThings.project.actuators.rgb",
         "description": "InternetOfThings.project.actuators.rgb",
-        "peekOfCode": "def run_rgb_loop(rgb, delay, callback, stop_event, publish_event, settings):\n    connect_mqtt()\n    rgb.turnOff()\n    while True:\n        if new_action != rgb.status:\n            rgb.status = new_action\n            change_light(rgb)\n            callback(rgb.status, publish_event, settings)\n        if stop_event.is_set():\n            GPIO.cleanup()",
+        "peekOfCode": "def run_rgb_loop(rgb, delay, callback, stop_event, publish_event, settings,hostname,port):\n    connect_mqtt(hostname, port)\n    rgb.turnOff()\n    while True:\n        if new_action != rgb.status:\n            rgb.status = new_action\n            change_light(rgb)\n            callback(rgb.status, publish_event, settings)\n        if stop_event.is_set():\n            GPIO.cleanup()",
         "detail": "InternetOfThings.project.actuators.rgb",
         "documentation": {}
     },
@@ -1234,7 +1250,7 @@
         "kind": 2,
         "importPath": "InternetOfThings.project.components.b4sd",
         "description": "InternetOfThings.project.components.b4sd",
-        "peekOfCode": "def run_b4sd(settings, threads, stop_event):\n    if settings['simulated']:\n        print(\"Starting {} simulator\".format(settings[\"name\"]))\n        b4sd_thread = threading.Thread(target=run_b4sd_simulator, args=(2, b4sd_callback, stop_event, publish_event, settings))\n        b4sd_thread.start()\n        threads.append(b4sd_thread)\n        print(\"{0} simulator started\".format(settings[\"name\"]))\n    else:\n        from sensors.b4sd import run_b4sd_loop, B4SD\n        print(\"Starting {} loop\".format(settings[\"name\"]))",
+        "peekOfCode": "def run_b4sd(settings, threads, stop_event,hostname,port):\n    if settings['simulated']:\n        print(\"Starting {} simulator\".format(settings[\"name\"]))\n        b4sd_thread = threading.Thread(target=run_b4sd_simulator, args=(2, b4sd_callback, stop_event, publish_event, settings))\n        b4sd_thread.start()\n        threads.append(b4sd_thread)\n        print(\"{0} simulator started\".format(settings[\"name\"]))\n    else:\n        from sensors.b4sd import run_b4sd_loop, B4SD\n        print(\"Starting {} loop\".format(settings[\"name\"]))",
         "detail": "InternetOfThings.project.components.b4sd",
         "documentation": {}
     },
@@ -1990,7 +2006,7 @@
         "kind": 2,
         "importPath": "InternetOfThings.project.components.rgb",
         "description": "InternetOfThings.project.components.rgb",
-        "peekOfCode": "def run_rgb(settings, threads, stop_event):\n    if settings['simulated']:\n        print(\"Starting {} simulator\".format(settings[\"name\"]))\n        rgb_thread = threading.Thread(target=run_rgb_simulator, args=(2, rgb_callback, stop_event, publish_event, settings))\n        rgb_thread.start()\n        threads.append(rgb_thread)\n        print(\"{0} simulator started\".format(settings[\"name\"]))\n    else:\n        from sensors.rgb import run_rgb_loop, RGB\n        print(\"Starting {} loop\".format(settings[\"name\"]))",
+        "peekOfCode": "def run_rgb(settings, threads, stop_event,hostname,port):\n    if settings['simulated']:\n        print(\"Starting {} simulator\".format(settings[\"name\"]))\n        rgb_thread = threading.Thread(target=run_rgb_simulator, args=(2, rgb_callback, stop_event, publish_event, settings))\n        rgb_thread.start()\n        threads.append(rgb_thread)\n        print(\"{0} simulator started\".format(settings[\"name\"]))\n    else:\n        from sensors.rgb import run_rgb_loop, RGB\n        print(\"Starting {} loop\".format(settings[\"name\"]))",
         "detail": "InternetOfThings.project.components.rgb",
         "documentation": {}
     },
@@ -3169,7 +3185,7 @@
         "kind": 2,
         "importPath": "InternetOfThings.project.simulations.rgb",
         "description": "InternetOfThings.project.simulations.rgb",
-        "peekOfCode": "def map_color(key):\n    match key:\n        case \"1\":\n            return \"red\"\n        case \"2\":\n            return \"green\"\n        case \"3\":\n            return \"blue\"\n        case \"4\":\n            return \"yellow\"",
+        "peekOfCode": "def map_color(key):\n    if key == \"1\":\n        return \"red\"\n    elif key == \"2\":\n        return \"green\"\n    elif key == \"3\":\n        return \"blue\"\n    elif key == \"4\":\n        return \"yellow\"\n    elif key == \"5\":",
         "detail": "InternetOfThings.project.simulations.rgb",
         "documentation": {}
     },
@@ -3214,7 +3230,7 @@
         "kind": 5,
         "importPath": "InternetOfThings.project.simulations.rgb",
         "description": "InternetOfThings.project.simulations.rgb",
-        "peekOfCode": "status = \"off\"\nnew_action = \"off\"\nall_states = [\"red\", \"green\", \"blue\", \"yellow\", \"purple\", \"lightBlue\", \"white\", \"off\"]\ndef map_color(key):\n    match key:\n        case \"1\":\n            return \"red\"\n        case \"2\":\n            return \"green\"\n        case \"3\":",
+        "peekOfCode": "status = \"off\"\nnew_action = \"off\"\nall_states = [\"red\", \"green\", \"blue\", \"yellow\", \"purple\", \"lightBlue\", \"white\", \"off\"]\ndef map_color(key):\n    if key == \"1\":\n        return \"red\"\n    elif key == \"2\":\n        return \"green\"\n    elif key == \"3\":\n        return \"blue\"",
         "detail": "InternetOfThings.project.simulations.rgb",
         "documentation": {}
     },
@@ -3223,7 +3239,7 @@
         "kind": 5,
         "importPath": "InternetOfThings.project.simulations.rgb",
         "description": "InternetOfThings.project.simulations.rgb",
-        "peekOfCode": "new_action = \"off\"\nall_states = [\"red\", \"green\", \"blue\", \"yellow\", \"purple\", \"lightBlue\", \"white\", \"off\"]\ndef map_color(key):\n    match key:\n        case \"1\":\n            return \"red\"\n        case \"2\":\n            return \"green\"\n        case \"3\":\n            return \"blue\"",
+        "peekOfCode": "new_action = \"off\"\nall_states = [\"red\", \"green\", \"blue\", \"yellow\", \"purple\", \"lightBlue\", \"white\", \"off\"]\ndef map_color(key):\n    if key == \"1\":\n        return \"red\"\n    elif key == \"2\":\n        return \"green\"\n    elif key == \"3\":\n        return \"blue\"\n    elif key == \"4\":",
         "detail": "InternetOfThings.project.simulations.rgb",
         "documentation": {}
     },
@@ -3232,7 +3248,7 @@
         "kind": 5,
         "importPath": "InternetOfThings.project.simulations.rgb",
         "description": "InternetOfThings.project.simulations.rgb",
-        "peekOfCode": "all_states = [\"red\", \"green\", \"blue\", \"yellow\", \"purple\", \"lightBlue\", \"white\", \"off\"]\ndef map_color(key):\n    match key:\n        case \"1\":\n            return \"red\"\n        case \"2\":\n            return \"green\"\n        case \"3\":\n            return \"blue\"\n        case \"4\":",
+        "peekOfCode": "all_states = [\"red\", \"green\", \"blue\", \"yellow\", \"purple\", \"lightBlue\", \"white\", \"off\"]\ndef map_color(key):\n    if key == \"1\":\n        return \"red\"\n    elif key == \"2\":\n        return \"green\"\n    elif key == \"3\":\n        return \"blue\"\n    elif key == \"4\":\n        return \"yellow\"",
         "detail": "InternetOfThings.project.simulations.rgb",
         "documentation": {}
     },
@@ -3268,7 +3284,7 @@
         "kind": 2,
         "importPath": "InternetOfThings.project.main",
         "description": "InternetOfThings.project.main",
-        "peekOfCode": "def on_connect(client, userdata, flags, rc):\n    client.subscribe(\"pi1\")\n    client.subscribe(\"front-bb\")\n    client.subscribe(\"front-bb-off\")\n    client.subscribe(\"pi3\")\nmqtt_client.on_connect = on_connect\nmqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef connect_mqtt():\n    mqtt_client.connect(\"localhost\", 1883, 60)\n    mqtt_client.loop_start()",
+        "peekOfCode": "def on_connect(client, userdata, flags, rc):\n    client.subscribe(\"pi1\")\n    client.subscribe(\"front-bb\")\n    client.subscribe(\"front-bb-off\")\n    client.subscribe(\"pi3\")\nmqtt_client.on_connect = on_connect\nmqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef connect_mqtt():\n    mqtt_client.connect(HOSTNAME, PORT, 60)\n    mqtt_client.loop_start()",
         "detail": "InternetOfThings.project.main",
         "documentation": {}
     },
@@ -3277,7 +3293,7 @@
         "kind": 2,
         "importPath": "InternetOfThings.project.main",
         "description": "InternetOfThings.project.main",
-        "peekOfCode": "def connect_mqtt():\n    mqtt_client.connect(\"localhost\", 1883, 60)\n    mqtt_client.loop_start()\ndef menu():\n    print(\"=\" * 10 + \"  MENU  \" + \"=\" * 10)\n    print(\"-- Enter B to activate buzzer --\")\n    print(\"-- Enter D to deactivate buzzer --\")\n    print(\"-- Enter L to change light state --\")\n    print(\"-- Enter X to stop all devices --\")\n    print(\"=\" * 30)",
+        "peekOfCode": "def connect_mqtt():\n    mqtt_client.connect(HOSTNAME, PORT, 60)\n    mqtt_client.loop_start()\ndef menu():\n    print(\"=\" * 10 + \"  MENU  \" + \"=\" * 10)\n    print(\"-- Enter B to activate buzzer --\")\n    print(\"-- Enter D to deactivate buzzer --\")\n    print(\"-- Enter L to change light state --\")\n    print(\"-- Enter X to stop all devices --\")\n    print(\"=\" * 30)",
         "detail": "InternetOfThings.project.main",
         "documentation": {}
     },
@@ -3385,7 +3401,7 @@
         "kind": 5,
         "importPath": "InternetOfThings.project.main",
         "description": "InternetOfThings.project.main",
-        "peekOfCode": "bb_alarm_time = \"21:39\"\ndef on_connect(client, userdata, flags, rc):\n    client.subscribe(\"pi1\")\n    client.subscribe(\"front-bb\")\n    client.subscribe(\"front-bb-off\")\n    client.subscribe(\"pi3\")\nmqtt_client.on_connect = on_connect\nmqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef connect_mqtt():\n    mqtt_client.connect(\"localhost\", 1883, 60)",
+        "peekOfCode": "bb_alarm_time = \"21:39\"\ndef on_connect(client, userdata, flags, rc):\n    client.subscribe(\"pi1\")\n    client.subscribe(\"front-bb\")\n    client.subscribe(\"front-bb-off\")\n    client.subscribe(\"pi3\")\nmqtt_client.on_connect = on_connect\nmqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef connect_mqtt():\n    mqtt_client.connect(HOSTNAME, PORT, 60)",
         "detail": "InternetOfThings.project.main",
         "documentation": {}
     },
@@ -3394,7 +3410,7 @@
         "kind": 5,
         "importPath": "InternetOfThings.project.main",
         "description": "InternetOfThings.project.main",
-        "peekOfCode": "mqtt_client.on_connect = on_connect\nmqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef connect_mqtt():\n    mqtt_client.connect(\"localhost\", 1883, 60)\n    mqtt_client.loop_start()\ndef menu():\n    print(\"=\" * 10 + \"  MENU  \" + \"=\" * 10)\n    print(\"-- Enter B to activate buzzer --\")\n    print(\"-- Enter D to deactivate buzzer --\")\n    print(\"-- Enter L to change light state --\")",
+        "peekOfCode": "mqtt_client.on_connect = on_connect\nmqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef connect_mqtt():\n    mqtt_client.connect(HOSTNAME, PORT, 60)\n    mqtt_client.loop_start()\ndef menu():\n    print(\"=\" * 10 + \"  MENU  \" + \"=\" * 10)\n    print(\"-- Enter B to activate buzzer --\")\n    print(\"-- Enter D to deactivate buzzer --\")\n    print(\"-- Enter L to change light state --\")",
         "detail": "InternetOfThings.project.main",
         "documentation": {}
     },
@@ -3403,7 +3419,7 @@
         "kind": 5,
         "importPath": "InternetOfThings.project.main",
         "description": "InternetOfThings.project.main",
-        "peekOfCode": "mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef connect_mqtt():\n    mqtt_client.connect(\"localhost\", 1883, 60)\n    mqtt_client.loop_start()\ndef menu():\n    print(\"=\" * 10 + \"  MENU  \" + \"=\" * 10)\n    print(\"-- Enter B to activate buzzer --\")\n    print(\"-- Enter D to deactivate buzzer --\")\n    print(\"-- Enter L to change light state --\")\n    print(\"-- Enter X to stop all devices --\")",
+        "peekOfCode": "mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef connect_mqtt():\n    mqtt_client.connect(HOSTNAME, PORT, 60)\n    mqtt_client.loop_start()\ndef menu():\n    print(\"=\" * 10 + \"  MENU  \" + \"=\" * 10)\n    print(\"-- Enter B to activate buzzer --\")\n    print(\"-- Enter D to deactivate buzzer --\")\n    print(\"-- Enter L to change light state --\")\n    print(\"-- Enter X to stop all devices --\")",
         "detail": "InternetOfThings.project.main",
         "documentation": {}
     },
@@ -3556,7 +3572,7 @@
         "kind": 5,
         "importPath": "InternetOfThings.server.server",
         "description": "InternetOfThings.server.server",
-        "peekOfCode": "app = Flask(__name__)\nCORS(app)\nsocketio = SocketIO(app, cors_allowed_origins=\"http://localhost:3001\", async_mode='threading')\n# InfluxDB Configuration\ntoken = os.getenv(\"INFLUXDB_TOKEN\")\norg = os.getenv(\"ORGANIZATION\")\nurl = os.getenv(\"URL\")\nbucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\n# MQTT Configuration",
+        "peekOfCode": "app = Flask(__name__)\nCORS(app)\nsocketio = SocketIO(app, cors_allowed_origins=\"http://localhost:3001\", async_mode='threading')\n# InfluxDB Configuration\ntoken = os.getenv(\"INFLUXDB_TOKEN\")\norg = os.getenv(\"ORGANIZATION\")\nurl = os.getenv(\"URL\")\nbucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\nmqtt_client = mqtt.Client()",
         "detail": "InternetOfThings.server.server",
         "documentation": {}
     },
@@ -3565,7 +3581,7 @@
         "kind": 5,
         "importPath": "InternetOfThings.server.server",
         "description": "InternetOfThings.server.server",
-        "peekOfCode": "socketio = SocketIO(app, cors_allowed_origins=\"http://localhost:3001\", async_mode='threading')\n# InfluxDB Configuration\ntoken = os.getenv(\"INFLUXDB_TOKEN\")\norg = os.getenv(\"ORGANIZATION\")\nurl = os.getenv(\"URL\")\nbucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\n# MQTT Configuration\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)",
+        "peekOfCode": "socketio = SocketIO(app, cors_allowed_origins=\"http://localhost:3001\", async_mode='threading')\n# InfluxDB Configuration\ntoken = os.getenv(\"INFLUXDB_TOKEN\")\norg = os.getenv(\"ORGANIZATION\")\nurl = os.getenv(\"URL\")\nbucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()",
         "detail": "InternetOfThings.server.server",
         "documentation": {}
     },
@@ -3574,7 +3590,7 @@
         "kind": 5,
         "importPath": "InternetOfThings.server.server",
         "description": "InternetOfThings.server.server",
-        "peekOfCode": "token = os.getenv(\"INFLUXDB_TOKEN\")\norg = os.getenv(\"ORGANIZATION\")\nurl = os.getenv(\"URL\")\nbucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\n# MQTT Configuration\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0",
+        "peekOfCode": "token = os.getenv(\"INFLUXDB_TOKEN\")\norg = os.getenv(\"ORGANIZATION\")\nurl = os.getenv(\"URL\")\nbucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False",
         "detail": "InternetOfThings.server.server",
         "documentation": {}
     },
@@ -3583,7 +3599,7 @@
         "kind": 5,
         "importPath": "InternetOfThings.server.server",
         "description": "InternetOfThings.server.server",
-        "peekOfCode": "org = os.getenv(\"ORGANIZATION\")\nurl = os.getenv(\"URL\")\nbucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\n# MQTT Configuration\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False",
+        "peekOfCode": "org = os.getenv(\"ORGANIZATION\")\nurl = os.getenv(\"URL\")\nbucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False\nlock = threading.Lock()",
         "detail": "InternetOfThings.server.server",
         "documentation": {}
     },
@@ -3592,7 +3608,7 @@
         "kind": 5,
         "importPath": "InternetOfThings.server.server",
         "description": "InternetOfThings.server.server",
-        "peekOfCode": "url = os.getenv(\"URL\")\nbucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\n# MQTT Configuration\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False\nlock = threading.Lock()",
+        "peekOfCode": "url = os.getenv(\"URL\")\nbucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False\nlock = threading.Lock()\nlast_pressed_ds1 = 0",
         "detail": "InternetOfThings.server.server",
         "documentation": {}
     },
@@ -3601,7 +3617,7 @@
         "kind": 5,
         "importPath": "InternetOfThings.server.server",
         "description": "InternetOfThings.server.server",
-        "peekOfCode": "bucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\n# MQTT Configuration\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False\nlock = threading.Lock()\nlast_pressed_ds1 = 0",
+        "peekOfCode": "bucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False\nlock = threading.Lock()\nlast_pressed_ds1 = 0\nlast_released_ds1 = 0",
         "detail": "InternetOfThings.server.server",
         "documentation": {}
     },
@@ -3610,7 +3626,7 @@
         "kind": 5,
         "importPath": "InternetOfThings.server.server",
         "description": "InternetOfThings.server.server",
-        "peekOfCode": "influxdb_client = InfluxDBClient(url=url, token=token, org=org)\n# MQTT Configuration\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False\nlock = threading.Lock()\nlast_pressed_ds1 = 0\nlast_released_ds1 = 0",
+        "peekOfCode": "influxdb_client = InfluxDBClient(url=url, token=token, org=org)\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False\nlock = threading.Lock()\nlast_pressed_ds1 = 0\nlast_released_ds1 = 0\nlast_pressed_ds2 = 0",
         "detail": "InternetOfThings.server.server",
         "documentation": {}
     },
@@ -3646,7 +3662,7 @@
         "kind": 5,
         "importPath": "InternetOfThings.server.server",
         "description": "InternetOfThings.server.server",
-        "peekOfCode": "lock = threading.Lock()\nlast_pressed_ds1 = 0\nlast_released_ds1 = 0\nlast_pressed_ds2 = 0\nlast_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\n# Table names: Temperature, Humidity, PIR_motion, Button_pressed, Buzzer_active, Light_status, MS_password, UDS,",
+        "peekOfCode": "lock = threading.Lock()\nlast_pressed_ds1 = 0\nlast_released_ds1 = 0\nlast_pressed_ds2 = 0\nlast_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():",
         "detail": "InternetOfThings.server.server",
         "documentation": {}
     },
@@ -3655,7 +3671,7 @@
         "kind": 5,
         "importPath": "InternetOfThings.server.server",
         "description": "InternetOfThings.server.server",
-        "peekOfCode": "last_pressed_ds1 = 0\nlast_released_ds1 = 0\nlast_pressed_ds2 = 0\nlast_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\n# Table names: Temperature, Humidity, PIR_motion, Button_pressed, Buzzer_active, Light_status, MS_password, UDS,\n#              Acceleration, Gyroscope, Infrared, Time_b4sd",
+        "peekOfCode": "last_pressed_ds1 = 0\nlast_released_ds1 = 0\nlast_pressed_ds2 = 0\nlast_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    with app.app_context():",
         "detail": "InternetOfThings.server.server",
         "documentation": {}
     },
@@ -3664,7 +3680,7 @@
         "kind": 5,
         "importPath": "InternetOfThings.server.server",
         "description": "InternetOfThings.server.server",
-        "peekOfCode": "last_released_ds1 = 0\nlast_pressed_ds2 = 0\nlast_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\n# Table names: Temperature, Humidity, PIR_motion, Button_pressed, Buzzer_active, Light_status, MS_password, UDS,\n#              Acceleration, Gyroscope, Infrared, Time_b4sd\n# Topic names: data/temperature, data/humidity, data/pir, data/button, data/buzzer, data/light, data/ms, data/uds,",
+        "peekOfCode": "last_released_ds1 = 0\nlast_pressed_ds2 = 0\nlast_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    with app.app_context():\n        with lock:",
         "detail": "InternetOfThings.server.server",
         "documentation": {}
     },
@@ -3673,7 +3689,7 @@
         "kind": 5,
         "importPath": "InternetOfThings.server.server",
         "description": "InternetOfThings.server.server",
-        "peekOfCode": "last_pressed_ds2 = 0\nlast_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\n# Table names: Temperature, Humidity, PIR_motion, Button_pressed, Buzzer_active, Light_status, MS_password, UDS,\n#              Acceleration, Gyroscope, Infrared, Time_b4sd\n# Topic names: data/temperature, data/humidity, data/pir, data/button, data/buzzer, data/light, data/ms, data/uds,\n#              data/acceleration, data/gyroscope, data/ir, data/b4sd",
+        "peekOfCode": "last_pressed_ds2 = 0\nlast_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    with app.app_context():\n        with lock:\n            global is_alarm",
         "detail": "InternetOfThings.server.server",
         "documentation": {}
     },
@@ -3682,7 +3698,7 @@
         "kind": 5,
         "importPath": "InternetOfThings.server.server",
         "description": "InternetOfThings.server.server",
-        "peekOfCode": "last_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\n# Table names: Temperature, Humidity, PIR_motion, Button_pressed, Buzzer_active, Light_status, MS_password, UDS,\n#              Acceleration, Gyroscope, Infrared, Time_b4sd\n# Topic names: data/temperature, data/humidity, data/pir, data/button, data/buzzer, data/light, data/ms, data/uds,\n#              data/acceleration, data/gyroscope, data/ir, data/b4sd\ndef alarm_set_on():",
+        "peekOfCode": "last_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    with app.app_context():\n        with lock:\n            global is_alarm\n            is_alarm = True",
         "detail": "InternetOfThings.server.server",
         "documentation": {}
     },
@@ -3691,7 +3707,7 @@
         "kind": 5,
         "importPath": "InternetOfThings.server.server",
         "description": "InternetOfThings.server.server",
-        "peekOfCode": "correct_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\n# Table names: Temperature, Humidity, PIR_motion, Button_pressed, Buzzer_active, Light_status, MS_password, UDS,\n#              Acceleration, Gyroscope, Infrared, Time_b4sd\n# Topic names: data/temperature, data/humidity, data/pir, data/button, data/buzzer, data/light, data/ms, data/uds,\n#              data/acceleration, data/gyroscope, data/ir, data/b4sd\ndef alarm_set_on():\n    with app.app_context():",
+        "peekOfCode": "correct_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    with app.app_context():\n        with lock:\n            global is_alarm\n            is_alarm = True\n            mqtt_client.publish(\"pi1\", json.dumps({\"trigger\": \"B\"}))",
         "detail": "InternetOfThings.server.server",
         "documentation": {}
     },
@@ -3700,7 +3716,7 @@
         "kind": 5,
         "importPath": "InternetOfThings.server.server",
         "description": "InternetOfThings.server.server",
-        "peekOfCode": "security_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\n# Table names: Temperature, Humidity, PIR_motion, Button_pressed, Buzzer_active, Light_status, MS_password, UDS,\n#              Acceleration, Gyroscope, Infrared, Time_b4sd\n# Topic names: data/temperature, data/humidity, data/pir, data/button, data/buzzer, data/light, data/ms, data/uds,\n#              data/acceleration, data/gyroscope, data/ir, data/b4sd\ndef alarm_set_on():\n    with app.app_context():\n        with lock:",
+        "peekOfCode": "security_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    with app.app_context():\n        with lock:\n            global is_alarm\n            is_alarm = True\n            mqtt_client.publish(\"pi1\", json.dumps({\"trigger\": \"B\"}))\n            mqtt_client.publish(\"pi3\", json.dumps({\"trigger\": \"B\"}))",
         "detail": "InternetOfThings.server.server",
         "documentation": {}
     },
@@ -3709,7 +3725,7 @@
         "kind": 5,
         "importPath": "InternetOfThings.server.server",
         "description": "InternetOfThings.server.server",
-        "peekOfCode": "last_correct_pin = 0\nbb_alarm_time = \"21:39\"\n# Table names: Temperature, Humidity, PIR_motion, Button_pressed, Buzzer_active, Light_status, MS_password, UDS,\n#              Acceleration, Gyroscope, Infrared, Time_b4sd\n# Topic names: data/temperature, data/humidity, data/pir, data/button, data/buzzer, data/light, data/ms, data/uds,\n#              data/acceleration, data/gyroscope, data/ir, data/b4sd\ndef alarm_set_on():\n    with app.app_context():\n        with lock:\n            global is_alarm",
+        "peekOfCode": "last_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    with app.app_context():\n        with lock:\n            global is_alarm\n            is_alarm = True\n            mqtt_client.publish(\"pi1\", json.dumps({\"trigger\": \"B\"}))\n            mqtt_client.publish(\"pi3\", json.dumps({\"trigger\": \"B\"}))\n            print(\"ALARM\")",
         "detail": "InternetOfThings.server.server",
         "documentation": {}
     },
@@ -3718,7 +3734,7 @@
         "kind": 5,
         "importPath": "InternetOfThings.server.server",
         "description": "InternetOfThings.server.server",
-        "peekOfCode": "bb_alarm_time = \"21:39\"\n# Table names: Temperature, Humidity, PIR_motion, Button_pressed, Buzzer_active, Light_status, MS_password, UDS,\n#              Acceleration, Gyroscope, Infrared, Time_b4sd\n# Topic names: data/temperature, data/humidity, data/pir, data/button, data/buzzer, data/light, data/ms, data/uds,\n#              data/acceleration, data/gyroscope, data/ir, data/b4sd\ndef alarm_set_on():\n    with app.app_context():\n        with lock:\n            global is_alarm\n            is_alarm = True",
+        "peekOfCode": "bb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    with app.app_context():\n        with lock:\n            global is_alarm\n            is_alarm = True\n            mqtt_client.publish(\"pi1\", json.dumps({\"trigger\": \"B\"}))\n            mqtt_client.publish(\"pi3\", json.dumps({\"trigger\": \"B\"}))\n            print(\"ALARM\")\n            point = (",
         "detail": "InternetOfThings.server.server",
         "documentation": {}
     },

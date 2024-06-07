@@ -61,7 +61,7 @@ def rgb_callback(status, publish_event, rgb_settings, verbose=False):
         publish_event.set()
 
 
-def run_rgb(settings, threads, stop_event):
+def run_rgb(settings, threads, stop_event,hostname,port):
     if settings['simulated']:
         print("Starting {} simulator".format(settings["name"]))
         rgb_thread = threading.Thread(target=run_rgb_simulator, args=(2, rgb_callback, stop_event, publish_event, settings))
@@ -71,8 +71,8 @@ def run_rgb(settings, threads, stop_event):
     else:
         from sensors.rgb import run_rgb_loop, RGB
         print("Starting {} loop".format(settings["name"]))
-        rgb = RGB(settings)
-        rgb_thread = threading.Thread(target=run_rgb_loop, args=(rgb, 2, rgb_callback, stop_event, publish_event, settings))
+        rgb = RGB(settings,hostname,port)
+        rgb_thread = threading.Thread(target=run_rgb_loop, args=(rgb, 2, rgb_callback, stop_event, publish_event, settings,hostname,port))
         rgb_thread.start()
         threads.append(rgb_thread)
         print("{} loop started".format(settings["name"]))

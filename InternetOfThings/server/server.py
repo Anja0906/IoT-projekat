@@ -25,7 +25,6 @@ url = os.getenv("URL")
 bucket = os.getenv("BUCKET_NAME")
 influxdb_client = InfluxDBClient(url=url, token=token, org=org)
 
-# MQTT Configuration
 mqtt_client = mqtt.Client()
 mqtt_client.connect("localhost", 1883, 0)
 mqtt_client.loop_start()
@@ -42,10 +41,7 @@ last_correct_pin = 0
 
 bb_alarm_time = "21:39"
 
-# Table names: Temperature, Humidity, PIR_motion, Button_pressed, Buzzer_active, Light_status, MS_password, UDS,
-#              Acceleration, Gyroscope, Infrared, Time_b4sd
-# Topic names: data/temperature, data/humidity, data/pir, data/button, data/buzzer, data/light, data/ms, data/uds,
-#              data/acceleration, data/gyroscope, data/ir, data/b4sd
+
 
 def alarm_set_on():
     with app.app_context():
@@ -307,4 +303,4 @@ if __name__ == '__main__':
     laj.daemon = True
     laj.start()
 
-    app.run(debug=True, port=8000)
+    app.run(debug=False, port=8000)

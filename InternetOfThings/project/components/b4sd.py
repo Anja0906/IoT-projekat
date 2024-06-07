@@ -62,7 +62,7 @@ def b4sd_callback(time_value, publish_event, b4sd_settings, verbose=False):
         publish_event.set()
 
 
-def run_b4sd(settings, threads, stop_event):
+def run_b4sd(settings, threads, stop_event,hostname,port):
     if settings['simulated']:
         print("Starting {} simulator".format(settings["name"]))
         b4sd_thread = threading.Thread(target=run_b4sd_simulator, args=(2, b4sd_callback, stop_event, publish_event, settings))
@@ -73,7 +73,7 @@ def run_b4sd(settings, threads, stop_event):
         from sensors.b4sd import run_b4sd_loop, B4SD
         print("Starting {} loop".format(settings["name"]))
         b4sd = B4SD(settings)
-        b4sd_thread = threading.Thread(target=run_b4sd_loop, args=(b4sd, 2, b4sd_callback, stop_event, publish_event, settings))
+        b4sd_thread = threading.Thread(target=run_b4sd_loop, args=(b4sd, 2, b4sd_callback, stop_event, publish_event, settings,hostname,port))
         b4sd_thread.start()
         threads.append(b4sd_thread)
         print("{} loop started".format(settings["name"]))

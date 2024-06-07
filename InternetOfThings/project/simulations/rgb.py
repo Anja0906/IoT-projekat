@@ -8,23 +8,23 @@ new_action = "off"
 all_states = ["red", "green", "blue", "yellow", "purple", "lightBlue", "white", "off"]
 
 def map_color(key):
-    match key:
-        case "1":
-            return "red"
-        case "2":
-            return "green"
-        case "3":
-            return "blue"
-        case "4":
-            return "yellow"
-        case "5":
-            return "lightBlue"
-        case "6":
-            return "purple"
-        case "0":
-            return "off"
-        case _:
-            return "white" 
+    if key == "1":
+        return "red"
+    elif key == "2":
+        return "green"
+    elif key == "3":
+        return "blue"
+    elif key == "4":
+        return "yellow"
+    elif key == "5":
+        return "lightBlue"
+    elif key == "6":
+        return "purple"
+    elif key == "0":
+        return "off"
+    else:
+        return "white"
+
 
 def on_connect(client, userdata, flags, rc):
     client.subscribe("data/ir")

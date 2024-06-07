@@ -35,16 +35,16 @@ def update_data(topic, data):
     print("rgb data: ", data, "received from topic " + topic)
     new_action = change_color(data["value"])
 
-def connect_mqtt():
+def connect_mqtt(hostname,port):
     mqtt_client = mqtt.Client()
-    mqtt_client.connect("localhost", 1883, 60)
+    mqtt_client.connect(hostname, port, 60)
     mqtt_client.loop_start()
     mqtt_client.on_connect = on_connect
     mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))
 
 
 class RGB:
-    def __init__(self, settings):
+    def __init__(self, settings,hostname,port):
         self.red_pin = settings['red_pin']
         self.blue_pin = settings['blue_pin']
         self.green_pin = settings['green_pin']
@@ -114,8 +114,8 @@ def change_light(rgb):
         rgb.turnOff()
 
 
-def run_rgb_loop(rgb, delay, callback, stop_event, publish_event, settings):
-    connect_mqtt()
+def run_rgb_loop(rgb, delay, callback, stop_event, publish_event, settings,hostname,port):
+    connect_mqtt(hostname, port)
     rgb.turnOff()
     while True:
         if new_action != rgb.status:
