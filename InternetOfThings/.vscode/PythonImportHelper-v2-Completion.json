@@ -1,5 +1,30 @@
 [
     {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
+        "documentation": {}
+    },
+    {
+        "label": "stringify",
+        "importPath": "flatted",
+        "description": "flatted",
+        "isExtraImport": true,
+        "detail": "flatted",
+        "documentation": {}
+    },
+    {
+        "label": "parse",
+        "importPath": "flatted",
+        "description": "flatted",
+        "isExtraImport": true,
+        "detail": "flatted",
+        "documentation": {}
+    },
+    {
         "label": "time",
         "kind": 6,
         "isExtraImport": true,
@@ -97,15 +122,6 @@
         "description": "threading",
         "isExtraImport": true,
         "detail": "threading",
-        "documentation": {}
-    },
-    {
-        "label": "json",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "json",
-        "description": "json",
-        "detail": "json",
         "documentation": {}
     },
     {
@@ -462,6 +478,22 @@
     },
     {
         "label": "load_settings",
+        "importPath": "settings.settings",
+        "description": "settings.settings",
+        "isExtraImport": true,
+        "detail": "settings.settings",
+        "documentation": {}
+    },
+    {
+        "label": "HOSTNAME",
+        "importPath": "settings.settings",
+        "description": "settings.settings",
+        "isExtraImport": true,
+        "detail": "settings.settings",
+        "documentation": {}
+    },
+    {
+        "label": "PORT",
         "importPath": "settings.settings",
         "description": "settings.settings",
         "isExtraImport": true,
@@ -942,12 +974,182 @@
         "documentation": {}
     },
     {
-        "label": "settings",
-        "kind": 6,
-        "isExtraImport": true,
+        "label": "load_settings",
         "importPath": "settings",
         "description": "settings",
+        "isExtraImport": true,
         "detail": "settings",
+        "documentation": {}
+    },
+    {
+        "label": "_Known",
+        "kind": 6,
+        "importPath": "front.node_modules.flatted.python.flatted",
+        "description": "front.node_modules.flatted.python.flatted",
+        "peekOfCode": "class _Known:\n    def __init__(self):\n        self.key = []\n        self.value = []\nclass _String:\n    def __init__(self, value):\n        self.value = value\ndef _array_keys(value):\n    keys = []\n    i = 0",
+        "detail": "front.node_modules.flatted.python.flatted",
+        "documentation": {}
+    },
+    {
+        "label": "_String",
+        "kind": 6,
+        "importPath": "front.node_modules.flatted.python.flatted",
+        "description": "front.node_modules.flatted.python.flatted",
+        "peekOfCode": "class _String:\n    def __init__(self, value):\n        self.value = value\ndef _array_keys(value):\n    keys = []\n    i = 0\n    for _ in value:\n        keys.append(i)\n        i += 1\n    return keys",
+        "detail": "front.node_modules.flatted.python.flatted",
+        "documentation": {}
+    },
+    {
+        "label": "parse",
+        "kind": 2,
+        "importPath": "front.node_modules.flatted.python.flatted",
+        "description": "front.node_modules.flatted.python.flatted",
+        "peekOfCode": "def parse(value, *args, **kwargs):\n    json = _json.loads(value, *args, **kwargs)\n    wrapped = []\n    for value in json:\n        wrapped.append(_wrap(value))\n    input = []\n    for value in wrapped:\n        if isinstance(value, _String):\n            input.append(value.value)\n        else:",
+        "detail": "front.node_modules.flatted.python.flatted",
+        "documentation": {}
+    },
+    {
+        "label": "stringify",
+        "kind": 2,
+        "importPath": "front.node_modules.flatted.python.flatted",
+        "description": "front.node_modules.flatted.python.flatted",
+        "peekOfCode": "def stringify(value, *args, **kwargs):\n    known = _Known()\n    input = []\n    output = []\n    i = int(_index(known, input, value))\n    while i < len(input):\n        output.append(_transform(known, input, input[i]))\n        i += 1\n    return _json.dumps(output, *args, **kwargs)",
+        "detail": "front.node_modules.flatted.python.flatted",
+        "documentation": {}
+    },
+    {
+        "label": "stringify",
+        "kind": 2,
+        "importPath": "front.node_modules.flatted.python.test",
+        "description": "front.node_modules.flatted.python.test",
+        "peekOfCode": "def stringify(value):\n    return _stringify(value, separators=(',', ':'))\nassert stringify([None, None]) == '[[null,null]]'\na = []\no = {}\nassert stringify(a) == '[[]]'\nassert stringify(o) == '[{}]'\na.append(a)\no['o'] = o\nassert stringify(a) == '[[\"0\"]]'",
+        "detail": "front.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "a",
+        "kind": 5,
+        "importPath": "front.node_modules.flatted.python.test",
+        "description": "front.node_modules.flatted.python.test",
+        "peekOfCode": "a = []\no = {}\nassert stringify(a) == '[[]]'\nassert stringify(o) == '[{}]'\na.append(a)\no['o'] = o\nassert stringify(a) == '[[\"0\"]]'\nassert stringify(o) == '[{\"o\":\"0\"}]'\nb = parse(stringify(a))\nassert isinstance(b, list) and b[0] == b",
+        "detail": "front.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "o",
+        "kind": 5,
+        "importPath": "front.node_modules.flatted.python.test",
+        "description": "front.node_modules.flatted.python.test",
+        "peekOfCode": "o = {}\nassert stringify(a) == '[[]]'\nassert stringify(o) == '[{}]'\na.append(a)\no['o'] = o\nassert stringify(a) == '[[\"0\"]]'\nassert stringify(o) == '[{\"o\":\"0\"}]'\nb = parse(stringify(a))\nassert isinstance(b, list) and b[0] == b\na.append(1)",
+        "detail": "front.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "o['o']",
+        "kind": 5,
+        "importPath": "front.node_modules.flatted.python.test",
+        "description": "front.node_modules.flatted.python.test",
+        "peekOfCode": "o['o'] = o\nassert stringify(a) == '[[\"0\"]]'\nassert stringify(o) == '[{\"o\":\"0\"}]'\nb = parse(stringify(a))\nassert isinstance(b, list) and b[0] == b\na.append(1)\na.append('two')\na.append(True)\no['one'] = 1\no['two'] = 'two'",
+        "detail": "front.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "b",
+        "kind": 5,
+        "importPath": "front.node_modules.flatted.python.test",
+        "description": "front.node_modules.flatted.python.test",
+        "peekOfCode": "b = parse(stringify(a))\nassert isinstance(b, list) and b[0] == b\na.append(1)\na.append('two')\na.append(True)\no['one'] = 1\no['two'] = 'two'\no['three'] = True\nassert stringify(a) == '[[\"0\",1,\"1\",true],\"two\"]'\nassert stringify(o) == '[{\"o\":\"0\",\"one\":1,\"two\":\"1\",\"three\":true},\"two\"]'",
+        "detail": "front.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "o['one']",
+        "kind": 5,
+        "importPath": "front.node_modules.flatted.python.test",
+        "description": "front.node_modules.flatted.python.test",
+        "peekOfCode": "o['one'] = 1\no['two'] = 'two'\no['three'] = True\nassert stringify(a) == '[[\"0\",1,\"1\",true],\"two\"]'\nassert stringify(o) == '[{\"o\":\"0\",\"one\":1,\"two\":\"1\",\"three\":true},\"two\"]'\na.append(o)\no['a'] = a\nassert stringify(a) == '[[\"0\",1,\"1\",true,\"2\"],\"two\",{\"o\":\"2\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"0\"}]'\nassert stringify(o) == '[{\"o\":\"0\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"2\"},\"two\",[\"2\",1,\"1\",true,\"0\"]]'\na.append({'test': 'OK'})",
+        "detail": "front.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "o['two']",
+        "kind": 5,
+        "importPath": "front.node_modules.flatted.python.test",
+        "description": "front.node_modules.flatted.python.test",
+        "peekOfCode": "o['two'] = 'two'\no['three'] = True\nassert stringify(a) == '[[\"0\",1,\"1\",true],\"two\"]'\nassert stringify(o) == '[{\"o\":\"0\",\"one\":1,\"two\":\"1\",\"three\":true},\"two\"]'\na.append(o)\no['a'] = a\nassert stringify(a) == '[[\"0\",1,\"1\",true,\"2\"],\"two\",{\"o\":\"2\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"0\"}]'\nassert stringify(o) == '[{\"o\":\"0\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"2\"},\"two\",[\"2\",1,\"1\",true,\"0\"]]'\na.append({'test': 'OK'})\na.append([1, 2, 3])",
+        "detail": "front.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "o['three']",
+        "kind": 5,
+        "importPath": "front.node_modules.flatted.python.test",
+        "description": "front.node_modules.flatted.python.test",
+        "peekOfCode": "o['three'] = True\nassert stringify(a) == '[[\"0\",1,\"1\",true],\"two\"]'\nassert stringify(o) == '[{\"o\":\"0\",\"one\":1,\"two\":\"1\",\"three\":true},\"two\"]'\na.append(o)\no['a'] = a\nassert stringify(a) == '[[\"0\",1,\"1\",true,\"2\"],\"two\",{\"o\":\"2\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"0\"}]'\nassert stringify(o) == '[{\"o\":\"0\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"2\"},\"two\",[\"2\",1,\"1\",true,\"0\"]]'\na.append({'test': 'OK'})\na.append([1, 2, 3])\no['test'] = {'test': 'OK'}",
+        "detail": "front.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "o['a']",
+        "kind": 5,
+        "importPath": "front.node_modules.flatted.python.test",
+        "description": "front.node_modules.flatted.python.test",
+        "peekOfCode": "o['a'] = a\nassert stringify(a) == '[[\"0\",1,\"1\",true,\"2\"],\"two\",{\"o\":\"2\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"0\"}]'\nassert stringify(o) == '[{\"o\":\"0\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"2\"},\"two\",[\"2\",1,\"1\",true,\"0\"]]'\na.append({'test': 'OK'})\na.append([1, 2, 3])\no['test'] = {'test': 'OK'}\no['array'] = [1, 2, 3]\nassert stringify(a) == '[[\"0\",1,\"1\",true,\"2\",\"3\",\"4\"],\"two\",{\"o\":\"2\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"0\",\"test\":\"3\",\"array\":\"4\"},{\"test\":\"5\"},[1,2,3],\"OK\"]'\nassert stringify(o) == '[{\"o\":\"0\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"2\",\"test\":\"3\",\"array\":\"4\"},\"two\",[\"2\",1,\"1\",true,\"0\",\"3\",\"4\"],{\"test\":\"5\"},[1,2,3],\"OK\"]'\na2 = parse(stringify(a));",
+        "detail": "front.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "o['test']",
+        "kind": 5,
+        "importPath": "front.node_modules.flatted.python.test",
+        "description": "front.node_modules.flatted.python.test",
+        "peekOfCode": "o['test'] = {'test': 'OK'}\no['array'] = [1, 2, 3]\nassert stringify(a) == '[[\"0\",1,\"1\",true,\"2\",\"3\",\"4\"],\"two\",{\"o\":\"2\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"0\",\"test\":\"3\",\"array\":\"4\"},{\"test\":\"5\"},[1,2,3],\"OK\"]'\nassert stringify(o) == '[{\"o\":\"0\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"2\",\"test\":\"3\",\"array\":\"4\"},\"two\",[\"2\",1,\"1\",true,\"0\",\"3\",\"4\"],{\"test\":\"5\"},[1,2,3],\"OK\"]'\na2 = parse(stringify(a));\no2 = parse(stringify(o));\nassert a2[0] == a2\nassert o2['o'] == o2\nassert a2[1] == 1 and a2[2] == 'two' and a2[3] == True and isinstance(a2[4], dict)\nassert a2[4] == a2[4]['o'] and a2 == a2[4]['o']['a']",
+        "detail": "front.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "o['array']",
+        "kind": 5,
+        "importPath": "front.node_modules.flatted.python.test",
+        "description": "front.node_modules.flatted.python.test",
+        "peekOfCode": "o['array'] = [1, 2, 3]\nassert stringify(a) == '[[\"0\",1,\"1\",true,\"2\",\"3\",\"4\"],\"two\",{\"o\":\"2\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"0\",\"test\":\"3\",\"array\":\"4\"},{\"test\":\"5\"},[1,2,3],\"OK\"]'\nassert stringify(o) == '[{\"o\":\"0\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"2\",\"test\":\"3\",\"array\":\"4\"},\"two\",[\"2\",1,\"1\",true,\"0\",\"3\",\"4\"],{\"test\":\"5\"},[1,2,3],\"OK\"]'\na2 = parse(stringify(a));\no2 = parse(stringify(o));\nassert a2[0] == a2\nassert o2['o'] == o2\nassert a2[1] == 1 and a2[2] == 'two' and a2[3] == True and isinstance(a2[4], dict)\nassert a2[4] == a2[4]['o'] and a2 == a2[4]['o']['a']\nstr = parse('[{\"prop\":\"1\",\"a\":\"2\",\"b\":\"3\"},{\"value\":123},[\"4\",\"5\"],{\"e\":\"6\",\"t\":\"7\",\"p\":4},{},{\"b\":\"8\"},\"f\",{\"a\":\"9\"},[\"10\"],\"sup\",{\"a\":1,\"d\":2,\"c\":\"7\",\"z\":\"11\",\"h\":1},{\"g\":2,\"a\":\"7\",\"b\":\"12\",\"f\":6},{\"r\":4,\"u\":\"7\",\"c\":5}]')",
+        "detail": "front.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "a2",
+        "kind": 5,
+        "importPath": "front.node_modules.flatted.python.test",
+        "description": "front.node_modules.flatted.python.test",
+        "peekOfCode": "a2 = parse(stringify(a));\no2 = parse(stringify(o));\nassert a2[0] == a2\nassert o2['o'] == o2\nassert a2[1] == 1 and a2[2] == 'two' and a2[3] == True and isinstance(a2[4], dict)\nassert a2[4] == a2[4]['o'] and a2 == a2[4]['o']['a']\nstr = parse('[{\"prop\":\"1\",\"a\":\"2\",\"b\":\"3\"},{\"value\":123},[\"4\",\"5\"],{\"e\":\"6\",\"t\":\"7\",\"p\":4},{},{\"b\":\"8\"},\"f\",{\"a\":\"9\"},[\"10\"],\"sup\",{\"a\":1,\"d\":2,\"c\":\"7\",\"z\":\"11\",\"h\":1},{\"g\":2,\"a\":\"7\",\"b\":\"12\",\"f\":6},{\"r\":4,\"u\":\"7\",\"c\":5}]')\nassert str['b']['t']['a'] == 'sup' and str['a'][1]['b'][0]['c'] == str['b']['t']\noo = parse('[{\"a\":\"1\",\"b\":\"0\",\"c\":\"2\"},{\"aa\":\"3\"},{\"ca\":\"4\",\"cb\":\"5\",\"cc\":\"6\",\"cd\":\"7\",\"ce\":\"8\",\"cf\":\"9\"},{\"aaa\":\"10\"},{\"caa\":\"4\"},{\"cba\":\"5\"},{\"cca\":\"2\"},{\"cda\":\"4\"},\"value2\",\"value3\",\"value1\"]');\nassert oo['a']['aa']['aaa'] == 'value1' and oo == oo['b'] and oo['c']['ca']['caa'] == oo['c']['ca']",
+        "detail": "front.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "o2",
+        "kind": 5,
+        "importPath": "front.node_modules.flatted.python.test",
+        "description": "front.node_modules.flatted.python.test",
+        "peekOfCode": "o2 = parse(stringify(o));\nassert a2[0] == a2\nassert o2['o'] == o2\nassert a2[1] == 1 and a2[2] == 'two' and a2[3] == True and isinstance(a2[4], dict)\nassert a2[4] == a2[4]['o'] and a2 == a2[4]['o']['a']\nstr = parse('[{\"prop\":\"1\",\"a\":\"2\",\"b\":\"3\"},{\"value\":123},[\"4\",\"5\"],{\"e\":\"6\",\"t\":\"7\",\"p\":4},{},{\"b\":\"8\"},\"f\",{\"a\":\"9\"},[\"10\"],\"sup\",{\"a\":1,\"d\":2,\"c\":\"7\",\"z\":\"11\",\"h\":1},{\"g\":2,\"a\":\"7\",\"b\":\"12\",\"f\":6},{\"r\":4,\"u\":\"7\",\"c\":5}]')\nassert str['b']['t']['a'] == 'sup' and str['a'][1]['b'][0]['c'] == str['b']['t']\noo = parse('[{\"a\":\"1\",\"b\":\"0\",\"c\":\"2\"},{\"aa\":\"3\"},{\"ca\":\"4\",\"cb\":\"5\",\"cc\":\"6\",\"cd\":\"7\",\"ce\":\"8\",\"cf\":\"9\"},{\"aaa\":\"10\"},{\"caa\":\"4\"},{\"cba\":\"5\"},{\"cca\":\"2\"},{\"cda\":\"4\"},\"value2\",\"value3\",\"value1\"]');\nassert oo['a']['aa']['aaa'] == 'value1' and oo == oo['b'] and oo['c']['ca']['caa'] == oo['c']['ca']\nprint('OK')",
+        "detail": "front.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "str",
+        "kind": 5,
+        "importPath": "front.node_modules.flatted.python.test",
+        "description": "front.node_modules.flatted.python.test",
+        "peekOfCode": "str = parse('[{\"prop\":\"1\",\"a\":\"2\",\"b\":\"3\"},{\"value\":123},[\"4\",\"5\"],{\"e\":\"6\",\"t\":\"7\",\"p\":4},{},{\"b\":\"8\"},\"f\",{\"a\":\"9\"},[\"10\"],\"sup\",{\"a\":1,\"d\":2,\"c\":\"7\",\"z\":\"11\",\"h\":1},{\"g\":2,\"a\":\"7\",\"b\":\"12\",\"f\":6},{\"r\":4,\"u\":\"7\",\"c\":5}]')\nassert str['b']['t']['a'] == 'sup' and str['a'][1]['b'][0]['c'] == str['b']['t']\noo = parse('[{\"a\":\"1\",\"b\":\"0\",\"c\":\"2\"},{\"aa\":\"3\"},{\"ca\":\"4\",\"cb\":\"5\",\"cc\":\"6\",\"cd\":\"7\",\"ce\":\"8\",\"cf\":\"9\"},{\"aaa\":\"10\"},{\"caa\":\"4\"},{\"cba\":\"5\"},{\"cca\":\"2\"},{\"cda\":\"4\"},\"value2\",\"value3\",\"value1\"]');\nassert oo['a']['aa']['aaa'] == 'value1' and oo == oo['b'] and oo['c']['ca']['caa'] == oo['c']['ca']\nprint('OK')",
+        "detail": "front.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "oo",
+        "kind": 5,
+        "importPath": "front.node_modules.flatted.python.test",
+        "description": "front.node_modules.flatted.python.test",
+        "peekOfCode": "oo = parse('[{\"a\":\"1\",\"b\":\"0\",\"c\":\"2\"},{\"aa\":\"3\"},{\"ca\":\"4\",\"cb\":\"5\",\"cc\":\"6\",\"cd\":\"7\",\"ce\":\"8\",\"cf\":\"9\"},{\"aaa\":\"10\"},{\"caa\":\"4\"},{\"cba\":\"5\"},{\"cca\":\"2\"},{\"cda\":\"4\"},\"value2\",\"value3\",\"value1\"]');\nassert oo['a']['aa']['aaa'] == 'value1' and oo == oo['b'] and oo['c']['ca']['caa'] == oo['c']['ca']\nprint('OK')",
+        "detail": "front.node_modules.flatted.python.test",
         "documentation": {}
     },
     {
@@ -973,7 +1175,7 @@
         "kind": 2,
         "importPath": "project.actuators.b4sd",
         "description": "project.actuators.b4sd",
-        "peekOfCode": "def update_data(topic, data):\n    global delay\n    print(\"bb data: \", data, \"received from topic \" + topic)\n    if topic == \"front-bb-on\":\n        delay = 0.5\n    elif topic == \"front-bb-off\":\n        delay = 0.001\ndef connect_mqtt():\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(\"localhost\", 1883, 60)",
+        "peekOfCode": "def update_data(topic, data):\n    global delay\n    print(\"bb data: \", data, \"received from topic \" + topic)\n    if topic == \"front-bb-on\":\n        delay = 0.5\n    elif topic == \"front-bb-off\":\n        delay = 0.001\ndef connect_mqtt(hostname,port):\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(hostname, port, 60)",
         "detail": "project.actuators.b4sd",
         "documentation": {}
     },
@@ -982,7 +1184,7 @@
         "kind": 2,
         "importPath": "project.actuators.b4sd",
         "description": "project.actuators.b4sd",
-        "peekOfCode": "def connect_mqtt():\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(\"localhost\", 1883, 60)\n    mqtt_client.loop_start()\n    mqtt_client.on_connect = on_connect\n    mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\nclass B4SD:\n    def __init__(self, settings):\n        # GPIO ports for the 7seg pins\n        self.segments = settings[\"segments\"]",
+        "peekOfCode": "def connect_mqtt(hostname,port):\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(hostname, port, 60)\n    mqtt_client.loop_start()\n    mqtt_client.on_connect = on_connect\n    mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\nclass B4SD:\n    def __init__(self, settings):\n        # GPIO ports for the 7seg pins\n        self.segments = settings[\"segments\"]",
         "detail": "project.actuators.b4sd",
         "documentation": {}
     },
@@ -991,7 +1193,7 @@
         "kind": 2,
         "importPath": "project.actuators.b4sd",
         "description": "project.actuators.b4sd",
-        "peekOfCode": "def run_b4sd_loop(b4sd, delay, callback, stop_event, publish_event, settings):\n    connect_mqtt()\n    while True:\n        value = b4sd.show_value()\n        callback(value, publish_event, settings)\n        if stop_event.is_set():\n            GPIO.cleanup()\n            break",
+        "peekOfCode": "def run_b4sd_loop(b4sd, delay, callback, stop_event, publish_event, settings,hostname,port):\n    connect_mqtt(hostname,port)\n    while True:\n        value = b4sd.show_value()\n        callback(value, publish_event, settings)\n        if stop_event.is_set():\n            GPIO.cleanup()\n            break",
         "detail": "project.actuators.b4sd",
         "documentation": {}
     },
@@ -1054,7 +1256,7 @@
         "kind": 6,
         "importPath": "project.actuators.rgb",
         "description": "project.actuators.rgb",
-        "peekOfCode": "class RGB:\n    def __init__(self, settings):\n        self.red_pin = settings['red_pin']\n        self.blue_pin = settings['blue_pin']\n        self.green_pin = settings['green_pin']\n        self.status = \"off\"\n        self.name = settings['name']\n        GPIO.setup(self.red_pin, GPIO.OUT)\n        GPIO.setup(self.blue_pin, GPIO.OUT)\n        GPIO.setup(self.green_pin, GPIO.OUT)",
+        "peekOfCode": "class RGB:\n    def __init__(self, settings,hostname,port):\n        self.red_pin = settings['red_pin']\n        self.blue_pin = settings['blue_pin']\n        self.green_pin = settings['green_pin']\n        self.status = \"off\"\n        self.name = settings['name']\n        GPIO.setup(self.red_pin, GPIO.OUT)\n        GPIO.setup(self.blue_pin, GPIO.OUT)\n        GPIO.setup(self.green_pin, GPIO.OUT)",
         "detail": "project.actuators.rgb",
         "documentation": {}
     },
@@ -1072,7 +1274,7 @@
         "kind": 2,
         "importPath": "project.actuators.rgb",
         "description": "project.actuators.rgb",
-        "peekOfCode": "def on_connect(client, userdata, flags, rc):\n    client.subscribe(\"data/ir\")\n    client.subscribe(\"change/rgb\")\ndef update_data(topic, data):\n    global new_action\n    print(\"rgb data: \", data, \"received from topic \" + topic)\n    new_action = change_color(data[\"value\"])\ndef connect_mqtt():\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(\"localhost\", 1883, 60)",
+        "peekOfCode": "def on_connect(client, userdata, flags, rc):\n    client.subscribe(\"data/ir\")\n    client.subscribe(\"change/rgb\")\ndef update_data(topic, data):\n    global new_action\n    print(\"rgb data: \", data, \"received from topic \" + topic)\n    new_action = change_color(data[\"value\"])\ndef connect_mqtt(hostname,port):\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(hostname, port, 60)",
         "detail": "project.actuators.rgb",
         "documentation": {}
     },
@@ -1081,7 +1283,7 @@
         "kind": 2,
         "importPath": "project.actuators.rgb",
         "description": "project.actuators.rgb",
-        "peekOfCode": "def update_data(topic, data):\n    global new_action\n    print(\"rgb data: \", data, \"received from topic \" + topic)\n    new_action = change_color(data[\"value\"])\ndef connect_mqtt():\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(\"localhost\", 1883, 60)\n    mqtt_client.loop_start()\n    mqtt_client.on_connect = on_connect\n    mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))",
+        "peekOfCode": "def update_data(topic, data):\n    global new_action\n    print(\"rgb data: \", data, \"received from topic \" + topic)\n    new_action = change_color(data[\"value\"])\ndef connect_mqtt(hostname,port):\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(hostname, port, 60)\n    mqtt_client.loop_start()\n    mqtt_client.on_connect = on_connect\n    mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))",
         "detail": "project.actuators.rgb",
         "documentation": {}
     },
@@ -1090,7 +1292,7 @@
         "kind": 2,
         "importPath": "project.actuators.rgb",
         "description": "project.actuators.rgb",
-        "peekOfCode": "def connect_mqtt():\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(\"localhost\", 1883, 60)\n    mqtt_client.loop_start()\n    mqtt_client.on_connect = on_connect\n    mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\nclass RGB:\n    def __init__(self, settings):\n        self.red_pin = settings['red_pin']\n        self.blue_pin = settings['blue_pin']",
+        "peekOfCode": "def connect_mqtt(hostname,port):\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(hostname, port, 60)\n    mqtt_client.loop_start()\n    mqtt_client.on_connect = on_connect\n    mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\nclass RGB:\n    def __init__(self, settings,hostname,port):\n        self.red_pin = settings['red_pin']\n        self.blue_pin = settings['blue_pin']",
         "detail": "project.actuators.rgb",
         "documentation": {}
     },
@@ -1108,7 +1310,7 @@
         "kind": 2,
         "importPath": "project.actuators.rgb",
         "description": "project.actuators.rgb",
-        "peekOfCode": "def run_rgb_loop(rgb, delay, callback, stop_event, publish_event, settings):\n    connect_mqtt()\n    rgb.turnOff()\n    while True:\n        if new_action != rgb.status:\n            rgb.status = new_action\n            change_light(rgb)\n            callback(rgb.status, publish_event, settings)\n        if stop_event.is_set():\n            GPIO.cleanup()",
+        "peekOfCode": "def run_rgb_loop(rgb, delay, callback, stop_event, publish_event, settings,hostname,port):\n    connect_mqtt(hostname, port)\n    rgb.turnOff()\n    while True:\n        if new_action != rgb.status:\n            rgb.status = new_action\n            change_light(rgb)\n            callback(rgb.status, publish_event, settings)\n        if stop_event.is_set():\n            GPIO.cleanup()",
         "detail": "project.actuators.rgb",
         "documentation": {}
     },
@@ -1234,7 +1436,7 @@
         "kind": 2,
         "importPath": "project.components.b4sd",
         "description": "project.components.b4sd",
-        "peekOfCode": "def run_b4sd(settings, threads, stop_event):\n    if settings['simulated']:\n        print(\"Starting {} simulator\".format(settings[\"name\"]))\n        b4sd_thread = threading.Thread(target=run_b4sd_simulator, args=(2, b4sd_callback, stop_event, publish_event, settings))\n        b4sd_thread.start()\n        threads.append(b4sd_thread)\n        print(\"{0} simulator started\".format(settings[\"name\"]))\n    else:\n        from sensors.b4sd import run_b4sd_loop, B4SD\n        print(\"Starting {} loop\".format(settings[\"name\"]))",
+        "peekOfCode": "def run_b4sd(settings, threads, stop_event,hostname,port):\n    if settings['simulated']:\n        print(\"Starting {} simulator\".format(settings[\"name\"]))\n        b4sd_thread = threading.Thread(target=run_b4sd_simulator, args=(2, b4sd_callback, stop_event, publish_event, settings))\n        b4sd_thread.start()\n        threads.append(b4sd_thread)\n        print(\"{0} simulator started\".format(settings[\"name\"]))\n    else:\n        from sensors.b4sd import run_b4sd_loop, B4SD\n        print(\"Starting {} loop\".format(settings[\"name\"]))",
         "detail": "project.components.b4sd",
         "documentation": {}
     },
@@ -1990,7 +2192,7 @@
         "kind": 2,
         "importPath": "project.components.rgb",
         "description": "project.components.rgb",
-        "peekOfCode": "def run_rgb(settings, threads, stop_event):\n    if settings['simulated']:\n        print(\"Starting {} simulator\".format(settings[\"name\"]))\n        rgb_thread = threading.Thread(target=run_rgb_simulator, args=(2, rgb_callback, stop_event, publish_event, settings))\n        rgb_thread.start()\n        threads.append(rgb_thread)\n        print(\"{0} simulator started\".format(settings[\"name\"]))\n    else:\n        from sensors.rgb import run_rgb_loop, RGB\n        print(\"Starting {} loop\".format(settings[\"name\"]))",
+        "peekOfCode": "def run_rgb(settings, threads, stop_event,hostname,port):\n    if settings['simulated']:\n        print(\"Starting {} simulator\".format(settings[\"name\"]))\n        rgb_thread = threading.Thread(target=run_rgb_simulator, args=(2, rgb_callback, stop_event, publish_event, settings))\n        rgb_thread.start()\n        threads.append(rgb_thread)\n        print(\"{0} simulator started\".format(settings[\"name\"]))\n    else:\n        from sensors.rgb import run_rgb_loop, RGB\n        print(\"Starting {} loop\".format(settings[\"name\"]))",
         "detail": "project.components.rgb",
         "documentation": {}
     },
@@ -3169,7 +3371,7 @@
         "kind": 2,
         "importPath": "project.simulations.rgb",
         "description": "project.simulations.rgb",
-        "peekOfCode": "def map_color(key):\n    match key:\n        case \"1\":\n            return \"red\"\n        case \"2\":\n            return \"green\"\n        case \"3\":\n            return \"blue\"\n        case \"4\":\n            return \"yellow\"",
+        "peekOfCode": "def map_color(key):\n    if key == \"1\":\n        return \"red\"\n    elif key == \"2\":\n        return \"green\"\n    elif key == \"3\":\n        return \"blue\"\n    elif key == \"4\":\n        return \"yellow\"\n    elif key == \"5\":",
         "detail": "project.simulations.rgb",
         "documentation": {}
     },
@@ -3214,7 +3416,7 @@
         "kind": 5,
         "importPath": "project.simulations.rgb",
         "description": "project.simulations.rgb",
-        "peekOfCode": "status = \"off\"\nnew_action = \"off\"\nall_states = [\"red\", \"green\", \"blue\", \"yellow\", \"purple\", \"lightBlue\", \"white\", \"off\"]\ndef map_color(key):\n    match key:\n        case \"1\":\n            return \"red\"\n        case \"2\":\n            return \"green\"\n        case \"3\":",
+        "peekOfCode": "status = \"off\"\nnew_action = \"off\"\nall_states = [\"red\", \"green\", \"blue\", \"yellow\", \"purple\", \"lightBlue\", \"white\", \"off\"]\ndef map_color(key):\n    if key == \"1\":\n        return \"red\"\n    elif key == \"2\":\n        return \"green\"\n    elif key == \"3\":\n        return \"blue\"",
         "detail": "project.simulations.rgb",
         "documentation": {}
     },
@@ -3223,7 +3425,7 @@
         "kind": 5,
         "importPath": "project.simulations.rgb",
         "description": "project.simulations.rgb",
-        "peekOfCode": "new_action = \"off\"\nall_states = [\"red\", \"green\", \"blue\", \"yellow\", \"purple\", \"lightBlue\", \"white\", \"off\"]\ndef map_color(key):\n    match key:\n        case \"1\":\n            return \"red\"\n        case \"2\":\n            return \"green\"\n        case \"3\":\n            return \"blue\"",
+        "peekOfCode": "new_action = \"off\"\nall_states = [\"red\", \"green\", \"blue\", \"yellow\", \"purple\", \"lightBlue\", \"white\", \"off\"]\ndef map_color(key):\n    if key == \"1\":\n        return \"red\"\n    elif key == \"2\":\n        return \"green\"\n    elif key == \"3\":\n        return \"blue\"\n    elif key == \"4\":",
         "detail": "project.simulations.rgb",
         "documentation": {}
     },
@@ -3232,7 +3434,7 @@
         "kind": 5,
         "importPath": "project.simulations.rgb",
         "description": "project.simulations.rgb",
-        "peekOfCode": "all_states = [\"red\", \"green\", \"blue\", \"yellow\", \"purple\", \"lightBlue\", \"white\", \"off\"]\ndef map_color(key):\n    match key:\n        case \"1\":\n            return \"red\"\n        case \"2\":\n            return \"green\"\n        case \"3\":\n            return \"blue\"\n        case \"4\":",
+        "peekOfCode": "all_states = [\"red\", \"green\", \"blue\", \"yellow\", \"purple\", \"lightBlue\", \"white\", \"off\"]\ndef map_color(key):\n    if key == \"1\":\n        return \"red\"\n    elif key == \"2\":\n        return \"green\"\n    elif key == \"3\":\n        return \"blue\"\n    elif key == \"4\":\n        return \"yellow\"",
         "detail": "project.simulations.rgb",
         "documentation": {}
     },
@@ -3268,7 +3470,7 @@
         "kind": 2,
         "importPath": "project.main",
         "description": "project.main",
-        "peekOfCode": "def on_connect(client, userdata, flags, rc):\n    client.subscribe(\"pi1\")\n    client.subscribe(\"front-bb\")\n    client.subscribe(\"front-bb-off\")\n    client.subscribe(\"pi3\")\nmqtt_client.on_connect = on_connect\nmqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef connect_mqtt():\n    mqtt_client.connect(\"localhost\", 1883, 60)\n    mqtt_client.loop_start()",
+        "peekOfCode": "def on_connect(client, userdata, flags, rc):\n    client.subscribe(\"pi1\")\n    client.subscribe(\"front-bb\")\n    client.subscribe(\"front-bb-off\")\n    client.subscribe(\"pi3\")\nmqtt_client.on_connect = on_connect\nmqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef connect_mqtt():\n    mqtt_client.connect(HOSTNAME, PORT, 60)\n    mqtt_client.loop_start()",
         "detail": "project.main",
         "documentation": {}
     },
@@ -3277,7 +3479,7 @@
         "kind": 2,
         "importPath": "project.main",
         "description": "project.main",
-        "peekOfCode": "def connect_mqtt():\n    mqtt_client.connect(\"localhost\", 1883, 60)\n    mqtt_client.loop_start()\ndef menu():\n    print(\"=\" * 10 + \"  MENU  \" + \"=\" * 10)\n    print(\"-- Enter B to activate buzzer --\")\n    print(\"-- Enter D to deactivate buzzer --\")\n    print(\"-- Enter L to change light state --\")\n    print(\"-- Enter X to stop all devices --\")\n    print(\"=\" * 30)",
+        "peekOfCode": "def connect_mqtt():\n    mqtt_client.connect(HOSTNAME, PORT, 60)\n    mqtt_client.loop_start()\ndef menu():\n    print(\"=\" * 10 + \"  MENU  \" + \"=\" * 10)\n    print(\"-- Enter B to activate buzzer --\")\n    print(\"-- Enter D to deactivate buzzer --\")\n    print(\"-- Enter L to change light state --\")\n    print(\"-- Enter X to stop all devices --\")\n    print(\"=\" * 30)",
         "detail": "project.main",
         "documentation": {}
     },
@@ -3385,7 +3587,7 @@
         "kind": 5,
         "importPath": "project.main",
         "description": "project.main",
-        "peekOfCode": "bb_alarm_time = \"21:39\"\ndef on_connect(client, userdata, flags, rc):\n    client.subscribe(\"pi1\")\n    client.subscribe(\"front-bb\")\n    client.subscribe(\"front-bb-off\")\n    client.subscribe(\"pi3\")\nmqtt_client.on_connect = on_connect\nmqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef connect_mqtt():\n    mqtt_client.connect(\"localhost\", 1883, 60)",
+        "peekOfCode": "bb_alarm_time = \"21:39\"\ndef on_connect(client, userdata, flags, rc):\n    client.subscribe(\"pi1\")\n    client.subscribe(\"front-bb\")\n    client.subscribe(\"front-bb-off\")\n    client.subscribe(\"pi3\")\nmqtt_client.on_connect = on_connect\nmqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef connect_mqtt():\n    mqtt_client.connect(HOSTNAME, PORT, 60)",
         "detail": "project.main",
         "documentation": {}
     },
@@ -3394,7 +3596,7 @@
         "kind": 5,
         "importPath": "project.main",
         "description": "project.main",
-        "peekOfCode": "mqtt_client.on_connect = on_connect\nmqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef connect_mqtt():\n    mqtt_client.connect(\"localhost\", 1883, 60)\n    mqtt_client.loop_start()\ndef menu():\n    print(\"=\" * 10 + \"  MENU  \" + \"=\" * 10)\n    print(\"-- Enter B to activate buzzer --\")\n    print(\"-- Enter D to deactivate buzzer --\")\n    print(\"-- Enter L to change light state --\")",
+        "peekOfCode": "mqtt_client.on_connect = on_connect\nmqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef connect_mqtt():\n    mqtt_client.connect(HOSTNAME, PORT, 60)\n    mqtt_client.loop_start()\ndef menu():\n    print(\"=\" * 10 + \"  MENU  \" + \"=\" * 10)\n    print(\"-- Enter B to activate buzzer --\")\n    print(\"-- Enter D to deactivate buzzer --\")\n    print(\"-- Enter L to change light state --\")",
         "detail": "project.main",
         "documentation": {}
     },
@@ -3403,7 +3605,7 @@
         "kind": 5,
         "importPath": "project.main",
         "description": "project.main",
-        "peekOfCode": "mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef connect_mqtt():\n    mqtt_client.connect(\"localhost\", 1883, 60)\n    mqtt_client.loop_start()\ndef menu():\n    print(\"=\" * 10 + \"  MENU  \" + \"=\" * 10)\n    print(\"-- Enter B to activate buzzer --\")\n    print(\"-- Enter D to deactivate buzzer --\")\n    print(\"-- Enter L to change light state --\")\n    print(\"-- Enter X to stop all devices --\")",
+        "peekOfCode": "mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef connect_mqtt():\n    mqtt_client.connect(HOSTNAME, PORT, 60)\n    mqtt_client.loop_start()\ndef menu():\n    print(\"=\" * 10 + \"  MENU  \" + \"=\" * 10)\n    print(\"-- Enter B to activate buzzer --\")\n    print(\"-- Enter D to deactivate buzzer --\")\n    print(\"-- Enter L to change light state --\")\n    print(\"-- Enter X to stop all devices --\")",
         "detail": "project.main",
         "documentation": {}
     },
@@ -3552,11 +3754,83 @@
         "documentation": {}
     },
     {
+        "label": "extract_keys_from_settings",
+        "kind": 2,
+        "importPath": "server.server",
+        "description": "server.server",
+        "peekOfCode": "def extract_keys_from_settings():\n    settings = load_settings()\n    return list(settings.keys())\ndef extract_runs_on_from_settings():\n    settings = load_settings()\n    unique_runs_on = {settings[key]['runs_on'] for key in settings}\n    return list(unique_runs_on)\n@app.route('/device_names', methods=['GET'])\ndef retrieve_device_names():\n    device_names = extract_keys_from_settings()",
+        "detail": "server.server",
+        "documentation": {}
+    },
+    {
+        "label": "extract_runs_on_from_settings",
+        "kind": 2,
+        "importPath": "server.server",
+        "description": "server.server",
+        "peekOfCode": "def extract_runs_on_from_settings():\n    settings = load_settings()\n    unique_runs_on = {settings[key]['runs_on'] for key in settings}\n    return list(unique_runs_on)\n@app.route('/device_names', methods=['GET'])\ndef retrieve_device_names():\n    device_names = extract_keys_from_settings()\n    return jsonify(device_names)\n@app.route('/api/updateRGB/<color>', methods=['GET'])\n@cross_origin()",
+        "detail": "server.server",
+        "documentation": {}
+    },
+    {
+        "label": "retrieve_device_names",
+        "kind": 2,
+        "importPath": "server.server",
+        "description": "server.server",
+        "peekOfCode": "def retrieve_device_names():\n    device_names = extract_keys_from_settings()\n    return jsonify(device_names)\n@app.route('/api/updateRGB/<color>', methods=['GET'])\n@cross_origin()\ndef update_rgb(color):\n    rgb_topic = \"front-rgb\"\n    payload = json.dumps({\"value\": color})\n    mqtt_client.publish(rgb_topic, payload)\n    print(\"rgb change sent with mqtt\")",
+        "detail": "server.server",
+        "documentation": {}
+    },
+    {
+        "label": "update_rgb",
+        "kind": 2,
+        "importPath": "server.server",
+        "description": "server.server",
+        "peekOfCode": "def update_rgb(color):\n    rgb_topic = \"front-rgb\"\n    payload = json.dumps({\"value\": color})\n    mqtt_client.publish(rgb_topic, payload)\n    print(\"rgb change sent with mqtt\")\n    return payload\n@app.route('/api/getAlarmClock', methods=['GET'])\n@cross_origin()\ndef get_alarm_clock():\n    print(\"api to get alarm clock\")",
+        "detail": "server.server",
+        "documentation": {}
+    },
+    {
+        "label": "get_alarm_clock",
+        "kind": 2,
+        "importPath": "server.server",
+        "description": "server.server",
+        "peekOfCode": "def get_alarm_clock():\n    print(\"api to get alarm clock\")\n    payload = json.dumps({\"time\": bb_alarm_time})\n    return payload\n@app.route('/api/setAlarmClock', methods=['PUT'])\n@cross_origin()\ndef set_alarm_clock():\n    global bb_alarm_time\n    try:\n        data = request.json",
+        "detail": "server.server",
+        "documentation": {}
+    },
+    {
+        "label": "set_alarm_clock",
+        "kind": 2,
+        "importPath": "server.server",
+        "description": "server.server",
+        "peekOfCode": "def set_alarm_clock():\n    global bb_alarm_time\n    try:\n        data = request.json\n        bb_alarm_time = data.get('time')\n        print(\"Alarm clock time changed to \", bb_alarm_time)\n        bb_topic = \"front-bb\"\n        payload = json.dumps({\"time\": bb_alarm_time})\n        mqtt_client.publish(bb_topic, payload)\n        return jsonify({'message': 'Alarm time set successfully'})",
+        "detail": "server.server",
+        "documentation": {}
+    },
+    {
+        "label": "input_pin",
+        "kind": 2,
+        "importPath": "server.server",
+        "description": "server.server",
+        "peekOfCode": "def input_pin():\n    try:\n        data = request.json\n        pin = data.get('pin')\n        print(\"Pin entered: \", pin)\n        handle_pin_input(pin)\n        return jsonify({'message': 'Alarm time set successfully'})\n    except Exception as e:\n        return jsonify({'error': str(e)}), 500\n@app.route('/api/turnOffAlarmClock', methods=['GET'])",
+        "detail": "server.server",
+        "documentation": {}
+    },
+    {
+        "label": "turn_off_alarm_clock",
+        "kind": 2,
+        "importPath": "server.server",
+        "description": "server.server",
+        "peekOfCode": "def turn_off_alarm_clock():\n    try:\n        print(\"turn off alarm clock\")\n        bb_topic = \"front-bb-off\"\n        payload = json.dumps({\"time\": \"\"})\n        mqtt_client.publish(bb_topic, payload)\n        return jsonify({'message': 'Alarm time turned off successfully'})\n    except Exception as e:\n        return jsonify({'error': str(e)}), 500\nif __name__ == '__main__':",
+        "detail": "server.server",
+        "documentation": {}
+    },
+    {
         "label": "app",
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "app = Flask(__name__)\nCORS(app)\nsocketio = SocketIO(app, cors_allowed_origins=\"http://localhost:3001\", async_mode='threading')\n# InfluxDB Configuration\ntoken = os.getenv(\"INFLUXDB_TOKEN\")\norg = os.getenv(\"ORGANIZATION\")\nurl = os.getenv(\"URL\")\nbucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\n# MQTT Configuration",
+        "peekOfCode": "app = Flask(__name__)\nCORS(app)\nsocketio = SocketIO(app, cors_allowed_origins=\"http://localhost:3001\", async_mode='threading')\n# InfluxDB Configuration\ntoken = os.getenv(\"INFLUXDB_TOKEN\")\norg = os.getenv(\"ORGANIZATION\")\nurl = os.getenv(\"URL\")\nbucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\nmqtt_client = mqtt.Client()",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3565,7 +3839,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "socketio = SocketIO(app, cors_allowed_origins=\"http://localhost:3001\", async_mode='threading')\n# InfluxDB Configuration\ntoken = os.getenv(\"INFLUXDB_TOKEN\")\norg = os.getenv(\"ORGANIZATION\")\nurl = os.getenv(\"URL\")\nbucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\n# MQTT Configuration\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)",
+        "peekOfCode": "socketio = SocketIO(app, cors_allowed_origins=\"http://localhost:3001\", async_mode='threading')\n# InfluxDB Configuration\ntoken = os.getenv(\"INFLUXDB_TOKEN\")\norg = os.getenv(\"ORGANIZATION\")\nurl = os.getenv(\"URL\")\nbucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3574,7 +3848,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "token = os.getenv(\"INFLUXDB_TOKEN\")\norg = os.getenv(\"ORGANIZATION\")\nurl = os.getenv(\"URL\")\nbucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\n# MQTT Configuration\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0",
+        "peekOfCode": "token = os.getenv(\"INFLUXDB_TOKEN\")\norg = os.getenv(\"ORGANIZATION\")\nurl = os.getenv(\"URL\")\nbucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3583,7 +3857,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "org = os.getenv(\"ORGANIZATION\")\nurl = os.getenv(\"URL\")\nbucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\n# MQTT Configuration\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False",
+        "peekOfCode": "org = os.getenv(\"ORGANIZATION\")\nurl = os.getenv(\"URL\")\nbucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False\nlock = threading.Lock()",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3592,7 +3866,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "url = os.getenv(\"URL\")\nbucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\n# MQTT Configuration\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False\nlock = threading.Lock()",
+        "peekOfCode": "url = os.getenv(\"URL\")\nbucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False\nlock = threading.Lock()\nlast_pressed_ds1 = 0",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3601,7 +3875,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "bucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\n# MQTT Configuration\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False\nlock = threading.Lock()\nlast_pressed_ds1 = 0",
+        "peekOfCode": "bucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False\nlock = threading.Lock()\nlast_pressed_ds1 = 0\nlast_released_ds1 = 0",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3610,7 +3884,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "influxdb_client = InfluxDBClient(url=url, token=token, org=org)\n# MQTT Configuration\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False\nlock = threading.Lock()\nlast_pressed_ds1 = 0\nlast_released_ds1 = 0",
+        "peekOfCode": "influxdb_client = InfluxDBClient(url=url, token=token, org=org)\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False\nlock = threading.Lock()\nlast_pressed_ds1 = 0\nlast_released_ds1 = 0\nlast_pressed_ds2 = 0",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3646,7 +3920,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "lock = threading.Lock()\nlast_pressed_ds1 = 0\nlast_released_ds1 = 0\nlast_pressed_ds2 = 0\nlast_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\n# Table names: Temperature, Humidity, PIR_motion, Button_pressed, Buzzer_active, Light_status, MS_password, UDS,",
+        "peekOfCode": "lock = threading.Lock()\nlast_pressed_ds1 = 0\nlast_released_ds1 = 0\nlast_pressed_ds2 = 0\nlast_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3655,7 +3929,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "last_pressed_ds1 = 0\nlast_released_ds1 = 0\nlast_pressed_ds2 = 0\nlast_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\n# Table names: Temperature, Humidity, PIR_motion, Button_pressed, Buzzer_active, Light_status, MS_password, UDS,\n#              Acceleration, Gyroscope, Infrared, Time_b4sd",
+        "peekOfCode": "last_pressed_ds1 = 0\nlast_released_ds1 = 0\nlast_pressed_ds2 = 0\nlast_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    with app.app_context():",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3664,7 +3938,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "last_released_ds1 = 0\nlast_pressed_ds2 = 0\nlast_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\n# Table names: Temperature, Humidity, PIR_motion, Button_pressed, Buzzer_active, Light_status, MS_password, UDS,\n#              Acceleration, Gyroscope, Infrared, Time_b4sd\n# Topic names: data/temperature, data/humidity, data/pir, data/button, data/buzzer, data/light, data/ms, data/uds,",
+        "peekOfCode": "last_released_ds1 = 0\nlast_pressed_ds2 = 0\nlast_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    with app.app_context():\n        with lock:",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3673,7 +3947,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "last_pressed_ds2 = 0\nlast_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\n# Table names: Temperature, Humidity, PIR_motion, Button_pressed, Buzzer_active, Light_status, MS_password, UDS,\n#              Acceleration, Gyroscope, Infrared, Time_b4sd\n# Topic names: data/temperature, data/humidity, data/pir, data/button, data/buzzer, data/light, data/ms, data/uds,\n#              data/acceleration, data/gyroscope, data/ir, data/b4sd",
+        "peekOfCode": "last_pressed_ds2 = 0\nlast_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    with app.app_context():\n        with lock:\n            global is_alarm",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3682,7 +3956,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "last_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\n# Table names: Temperature, Humidity, PIR_motion, Button_pressed, Buzzer_active, Light_status, MS_password, UDS,\n#              Acceleration, Gyroscope, Infrared, Time_b4sd\n# Topic names: data/temperature, data/humidity, data/pir, data/button, data/buzzer, data/light, data/ms, data/uds,\n#              data/acceleration, data/gyroscope, data/ir, data/b4sd\ndef alarm_set_on():",
+        "peekOfCode": "last_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    with app.app_context():\n        with lock:\n            global is_alarm\n            is_alarm = True",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3691,7 +3965,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "correct_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\n# Table names: Temperature, Humidity, PIR_motion, Button_pressed, Buzzer_active, Light_status, MS_password, UDS,\n#              Acceleration, Gyroscope, Infrared, Time_b4sd\n# Topic names: data/temperature, data/humidity, data/pir, data/button, data/buzzer, data/light, data/ms, data/uds,\n#              data/acceleration, data/gyroscope, data/ir, data/b4sd\ndef alarm_set_on():\n    with app.app_context():",
+        "peekOfCode": "correct_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    with app.app_context():\n        with lock:\n            global is_alarm\n            is_alarm = True\n            mqtt_client.publish(\"pi1\", json.dumps({\"trigger\": \"B\"}))",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3700,7 +3974,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "security_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\n# Table names: Temperature, Humidity, PIR_motion, Button_pressed, Buzzer_active, Light_status, MS_password, UDS,\n#              Acceleration, Gyroscope, Infrared, Time_b4sd\n# Topic names: data/temperature, data/humidity, data/pir, data/button, data/buzzer, data/light, data/ms, data/uds,\n#              data/acceleration, data/gyroscope, data/ir, data/b4sd\ndef alarm_set_on():\n    with app.app_context():\n        with lock:",
+        "peekOfCode": "security_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    with app.app_context():\n        with lock:\n            global is_alarm\n            is_alarm = True\n            mqtt_client.publish(\"pi1\", json.dumps({\"trigger\": \"B\"}))\n            mqtt_client.publish(\"pi3\", json.dumps({\"trigger\": \"B\"}))",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3709,7 +3983,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "last_correct_pin = 0\nbb_alarm_time = \"21:39\"\n# Table names: Temperature, Humidity, PIR_motion, Button_pressed, Buzzer_active, Light_status, MS_password, UDS,\n#              Acceleration, Gyroscope, Infrared, Time_b4sd\n# Topic names: data/temperature, data/humidity, data/pir, data/button, data/buzzer, data/light, data/ms, data/uds,\n#              data/acceleration, data/gyroscope, data/ir, data/b4sd\ndef alarm_set_on():\n    with app.app_context():\n        with lock:\n            global is_alarm",
+        "peekOfCode": "last_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    with app.app_context():\n        with lock:\n            global is_alarm\n            is_alarm = True\n            mqtt_client.publish(\"pi1\", json.dumps({\"trigger\": \"B\"}))\n            mqtt_client.publish(\"pi3\", json.dumps({\"trigger\": \"B\"}))\n            print(\"ALARM\")",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3718,7 +3992,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "bb_alarm_time = \"21:39\"\n# Table names: Temperature, Humidity, PIR_motion, Button_pressed, Buzzer_active, Light_status, MS_password, UDS,\n#              Acceleration, Gyroscope, Infrared, Time_b4sd\n# Topic names: data/temperature, data/humidity, data/pir, data/button, data/buzzer, data/light, data/ms, data/uds,\n#              data/acceleration, data/gyroscope, data/ir, data/b4sd\ndef alarm_set_on():\n    with app.app_context():\n        with lock:\n            global is_alarm\n            is_alarm = True",
+        "peekOfCode": "bb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    with app.app_context():\n        with lock:\n            global is_alarm\n            is_alarm = True\n            mqtt_client.publish(\"pi1\", json.dumps({\"trigger\": \"B\"}))\n            mqtt_client.publish(\"pi3\", json.dumps({\"trigger\": \"B\"}))\n            print(\"ALARM\")\n            point = (",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3745,7 +4019,7 @@
         "kind": 2,
         "importPath": "server.settings",
         "description": "server.settings",
-        "peekOfCode": "def load_settings():\n    file_path = \"settings/settings.json\"\n    with open(file_path, 'r') as f:\n        return json.load(f)\nlock = threading.Lock()",
+        "peekOfCode": "def load_settings():\n    file_path = \"settings.json\"\n    with open(file_path, 'r') as f:\n        return json.load(f)\nlock = threading.Lock()",
         "detail": "server.settings",
         "documentation": {}
     },
@@ -3754,7 +4028,7 @@
         "kind": 5,
         "importPath": "server.settings",
         "description": "server.settings",
-        "peekOfCode": "HOSTNAME = \"localhost\"\nPORT = 1883\nlock = threading.Lock()\ndef load_settings():\n    file_path = \"settings/settings.json\"\n    with open(file_path, 'r') as f:\n        return json.load(f)\nlock = threading.Lock()",
+        "peekOfCode": "HOSTNAME = \"localhost\"\nPORT = 1883\nlock = threading.Lock()\ndef load_settings():\n    file_path = \"settings.json\"\n    with open(file_path, 'r') as f:\n        return json.load(f)\nlock = threading.Lock()",
         "detail": "server.settings",
         "documentation": {}
     },
@@ -3763,7 +4037,7 @@
         "kind": 5,
         "importPath": "server.settings",
         "description": "server.settings",
-        "peekOfCode": "PORT = 1883\nlock = threading.Lock()\ndef load_settings():\n    file_path = \"settings/settings.json\"\n    with open(file_path, 'r') as f:\n        return json.load(f)\nlock = threading.Lock()",
+        "peekOfCode": "PORT = 1883\nlock = threading.Lock()\ndef load_settings():\n    file_path = \"settings.json\"\n    with open(file_path, 'r') as f:\n        return json.load(f)\nlock = threading.Lock()",
         "detail": "server.settings",
         "documentation": {}
     },
@@ -3772,7 +4046,7 @@
         "kind": 5,
         "importPath": "server.settings",
         "description": "server.settings",
-        "peekOfCode": "lock = threading.Lock()\ndef load_settings():\n    file_path = \"settings/settings.json\"\n    with open(file_path, 'r') as f:\n        return json.load(f)\nlock = threading.Lock()",
+        "peekOfCode": "lock = threading.Lock()\ndef load_settings():\n    file_path = \"settings.json\"\n    with open(file_path, 'r') as f:\n        return json.load(f)\nlock = threading.Lock()",
         "detail": "server.settings",
         "documentation": {}
     },

@@ -1,6 +1,5 @@
 version: "3.7"
 services:
-
   # mqtt5 eclipse-mosquitto
   mqtt5:
     image: eclipse-mosquitto
@@ -30,11 +29,10 @@ services:
     networks:
       - iot-network
 
-  
   grafana:
     image: grafana/grafana:latest
     ports:
-      - '3000:3000'
+      - "3000:3000"
     volumes:
       - grafana:/var/lib/grafana
     depends_on:

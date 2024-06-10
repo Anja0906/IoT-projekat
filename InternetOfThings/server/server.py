@@ -9,7 +9,7 @@ from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 import paho.mqtt.client as mqtt
 import json
-import settings
+from settings import load_settings
 
 # Load environment variables from .env file
 load_dotenv()
@@ -296,7 +296,78 @@ def handle_influx_query(query):
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
+def extract_keys_from_settings():
+    settings = load_settings()
+    return list(settings.keys())
 
+def extract_runs_on_from_settings():
+    settings = load_settings()
+    unique_runs_on = {settings[key]['runs_on'] for key in settings}
+    return list(unique_runs_on)
+
+@app.route('/device_names', methods=['GET'])
+def retrieve_device_names():
+    device_names = extract_keys_from_settings()
+    return jsonify(device_names)
+
+@app.route('/api/updateRGB/<color>', methods=['GET'])
+@cross_origin()
+def update_rgb(color):
+    rgb_topic = "front-rgb"
+    payload = json.dumps({"value": color})
+    mqtt_client.publish(rgb_topic, payload)
+    print("rgb change sent with mqtt")
+    return payload
+
+@app.route('/api/getAlarmClock', methods=['GET'])
+@cross_origin()
+def get_alarm_clock():
+    print("api to get alarm clock")
+    payload = json.dumps({"time": bb_alarm_time})
+    return payload
+
+
+@app.route('/api/setAlarmClock', methods=['PUT'])
+@cross_origin()
+def set_alarm_clock():
+    global bb_alarm_time
+    try:
+        data = request.json
+        bb_alarm_time = data.get('time')
+        print("Alarm clock time changed to ", bb_alarm_time)
+
+        bb_topic = "front-bb"
+        payload = json.dumps({"time": bb_alarm_time})
+        mqtt_client.publish(bb_topic, payload)
+        return jsonify({'message': 'Alarm time set successfully'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/inputPin', methods=['PUT'])
+@cross_origin()
+def input_pin():
+    try:
+        data = request.json
+        pin = data.get('pin')
+        print("Pin entered: ", pin)
+        handle_pin_input(pin)
+        return jsonify({'message': 'Alarm time set successfully'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/turnOffAlarmClock', methods=['GET'])
+@cross_origin()
+def turn_off_alarm_clock():
+    try:
+        print("turn off alarm clock")
+        bb_topic = "front-bb-off"
+        payload = json.dumps({"time": ""})
+        mqtt_client.publish(bb_topic, payload)
+        return jsonify({'message': 'Alarm time turned off successfully'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     laj = threading.Thread(target=laj_koji_pase_ne_ujeda)
