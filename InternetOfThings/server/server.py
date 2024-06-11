@@ -248,6 +248,7 @@ def command_callback(data):
         handle_pin_input(data["value"])
 
 
+
 def save_to_db(topic, data):
     write_api = influxdb_client.write_api(write_options=SYNCHRONOUS)
     
@@ -271,7 +272,9 @@ def save_to_db(topic, data):
             .tag("name", data["name"])
             .field("value", data["value"])  
         )
-            
+    if data["name"] == "BRGB":  
+        print(data)
+
     write_api.write(bucket=bucket, org=org, record=point)
     command_callback(data)
     send_data_to_client(data)  

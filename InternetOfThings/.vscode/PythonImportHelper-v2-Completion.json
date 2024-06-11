@@ -1265,7 +1265,7 @@
         "kind": 2,
         "importPath": "project.actuators.rgb",
         "description": "project.actuators.rgb",
-        "peekOfCode": "def change_color(key):\n    match key:\n        case \"1\":\n            return \"red\"\n        case \"2\":\n            return \"green\"\n        case \"3\":\n            return \"blue\"\n        case \"4\":\n            return \"yellow\"",
+        "peekOfCode": "def change_color(key):\n    if key == \"1\":\n        return \"red\"\n    elif key == \"2\":\n        return \"green\"\n    elif key == \"3\":\n        return \"blue\"\n    elif key == \"4\":\n        return \"yellow\"\n    elif key == \"5\":",
         "detail": "project.actuators.rgb",
         "documentation": {}
     },
@@ -1274,7 +1274,7 @@
         "kind": 2,
         "importPath": "project.actuators.rgb",
         "description": "project.actuators.rgb",
-        "peekOfCode": "def on_connect(client, userdata, flags, rc):\n    client.subscribe(\"data/ir\")\n    client.subscribe(\"change/rgb\")\ndef update_data(topic, data):\n    global new_action\n    print(\"rgb data: \", data, \"received from topic \" + topic)\n    new_action = change_color(data[\"value\"])\ndef connect_mqtt(hostname,port):\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(hostname, port, 60)",
+        "peekOfCode": "def on_connect(client, userdata, flags, rc):\n    client.subscribe(\"data/ir\")\n    client.subscribe(\"change/rgb\")\n    client.subscribe(\"front-rgb\")\ndef update_data(topic, data):\n    global new_action\n    print(\"rgb data: \", data, \"received from topic \" + topic)\n    new_action = change_color(data[\"value\"])\ndef connect_mqtt(hostname,port):\n    mqtt_client = mqtt.Client()",
         "detail": "project.actuators.rgb",
         "documentation": {}
     },
@@ -1319,7 +1319,7 @@
         "kind": 5,
         "importPath": "project.actuators.rgb",
         "description": "project.actuators.rgb",
-        "peekOfCode": "new_action = \"off\"\ndef change_color(key):\n    match key:\n        case \"1\":\n            return \"red\"\n        case \"2\":\n            return \"green\"\n        case \"3\":\n            return \"blue\"\n        case \"4\":",
+        "peekOfCode": "new_action = \"off\"\ndef change_color(key):\n    if key == \"1\":\n        return \"red\"\n    elif key == \"2\":\n        return \"green\"\n    elif key == \"3\":\n        return \"blue\"\n    elif key == \"4\":\n        return \"yellow\"",
         "detail": "project.actuators.rgb",
         "documentation": {}
     },
