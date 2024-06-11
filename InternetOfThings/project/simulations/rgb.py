@@ -28,7 +28,7 @@ def map_color(key):
 
 def on_connect(client, userdata, flags, rc):
     client.subscribe("data/ir")
-    client.subscribe("change/rgb")
+    client.subscribe("front-rgb")
 
 def update_data(topic, data):
     global new_action
@@ -44,6 +44,7 @@ def connect_mqtt():
 
 
 def run_rgb_simulator(delay, callback, stop_event, publish_event, settings):
+    print("AAAAAAAAAAAAAAAA")
     connect_mqtt()
     global status, new_action
     while True:

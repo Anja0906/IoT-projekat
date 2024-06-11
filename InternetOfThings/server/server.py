@@ -30,6 +30,7 @@ mqtt_client.connect("localhost", 1883, 0)
 mqtt_client.loop_start()
 in_house_count = 0
 is_alarm = False
+house_keep = False
 lock = threading.Lock()
 last_pressed_ds1 = 0
 last_released_ds1 = 0
@@ -41,16 +42,14 @@ last_correct_pin = 0
 
 bb_alarm_time = "21:39"
 
-
-
 def alarm_set_on():
+    print("ALARM")
     with app.app_context():
         with lock:
             global is_alarm
             is_alarm = True
             mqtt_client.publish("pi1", json.dumps({"trigger": "B"}))
             mqtt_client.publish("pi3", json.dumps({"trigger": "B"}))
-            print("ALARM")
             point = (
                 Point("Alarm")
                 .tag("name", "triggered")
@@ -86,8 +85,7 @@ def handle_disconnect():
 
 def send_data_to_client(data):
     try:
-        socketio.emit('data/' + data["runs_on"], {'message': data})
-        print("Data sent to topic: data/" + data["runs_on"])
+        socketio.emit('data', {'message': data})
     except Exception as e:
         print(e)
 
@@ -95,7 +93,6 @@ def send_alarm_to_client():
     global is_alarm
     try:
         socketio.emit('alarm', {'message': is_alarm})
-        print("Alarm sent to topic: alarm")
     except Exception as e:
         print(e)
 
@@ -110,19 +107,20 @@ def laj_koji_pase_ne_ujeda():
     global last_pressed_ds1
     global last_pressed_ds2
     global security_timestamp
+    global house_keep
     while True:
-        if last_pressed_ds1 > 0 and time.time() - last_pressed_ds1 > 5 and last_released_ds1 <= last_pressed_ds1:
-            alarm_set_on()
-        if last_pressed_ds2 > 0 and time.time() - last_pressed_ds2 > 5 and last_released_ds2 <= last_pressed_ds2:
-            alarm_set_on()
-        if security_timestamp > time.time():
-            if (last_released_ds2 > last_pressed_ds2 and
-                    time.time() - max(last_pressed_ds2, last_released_ds2) > 5 and time.time() - last_correct_pin > 5):
+        if house_keep:
+            if last_pressed_ds1 > 0 and time.time() - last_pressed_ds1 > 5 and last_released_ds1 <= last_pressed_ds1:
                 alarm_set_on()
-            if (last_released_ds1 > last_pressed_ds1 and
-                    time.time() - max(last_pressed_ds1, last_released_ds1) > 5 and time.time() - last_correct_pin > 5):
+            if last_pressed_ds2 > 0 and time.time() - last_pressed_ds2 > 5 and last_released_ds2 <= last_pressed_ds2:
                 alarm_set_on()
-
+            if security_timestamp > time.time():
+                if (last_released_ds2 > last_pressed_ds2 and
+                        time.time() - max(last_pressed_ds2, last_released_ds2) > 5 and time.time() - last_correct_pin > 5):
+                    alarm_set_on()
+                if (last_released_ds1 > last_pressed_ds1 and
+                        time.time() - max(last_pressed_ds1, last_released_ds1) > 5 and time.time() - last_correct_pin > 5):
+                    alarm_set_on()
         time.sleep(1)
 
 def adjust_people_count(device_number=1):
@@ -131,7 +129,6 @@ def adjust_people_count(device_number=1):
                  f'r) => r["_measurement"] == "UDS") |> filter(fn: (r) => r["name"] == "DUS{device_number}") '
                  f' |> yield(name: "last")')
         response = handle_influx_query(query)
-        print("InfluxDB response:", response)
 
         try:
             values = json.loads(response.data.decode('utf-8'))['data']
@@ -173,7 +170,8 @@ def check_safe_movement(data):
         response = handle_influx_query(query)
         values = json.loads(response.data.decode('utf-8'))['data']
         global is_alarm
-        if len(values) > 0:
+        global house_keep
+        if len(values) > 0 and house_keep:
             diff = abs(values[0]["_value"] - data["value"])
             if diff > 10:
                 alarm_set_on()
@@ -182,7 +180,8 @@ def rpir_raise_alarm():
     with app.app_context():
         global is_alarm
         global in_house_count
-        if in_house_count == 0:
+        global house_keep
+        if in_house_count == 0 and house_keep:
             alarm_set_on()
 
 def ds_adjust_time(data, device_number=1):
@@ -248,8 +247,8 @@ def command_callback(data):
     if data["name"] == "DMS":
         handle_pin_input(data["value"])
 
+
 def save_to_db(topic, data):
-    print("Saving data to database: ", data)
     write_api = influxdb_client.write_api(write_options=SYNCHRONOUS)
     
     if isinstance(data["value"], int):
@@ -272,15 +271,15 @@ def save_to_db(topic, data):
             .tag("name", data["name"])
             .field("value", data["value"])  
         )
-    
+            
     write_api.write(bucket=bucket, org=org, record=point)
     command_callback(data)
+    send_data_to_client(data)  
     try:
         if data.get("is_last"): 
             send_data_to_client(data)
     except Exception as e:
         print(e)
-
 
 def handle_influx_query(query):
     try:
@@ -296,27 +295,68 @@ def handle_influx_query(query):
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
-def extract_keys_from_settings():
+def extract_filtered_device_info():
     settings = load_settings()
-    return list(settings.keys())
+    filtered_info = {
+        key: {
+            "name": device_info["name"],
+            "simulated": device_info["simulated"],
+            "pin": device_info.get("pin", None),
+            "runs_on": device_info["runs_on"]
+        }
+        for key, device_info in settings.items()
+    }
+    return filtered_info
 
-def extract_runs_on_from_settings():
-    settings = load_settings()
-    unique_runs_on = {settings[key]['runs_on'] for key in settings}
-    return list(unique_runs_on)
+@app.route('/api/device_info', methods=['GET'])
+@cross_origin()
+def retrieve_filtered_device_info():
+    filtered_device_info = extract_filtered_device_info()
+    print(filtered_device_info)
+    return jsonify(filtered_device_info)
 
-@app.route('/device_names', methods=['GET'])
-def retrieve_device_names():
-    device_names = extract_keys_from_settings()
-    return jsonify(device_names)
+@app.route('/api/active', methods=['GET'])
+@cross_origin()
+def active_system():
+    global house_keep
+    house_keep = True
+    print("System activated")
+    return jsonify({"status": "success", "message": "System activated"})
+
+@app.route('/api/deactive', methods=['GET'])
+@cross_origin()
+def deactive_system():
+    global house_keep
+    house_keep = False
+    print("System deactivated")
+    return jsonify({"status": "success", "message": "System deactivated"})
+
+@app.route('/api/device_values', methods=['GET'])
+@cross_origin()
+def retrieve_device_values():
+    query = f'from(bucket: "{bucket}") |> range(start: -5m) |> filter(fn: (r) => r["_measurement"] != "Alarm") |> last()'
+    response = handle_influx_query(query)
+    values = json.loads(response.data.decode('utf-8'))['data']
+    device_values = {}
+
+    for value in values:
+        device_name = value["name"]
+        device_values[device_name] = {
+            "value": value["_value"],
+            "measurement": value["_measurement"],
+            "time": value["_time"]
+        }
+        print(device_values[device_name])
+
+    return jsonify({"status": "success", "data": device_values})
 
 @app.route('/api/updateRGB/<color>', methods=['GET'])
 @cross_origin()
 def update_rgb(color):
+    print(color)
     rgb_topic = "front-rgb"
     payload = json.dumps({"value": color})
     mqtt_client.publish(rgb_topic, payload)
-    print("rgb change sent with mqtt")
     return payload
 
 @app.route('/api/getAlarmClock', methods=['GET'])
@@ -326,7 +366,6 @@ def get_alarm_clock():
     payload = json.dumps({"time": bb_alarm_time})
     return payload
 
-
 @app.route('/api/setAlarmClock', methods=['PUT'])
 @cross_origin()
 def set_alarm_clock():
@@ -335,14 +374,12 @@ def set_alarm_clock():
         data = request.json
         bb_alarm_time = data.get('time')
         print("Alarm clock time changed to ", bb_alarm_time)
-
-        bb_topic = "front-bb"
+        bb_topic = "front-bb-on"
         payload = json.dumps({"time": bb_alarm_time})
         mqtt_client.publish(bb_topic, payload)
         return jsonify({'message': 'Alarm time set successfully'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
 
 @app.route('/api/inputPin', methods=['PUT'])
 @cross_origin()
@@ -352,7 +389,7 @@ def input_pin():
         pin = data.get('pin')
         print("Pin entered: ", pin)
         handle_pin_input(pin)
-        return jsonify({'message': 'Alarm time set successfully'})
+        return jsonify({'message': 'Pin entered successfully'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

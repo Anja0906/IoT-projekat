@@ -50,6 +50,7 @@ def rgb_callback(status, publish_event, rgb_settings, verbose=False):
         "value": status,
         "is_last": False
     }
+    print("AAAAAAAAAAAAA" +  rgb_settings["name"])
 
     with counter_lock:
         if publish_data_counter + 1 >= publish_data_limit:

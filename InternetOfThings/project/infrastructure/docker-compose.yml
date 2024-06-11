@@ -44,13 +44,12 @@ services:
     networks:
       - iot-network
 
-# volumes for mapping data,config and log
 volumes:
   config:
   data:
   log:
-  influxdb:
-  grafana:
+  influxdb: {}
+  grafana: {}
 
 networks:
   iot-network:

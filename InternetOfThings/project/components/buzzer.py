@@ -32,20 +32,22 @@ publisher_thread.daemon = True
 publisher_thread.start()
 
 
-def buzzer_activated(publish_event, dht_settings, verbose=False):
+def buzzer_activated(publish_event, buzzer_settings, verbose=False):
     global publish_data_counter, publish_data_limit
+
+    measurement = "bedroom_buzzer" if buzzer_settings["name"] == "BB" else "Buzzer_active"
 
     if verbose:
         t = time.localtime()
-        print("=" * 10 + dht_settings["name"] + "=" * 10)
+        print("=" * 10 + buzzer_settings["name"] + "=" * 10)
         print(f"Timestamp: {time.strftime('%H:%M:%S', t)}")
         print("Buzzer activated")
 
     payload = {
-        "measurement": "Buzzer_active",
-        "simulated": dht_settings['simulated'],
-        "runs_on": dht_settings["runs_on"],
-        "name": dht_settings["name"],
+        "measurement": measurement,
+        "simulated": buzzer_settings['simulated'],
+        "runs_on": buzzer_settings["runs_on"],
+        "name": buzzer_settings["name"],
         "value": "activated",
         "is_last": False
     }
@@ -59,21 +61,22 @@ def buzzer_activated(publish_event, dht_settings, verbose=False):
     if publish_data_counter >= publish_data_limit:
         publish_event.set()
 
-
-def buzzer_deactivated(publish_event, dht_settings, verbose=False):
+def buzzer_deactivated(publish_event, buzzer_settings, verbose=False):
     global publish_data_counter, publish_data_limit
+
+    measurement = "bedroom_buzzer" if buzzer_settings["name"] == "BB" else "Buzzer_active"
 
     if verbose:
         t = time.localtime()
-        print("=" * 10 + dht_settings["name"] + "=" * 10)
+        print("=" * 10 + buzzer_settings["name"] + "=" * 10)
         print(f"Timestamp: {time.strftime('%H:%M:%S', t)}")
         print("Buzzer deactivated")
 
     payload = {
-        "measurement": "Buzzer_active",
-        "simulated": dht_settings['simulated'],
-        "runs_on": dht_settings["runs_on"],
-        "name": dht_settings["name"],
+        "measurement": measurement,
+        "simulated": buzzer_settings['simulated'],
+        "runs_on": buzzer_settings["runs_on"],
+        "name": buzzer_settings["name"],
         "value": "deactivated",
         "is_last": False
     }
@@ -86,6 +89,7 @@ def buzzer_deactivated(publish_event, dht_settings, verbose=False):
 
     if publish_data_counter >= publish_data_limit:
         publish_event.set()
+
 
 
 def run_buzzer(settings, threads, stop_event):

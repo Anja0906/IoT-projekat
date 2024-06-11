@@ -1,30 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import DeviceService from '../services/DeviceService';
-import "./Dialog.css"
+import React, { useState, useEffect } from "react";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import DeviceService from "../services/DeviceService";
+import "./Dialog.css";
 
 const RGBDialog = ({ open, onClose, device }) => {
-  const [selectedColor, setSelectedColor] = useState('');
+  const [selectedColor, setSelectedColor] = useState("");
 
   useEffect(() => {
     if (open && device) {
       const colorMapping = {
-        'red': 1,
-        'green': 2,
-        'blue': 3,
-        'lightBlue': 5,
-        'yellow': 4,
-        'purple': 6,
-        'white': 7,
-        'off': 0,
+        red: 1,
+        green: 2,
+        blue: 3,
+        lightBlue: 5,
+        yellow: 4,
+        purple: 6,
+        white: 7,
+        off: 0,
       };
       setSelectedColor(colorMapping[device.value]);
     }
@@ -36,18 +36,19 @@ const RGBDialog = ({ open, onClose, device }) => {
 
   const handleSave = async () => {
     try {
+      console.log(selectedColor);
       await DeviceService.updateRGBLight(selectedColor);
-  } catch (error) {
+    } catch (error) {
       console.log("Error fetching data from the server");
       console.log(error);
-  }
+    }
     onClose();
   };
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle className='dialog-title'>Change Light Color</DialogTitle>
-      <DialogContent className='device-dialog'>
+      <DialogTitle className="dialog-title">Change Light Color</DialogTitle>
+      <DialogContent className="device-dialog">
         <FormControl fullWidth>
           <InputLabel id="color-select-label">Select Color</InputLabel>
           <Select

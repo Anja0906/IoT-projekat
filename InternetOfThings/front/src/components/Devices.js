@@ -14,6 +14,7 @@ export class Devices extends Component {
     super(props);
     this.state = {
       data: [],
+      deviceValues: {},
       isColorDialogOpen: false,
       isDMSDialogOpen: false,
       isBBDialogOpen: false,
@@ -26,7 +27,13 @@ export class Devices extends Component {
   async fetchData() {
     try {
       const result = await DeviceService.getDevices();
-      this.setState({ data: result });
+      const valuesResult = await DeviceService.getDeviceValues();
+      this.setState({
+        data: Object.values(result.data), // Convert object to array
+        deviceValues: valuesResult.data.data,
+      });
+      console.log("Fetched devices:", result);
+      console.log("Fetched device values:", valuesResult.data.data);
     } catch (error) {
       console.log("Error fetching data from the server");
       console.log(error);
@@ -78,6 +85,22 @@ export class Devices extends Component {
       console.log(message);
       this.setState({ showAlarm: message });
       localStorage.setItem("alarm", message);
+    });
+
+    this.socket.on("color_change", (msg) => {
+      const { color } = msg;
+      console.log("Color change:", color);
+      this.setState((prevState) => {
+        const updatedData = prevState.data.map((device) =>
+          device.name === "BRGB"
+            ? {
+                ...device,
+                value: color,
+              }
+            : device
+        );
+        return { data: updatedData };
+      });
     });
   }
 
@@ -250,8 +273,26 @@ export class Devices extends Component {
     this.setState({ isBBDialogOpen: false, selectedDevice: null });
   };
 
+  handleActivateSystem = async () => {
+    try {
+      const response = await DeviceService.activateSystem();
+      console.log(response.message);
+    } catch (error) {
+      console.log("Error activating system:", error);
+    }
+  };
+
+  handleDeactivateSystem = async () => {
+    try {
+      const response = await DeviceService.deactivateSystem();
+      console.log(response.message);
+    } catch (error) {
+      console.log("Error deactivating system:", error);
+    }
+  };
+
   render() {
-    const { data } = this.state;
+    const { data, deviceValues } = this.state;
     const showAlarm = this.state.showAlarm;
 
     return (
@@ -262,6 +303,7 @@ export class Devices extends Component {
           open={this.state.isColorDialogOpen}
           onClose={this.closeColorDialog}
           device={this.state.selectedDevice}
+          fetchDeviceValues={this.fetchData} // Pass the fetch function to the dialog
         />
         <DMSDialog
           open={this.state.isDMSDialogOpen}
@@ -275,14 +317,17 @@ export class Devices extends Component {
         />
         <DevicesList
           devices={data}
+          deviceValues={deviceValues}
           openColorDialog={this.openColorDialog}
           openDMSDialog={this.openDMSDialog}
           openBBDialog={this.openBBDialog}
+          handleActivateSystem={this.handleActivateSystem}
+          handleDeactivateSystem={this.handleDeactivateSystem}
         />
         <iframe
           width="100%"
           height="900vh"
-          src="http://localhost:3000/public-dashboards/b7417158c7d5433e91984caeb220d594"
+          src="http://localhost:3000/d/b32b85bf-e022-4505-8d2a-e0fd0c9e4f32/rpir4?orgId=1&from=1718038977575&to=1718060577575"
           frameBorder="0"
         ></iframe>
       </div>
@@ -291,118 +336,99 @@ export class Devices extends Component {
 }
 
 const DevicesList = ({
-  devices,
+  devices = [],
+  deviceValues = {},
   openColorDialog,
   openDMSDialog,
   openBBDialog,
+  handleActivateSystem,
+  handleDeactivateSystem,
 }) => {
-  const chunkSize = 5;
-  const chunkArray = (arr, size) => {
-    return Array.from({ length: Math.ceil(arr.length / size) }, (v, i) =>
-      arr.slice(i * size, i * size + size)
-    );
-  };
-
-  const rows = chunkArray(devices, chunkSize);
-
   return (
     <div id="devices-container">
-      {rows.map((row, rowIndex) => (
-        <div key={rowIndex} className="device-row">
-          {row.map((device, index) => (
-            <div key={index} className="device-card">
-              <div className="device-info">
-                <p className="device-title">{device.name}</p>
-                <p className="device-text">{device.type}</p>
-                {device.simulated && (
-                  <p className="device-text">
-                    <b>Simulation:</b> True
-                  </p>
-                )}
-                {!device.simulated && (
-                  <p className="device-text">
-                    <b>Simulation:</b> False
-                  </p>
-                )}
-                {device.type.slice(-3) === "DHT" && (
-                  <p className="device-text">
-                    <b>Temperature: </b>
-                    {device.valueT}°C
-                  </p>
-                )}
-                {device.type.slice(-3) === "DHT" && (
-                  <p className="device-text">
-                    <b>Humidity: </b>
-                    {device.valueH}%
-                  </p>
-                )}
-                {device.name === "GLCD" && (
-                  <p className="device-text">
-                    <b>Temperature: </b>
-                    {device.valueT}°C
-                  </p>
-                )}
-                {device.name === "GLCD" && (
-                  <p className="device-text">
-                    <b>Humidity: </b>
-                    {device.valueH}%
-                  </p>
-                )}
-                {device.name === "GSG" && (
-                  <p className="device-text">
-                    <b>Acceleration: </b>
-                    {device.valueAX}, {device.valueAY}, {device.valueAZ}
-                  </p>
-                )}
-                {device.name === "GSG" && (
-                  <p className="device-text">
-                    <b>Gyroscope: </b>
-                    {device.valueGX}, {device.valueGY}, {device.valueGZ}
-                  </p>
-                )}
-                {device.type.slice(-3) !== "DHT" &&
-                  device.name !== "GSG" &&
-                  device.name !== "GLCD" && (
-                    <p className="device-text">
-                      <b>{device.measurement}: </b>
-                      {device.value}
-                    </p>
-                  )}
-                {device.name === "BRGB" && (
-                  <p className="device-text">
-                    <button
-                      className="card-button"
-                      onClick={() => openColorDialog(device)}
-                    >
-                      Change Light
-                    </button>
-                  </p>
-                )}
-                {device.name === "DMS" && (
-                  <p className="device-text">
-                    <button
-                      className="card-button"
-                      onClick={() => openDMSDialog(device)}
-                    >
-                      Enter pin
-                    </button>
-                  </p>
-                )}
-                {device.name === "BB" && (
-                  <p className="device-text">
-                    <button
-                      className="card-button"
-                      onClick={() => openBBDialog(device)}
-                    >
-                      Edit alarm clock
-                    </button>
-                  </p>
-                )}
-              </div>
+      {devices.map((device, index) => {
+        const deviceValue = deviceValues[device.name] || {};
+        return (
+          <div key={index} className="device-card">
+            <div className="device-info">
+              <p className="device-title">{device.name}</p>
+              <p className="device-text">
+                Simulated: {device.simulated ? "Yes" : "No"}
+              </p>
+              <p className="device-text">Runs on: {device.runs_on}</p>
+              <p className="device-text">Pin: {device.pin}</p>
+              {device.measurement && (
+                <p className="device-text">Measurement: {device.measurement}</p>
+              )}
+              <p className="device-text">Value: {device.value}</p>
+              {device.valueT && (
+                <p className="device-text">Temperature: {device.valueT}</p>
+              )}
+              {device.valueH && (
+                <p className="device-text">Humidity: {device.valueH}</p>
+              )}
+              {device.valueAX && (
+                <p className="device-text">Acceleration X: {device.valueAX}</p>
+              )}
+              {device.valueAY && (
+                <p className="device-text">Acceleration Y: {device.valueAY}</p>
+              )}
+              {device.valueAZ && (
+                <p className="device-text">Acceleration Z: {device.valueAZ}</p>
+              )}
+              {device.valueGX && (
+                <p className="device-text">Gyroscope X: {device.valueGX}</p>
+              )}
+              {device.valueGY && (
+                <p className="device-text">Gyroscope Y: {device.valueGY}</p>
+              )}
+              {device.valueGZ && (
+                <p className="device-text">Gyroscope Z: {device.valueGZ}</p>
+              )}
+              {device.name.includes("RGB") && (
+                <button
+                  className="card-button"
+                  onClick={() => openColorDialog(device)}
+                >
+                  Change Light
+                </button>
+              )}
+              {device.name.includes("DMS") && (
+                <button
+                  className="card-button"
+                  onClick={() => openDMSDialog(device)}
+                >
+                  Enter pin
+                </button>
+              )}
+              {device.name.includes("BB") && (
+                <button
+                  className="card-button"
+                  onClick={() => openBBDialog(device)}
+                >
+                  Edit alarm clock
+                </button>
+              )}
+              {device.name.includes("DMS") && (
+                <div>
+                  <button
+                    className="card-button"
+                    onClick={handleActivateSystem}
+                  >
+                    Activate System
+                  </button>
+                  <button
+                    className="card-button"
+                    onClick={handleDeactivateSystem}
+                  >
+                    Deactivate System
+                  </button>
+                </div>
+              )}
             </div>
-          ))}
-        </div>
-      ))}
+          </div>
+        );
+      })}
     </div>
   );
 };

@@ -34,7 +34,7 @@ bb_alarm_time = "21:39"
 
 def on_connect(client, userdata, flags, rc):
     client.subscribe("pi1")
-    client.subscribe("front-bb")
+    client.subscribe("front-bb-on")
     client.subscribe("front-bb-off")
     client.subscribe("pi3")
 
@@ -72,7 +72,7 @@ def user_inputs(data):
 
 def update_data(topic, data):
     print("bb data: ", data, "received from topic " + topic)
-    if topic == "front-bb":
+    if topic == "front-bb-on":
         global bb_alarm_time
         bb_alarm_time = data["time"]
     elif topic == "front-bb-off":
@@ -92,6 +92,7 @@ def run_alarm_clock(bb_settings, threads, buzzer_stop_event):
         max_target_time = delta_target_time.time()
 
         if target_time <= current_time <= max_target_time and not is_active:
+            print("IDE ALARM NA MAKS")
             buzzer_stop_event.clear()
             run_buzzer(bb_settings, threads, buzzer_stop_event)
             is_active = True
@@ -110,6 +111,7 @@ def run_pi1(settings, threads, stop_event, pi_light_pipe):
     ds1_settings = settings.get('DS1')
     ms_settings = settings.get('DMS')
     db_settings = settings.get('DB')
+    dl_settings = settings.get('DL')
 
     if dht1_settings:
         run_dht(dht1_settings, threads, stop_event)
@@ -127,8 +129,8 @@ def run_pi1(settings, threads, stop_event, pi_light_pipe):
         run_button(ds1_settings, threads, stop_event)
     if ms_settings:
         run_ms(ms_settings, threads, stop_event)
-    if pi_light_pipe:
-        run_dioda(pi_light_pipe, settings.get('DL'), threads, stop_event)
+    if pi_light_pipe and dl_settings:
+        run_dioda(pi_light_pipe, dl_settings, threads, stop_event)
 
 def run_pi2(settings, threads, stop_event):
     gdht_settings = settings.get('GDHT')

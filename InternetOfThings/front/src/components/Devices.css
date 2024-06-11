@@ -1,4 +1,4 @@
-p{
+p {
     margin: 0;
 }
 
@@ -35,8 +35,11 @@ p{
     cursor: pointer;
 }
 
-#devices-container{
+#devices-container {
     margin: 0 50px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
 }
 
 .device-card {
@@ -48,6 +51,7 @@ p{
     border: 1px solid rgb(189, 189, 189);
     margin: 25px 2.4%;
     width: 15%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .device-img {
@@ -58,28 +62,26 @@ p{
 
 .device-info {
     padding-left: 7%;
+    text-align: center;
 }
 
 .device-title {
     margin: 9px 13px 9px 0px;
     font-size: 1.5em;
     font-weight: 500;
-    text-align: center;
 }
 
 .device-text {
     color: gray;
     margin-bottom: 13px;
     font-size: 1em;
-    text-align: center;
-    margin-right:13px;
 }
 
 .state-color {
     color: green;
 }
 
-.card-button{
+.card-button {
     border: none;
     margin-top: 5px;
     background-color: #81c5b6;
@@ -89,7 +91,7 @@ p{
     padding: 7px 15px;
 }
 
-.card-button:hover{
-   cursor: pointer;
-   background-color: #5b8d85;
+.card-button:hover {
+    cursor: pointer;
+    background-color: #5b8d85;
 }

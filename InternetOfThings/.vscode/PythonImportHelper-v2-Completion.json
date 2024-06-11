@@ -1616,7 +1616,7 @@
         "kind": 2,
         "importPath": "project.components.buzzer",
         "description": "project.components.buzzer",
-        "peekOfCode": "def buzzer_activated(publish_event, dht_settings, verbose=False):\n    global publish_data_counter, publish_data_limit\n    if verbose:\n        t = time.localtime()\n        print(\"=\" * 10 + dht_settings[\"name\"] + \"=\" * 10)\n        print(f\"Timestamp: {time.strftime('%H:%M:%S', t)}\")\n        print(\"Buzzer activated\")\n    payload = {\n        \"measurement\": \"Buzzer_active\",\n        \"simulated\": dht_settings['simulated'],",
+        "peekOfCode": "def buzzer_activated(publish_event, buzzer_settings, verbose=False):\n    global publish_data_counter, publish_data_limit\n    measurement = \"bedroom_buzzer\" if buzzer_settings[\"name\"] == \"BB\" else \"Buzzer_active\"\n    if verbose:\n        t = time.localtime()\n        print(\"=\" * 10 + buzzer_settings[\"name\"] + \"=\" * 10)\n        print(f\"Timestamp: {time.strftime('%H:%M:%S', t)}\")\n        print(\"Buzzer activated\")\n    payload = {\n        \"measurement\": measurement,",
         "detail": "project.components.buzzer",
         "documentation": {}
     },
@@ -1625,7 +1625,7 @@
         "kind": 2,
         "importPath": "project.components.buzzer",
         "description": "project.components.buzzer",
-        "peekOfCode": "def buzzer_deactivated(publish_event, dht_settings, verbose=False):\n    global publish_data_counter, publish_data_limit\n    if verbose:\n        t = time.localtime()\n        print(\"=\" * 10 + dht_settings[\"name\"] + \"=\" * 10)\n        print(f\"Timestamp: {time.strftime('%H:%M:%S', t)}\")\n        print(\"Buzzer deactivated\")\n    payload = {\n        \"measurement\": \"Buzzer_active\",\n        \"simulated\": dht_settings['simulated'],",
+        "peekOfCode": "def buzzer_deactivated(publish_event, buzzer_settings, verbose=False):\n    global publish_data_counter, publish_data_limit\n    measurement = \"bedroom_buzzer\" if buzzer_settings[\"name\"] == \"BB\" else \"Buzzer_active\"\n    if verbose:\n        t = time.localtime()\n        print(\"=\" * 10 + buzzer_settings[\"name\"] + \"=\" * 10)\n        print(f\"Timestamp: {time.strftime('%H:%M:%S', t)}\")\n        print(\"Buzzer deactivated\")\n    payload = {\n        \"measurement\": measurement,",
         "detail": "project.components.buzzer",
         "documentation": {}
     },
@@ -1679,7 +1679,7 @@
         "kind": 5,
         "importPath": "project.components.buzzer",
         "description": "project.components.buzzer",
-        "peekOfCode": "publish_event = threading.Event()\npublisher_thread = threading.Thread(target=publisher_task, args=(publish_event, buzzer_batch,))\npublisher_thread.daemon = True\npublisher_thread.start()\ndef buzzer_activated(publish_event, dht_settings, verbose=False):\n    global publish_data_counter, publish_data_limit\n    if verbose:\n        t = time.localtime()\n        print(\"=\" * 10 + dht_settings[\"name\"] + \"=\" * 10)\n        print(f\"Timestamp: {time.strftime('%H:%M:%S', t)}\")",
+        "peekOfCode": "publish_event = threading.Event()\npublisher_thread = threading.Thread(target=publisher_task, args=(publish_event, buzzer_batch,))\npublisher_thread.daemon = True\npublisher_thread.start()\ndef buzzer_activated(publish_event, buzzer_settings, verbose=False):\n    global publish_data_counter, publish_data_limit\n    measurement = \"bedroom_buzzer\" if buzzer_settings[\"name\"] == \"BB\" else \"Buzzer_active\"\n    if verbose:\n        t = time.localtime()\n        print(\"=\" * 10 + buzzer_settings[\"name\"] + \"=\" * 10)",
         "detail": "project.components.buzzer",
         "documentation": {}
     },
@@ -1688,7 +1688,7 @@
         "kind": 5,
         "importPath": "project.components.buzzer",
         "description": "project.components.buzzer",
-        "peekOfCode": "publisher_thread = threading.Thread(target=publisher_task, args=(publish_event, buzzer_batch,))\npublisher_thread.daemon = True\npublisher_thread.start()\ndef buzzer_activated(publish_event, dht_settings, verbose=False):\n    global publish_data_counter, publish_data_limit\n    if verbose:\n        t = time.localtime()\n        print(\"=\" * 10 + dht_settings[\"name\"] + \"=\" * 10)\n        print(f\"Timestamp: {time.strftime('%H:%M:%S', t)}\")\n        print(\"Buzzer activated\")",
+        "peekOfCode": "publisher_thread = threading.Thread(target=publisher_task, args=(publish_event, buzzer_batch,))\npublisher_thread.daemon = True\npublisher_thread.start()\ndef buzzer_activated(publish_event, buzzer_settings, verbose=False):\n    global publish_data_counter, publish_data_limit\n    measurement = \"bedroom_buzzer\" if buzzer_settings[\"name\"] == \"BB\" else \"Buzzer_active\"\n    if verbose:\n        t = time.localtime()\n        print(\"=\" * 10 + buzzer_settings[\"name\"] + \"=\" * 10)\n        print(f\"Timestamp: {time.strftime('%H:%M:%S', t)}\")",
         "detail": "project.components.buzzer",
         "documentation": {}
     },
@@ -1697,7 +1697,7 @@
         "kind": 5,
         "importPath": "project.components.buzzer",
         "description": "project.components.buzzer",
-        "peekOfCode": "publisher_thread.daemon = True\npublisher_thread.start()\ndef buzzer_activated(publish_event, dht_settings, verbose=False):\n    global publish_data_counter, publish_data_limit\n    if verbose:\n        t = time.localtime()\n        print(\"=\" * 10 + dht_settings[\"name\"] + \"=\" * 10)\n        print(f\"Timestamp: {time.strftime('%H:%M:%S', t)}\")\n        print(\"Buzzer activated\")\n    payload = {",
+        "peekOfCode": "publisher_thread.daemon = True\npublisher_thread.start()\ndef buzzer_activated(publish_event, buzzer_settings, verbose=False):\n    global publish_data_counter, publish_data_limit\n    measurement = \"bedroom_buzzer\" if buzzer_settings[\"name\"] == \"BB\" else \"Buzzer_active\"\n    if verbose:\n        t = time.localtime()\n        print(\"=\" * 10 + buzzer_settings[\"name\"] + \"=\" * 10)\n        print(f\"Timestamp: {time.strftime('%H:%M:%S', t)}\")\n        print(\"Buzzer activated\")",
         "detail": "project.components.buzzer",
         "documentation": {}
     },
@@ -1814,7 +1814,7 @@
         "kind": 2,
         "importPath": "project.components.dioda",
         "description": "project.components.dioda",
-        "peekOfCode": "def run_dioda(pipe, settings, threads, stop_event):\n    if settings['simulated']:\n        print(\"Starting {} simulator\".format(settings[\"name\"]))\n        uds_thread = threading.Thread(target=run_dioda_simulator,\n                                      args=(pipe, 2, light_callback, stop_event, publish_event, settings))\n        uds_thread.start()\n        threads.append(uds_thread)\n        print(\"{0} simulator started\".format(settings[\"name\"]))\n    else:\n        from sensors.dioda import run_dioda_loop, Dioda",
+        "peekOfCode": "def run_dioda(pipe, settings, threads, stop_event):\n    if settings['simulated']:\n        print(\"Starting {} simulator\".format(settings[\"name\"]))\n        uds_thread = threading.Thread(target=run_dioda_simulator,\n                                      args=(pipe, 0.5, light_callback, stop_event, publish_event, settings))\n        uds_thread.start()\n        threads.append(uds_thread)\n        print(\"{0} simulator started\".format(settings[\"name\"]))\n    else:\n        from sensors.dioda import run_dioda_loop, Dioda",
         "detail": "project.components.dioda",
         "documentation": {}
     },
@@ -3227,7 +3227,7 @@
         "kind": 2,
         "importPath": "project.simulations.dioda",
         "description": "project.simulations.dioda",
-        "peekOfCode": "def run_dioda_simulator(pipe, delay, callback, stop_event, publish_event, settings):\n    last_dioda_time = time.time()\n    while True:\n        if pipe.poll():\n            message = pipe.recv()\n            message = str(message).strip().lower()\n            if message == \"l\":\n                last_dioda_time = time.time()\n        dioda_state = time.time() - last_dioda_time <= 10\n        time.sleep(delay)  ",
+        "peekOfCode": "def run_dioda_simulator(pipe, delay, callback, stop_event, publish_event, settings):\n    last_dioda_time = time.time()\n    while True:\n        if pipe.poll():\n            message = pipe.recv()\n            message = str(message).strip().lower()\n            if message == \"l\":\n                last_dioda_time = time.time()\n        print(\"BIBIBIBIBI\" + \" \" +time.time())\n        print(\"BIBIBIBIBI\" + \" \" +last_dioda_time)",
         "detail": "project.simulations.dioda",
         "documentation": {}
     },
@@ -3380,7 +3380,7 @@
         "kind": 2,
         "importPath": "project.simulations.rgb",
         "description": "project.simulations.rgb",
-        "peekOfCode": "def on_connect(client, userdata, flags, rc):\n    client.subscribe(\"data/ir\")\n    client.subscribe(\"change/rgb\")\ndef update_data(topic, data):\n    global new_action\n    print(\"rgb data: \", data, \"received from topic \" + topic)\n    new_action = map_color(data[\"value\"])\ndef connect_mqtt():\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(\"localhost\", 1883, 60)",
+        "peekOfCode": "def on_connect(client, userdata, flags, rc):\n    client.subscribe(\"data/ir\")\n    client.subscribe(\"front-rgb\")\ndef update_data(topic, data):\n    global new_action\n    print(\"rgb data: \", data, \"received from topic \" + topic)\n    new_action = map_color(data[\"value\"])\ndef connect_mqtt():\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(\"localhost\", 1883, 60)",
         "detail": "project.simulations.rgb",
         "documentation": {}
     },
@@ -3398,7 +3398,7 @@
         "kind": 2,
         "importPath": "project.simulations.rgb",
         "description": "project.simulations.rgb",
-        "peekOfCode": "def connect_mqtt():\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(\"localhost\", 1883, 60)\n    mqtt_client.loop_start()\n    mqtt_client.on_connect = on_connect\n    mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef run_rgb_simulator(delay, callback, stop_event, publish_event, settings):\n    connect_mqtt()\n    global status, new_action\n    while True:",
+        "peekOfCode": "def connect_mqtt():\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(\"localhost\", 1883, 60)\n    mqtt_client.loop_start()\n    mqtt_client.on_connect = on_connect\n    mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef run_rgb_simulator(delay, callback, stop_event, publish_event, settings):\n    print(\"AAAAAAAAAAAAAAAA\")\n    connect_mqtt()\n    global status, new_action",
         "detail": "project.simulations.rgb",
         "documentation": {}
     },
@@ -3407,7 +3407,7 @@
         "kind": 2,
         "importPath": "project.simulations.rgb",
         "description": "project.simulations.rgb",
-        "peekOfCode": "def run_rgb_simulator(delay, callback, stop_event, publish_event, settings):\n    connect_mqtt()\n    global status, new_action\n    while True:\n        if new_action != status:\n            status = new_action\n            callback(status, publish_event, settings)\n        if stop_event.is_set():\n            break\n        time.sleep(delay)",
+        "peekOfCode": "def run_rgb_simulator(delay, callback, stop_event, publish_event, settings):\n    print(\"AAAAAAAAAAAAAAAA\")\n    connect_mqtt()\n    global status, new_action\n    while True:\n        if new_action != status:\n            status = new_action\n            callback(status, publish_event, settings)\n        if stop_event.is_set():\n            break",
         "detail": "project.simulations.rgb",
         "documentation": {}
     },
@@ -3470,7 +3470,7 @@
         "kind": 2,
         "importPath": "project.main",
         "description": "project.main",
-        "peekOfCode": "def on_connect(client, userdata, flags, rc):\n    client.subscribe(\"pi1\")\n    client.subscribe(\"front-bb\")\n    client.subscribe(\"front-bb-off\")\n    client.subscribe(\"pi3\")\nmqtt_client.on_connect = on_connect\nmqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef connect_mqtt():\n    mqtt_client.connect(HOSTNAME, PORT, 60)\n    mqtt_client.loop_start()",
+        "peekOfCode": "def on_connect(client, userdata, flags, rc):\n    client.subscribe(\"pi1\")\n    client.subscribe(\"front-bb-on\")\n    client.subscribe(\"front-bb-off\")\n    client.subscribe(\"pi3\")\nmqtt_client.on_connect = on_connect\nmqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef connect_mqtt():\n    mqtt_client.connect(HOSTNAME, PORT, 60)\n    mqtt_client.loop_start()",
         "detail": "project.main",
         "documentation": {}
     },
@@ -3506,7 +3506,7 @@
         "kind": 2,
         "importPath": "project.main",
         "description": "project.main",
-        "peekOfCode": "def update_data(topic, data):\n    print(\"bb data: \", data, \"received from topic \" + topic)\n    if topic == \"front-bb\":\n        global bb_alarm_time\n        bb_alarm_time = data[\"time\"]\n    elif topic == \"front-bb-off\":\n        buzzer_stop_event.set()\n    elif topic == \"pi3\":\n        user_inputs(data)\ndef run_alarm_clock(bb_settings, threads, buzzer_stop_event):",
+        "peekOfCode": "def update_data(topic, data):\n    print(\"bb data: \", data, \"received from topic \" + topic)\n    if topic == \"front-bb-on\":\n        global bb_alarm_time\n        bb_alarm_time = data[\"time\"]\n    elif topic == \"front-bb-off\":\n        buzzer_stop_event.set()\n    elif topic == \"pi3\":\n        user_inputs(data)\ndef run_alarm_clock(bb_settings, threads, buzzer_stop_event):",
         "detail": "project.main",
         "documentation": {}
     },
@@ -3551,7 +3551,7 @@
         "kind": 5,
         "importPath": "project.main",
         "description": "project.main",
-        "peekOfCode": "buzzer_stop_event = threading.Event()\nstop_event = threading.Event()\nmqtt_client = mqtt.Client()\nbuzzer_active = False\nbb_alarm_time = \"21:39\"\ndef on_connect(client, userdata, flags, rc):\n    client.subscribe(\"pi1\")\n    client.subscribe(\"front-bb\")\n    client.subscribe(\"front-bb-off\")\n    client.subscribe(\"pi3\")",
+        "peekOfCode": "buzzer_stop_event = threading.Event()\nstop_event = threading.Event()\nmqtt_client = mqtt.Client()\nbuzzer_active = False\nbb_alarm_time = \"21:39\"\ndef on_connect(client, userdata, flags, rc):\n    client.subscribe(\"pi1\")\n    client.subscribe(\"front-bb-on\")\n    client.subscribe(\"front-bb-off\")\n    client.subscribe(\"pi3\")",
         "detail": "project.main",
         "documentation": {}
     },
@@ -3560,7 +3560,7 @@
         "kind": 5,
         "importPath": "project.main",
         "description": "project.main",
-        "peekOfCode": "stop_event = threading.Event()\nmqtt_client = mqtt.Client()\nbuzzer_active = False\nbb_alarm_time = \"21:39\"\ndef on_connect(client, userdata, flags, rc):\n    client.subscribe(\"pi1\")\n    client.subscribe(\"front-bb\")\n    client.subscribe(\"front-bb-off\")\n    client.subscribe(\"pi3\")\nmqtt_client.on_connect = on_connect",
+        "peekOfCode": "stop_event = threading.Event()\nmqtt_client = mqtt.Client()\nbuzzer_active = False\nbb_alarm_time = \"21:39\"\ndef on_connect(client, userdata, flags, rc):\n    client.subscribe(\"pi1\")\n    client.subscribe(\"front-bb-on\")\n    client.subscribe(\"front-bb-off\")\n    client.subscribe(\"pi3\")\nmqtt_client.on_connect = on_connect",
         "detail": "project.main",
         "documentation": {}
     },
@@ -3569,7 +3569,7 @@
         "kind": 5,
         "importPath": "project.main",
         "description": "project.main",
-        "peekOfCode": "mqtt_client = mqtt.Client()\nbuzzer_active = False\nbb_alarm_time = \"21:39\"\ndef on_connect(client, userdata, flags, rc):\n    client.subscribe(\"pi1\")\n    client.subscribe(\"front-bb\")\n    client.subscribe(\"front-bb-off\")\n    client.subscribe(\"pi3\")\nmqtt_client.on_connect = on_connect\nmqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))",
+        "peekOfCode": "mqtt_client = mqtt.Client()\nbuzzer_active = False\nbb_alarm_time = \"21:39\"\ndef on_connect(client, userdata, flags, rc):\n    client.subscribe(\"pi1\")\n    client.subscribe(\"front-bb-on\")\n    client.subscribe(\"front-bb-off\")\n    client.subscribe(\"pi3\")\nmqtt_client.on_connect = on_connect\nmqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))",
         "detail": "project.main",
         "documentation": {}
     },
@@ -3578,7 +3578,7 @@
         "kind": 5,
         "importPath": "project.main",
         "description": "project.main",
-        "peekOfCode": "buzzer_active = False\nbb_alarm_time = \"21:39\"\ndef on_connect(client, userdata, flags, rc):\n    client.subscribe(\"pi1\")\n    client.subscribe(\"front-bb\")\n    client.subscribe(\"front-bb-off\")\n    client.subscribe(\"pi3\")\nmqtt_client.on_connect = on_connect\nmqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef connect_mqtt():",
+        "peekOfCode": "buzzer_active = False\nbb_alarm_time = \"21:39\"\ndef on_connect(client, userdata, flags, rc):\n    client.subscribe(\"pi1\")\n    client.subscribe(\"front-bb-on\")\n    client.subscribe(\"front-bb-off\")\n    client.subscribe(\"pi3\")\nmqtt_client.on_connect = on_connect\nmqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef connect_mqtt():",
         "detail": "project.main",
         "documentation": {}
     },
@@ -3587,7 +3587,7 @@
         "kind": 5,
         "importPath": "project.main",
         "description": "project.main",
-        "peekOfCode": "bb_alarm_time = \"21:39\"\ndef on_connect(client, userdata, flags, rc):\n    client.subscribe(\"pi1\")\n    client.subscribe(\"front-bb\")\n    client.subscribe(\"front-bb-off\")\n    client.subscribe(\"pi3\")\nmqtt_client.on_connect = on_connect\nmqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef connect_mqtt():\n    mqtt_client.connect(HOSTNAME, PORT, 60)",
+        "peekOfCode": "bb_alarm_time = \"21:39\"\ndef on_connect(client, userdata, flags, rc):\n    client.subscribe(\"pi1\")\n    client.subscribe(\"front-bb-on\")\n    client.subscribe(\"front-bb-off\")\n    client.subscribe(\"pi3\")\nmqtt_client.on_connect = on_connect\nmqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef connect_mqtt():\n    mqtt_client.connect(HOSTNAME, PORT, 60)",
         "detail": "project.main",
         "documentation": {}
     },
@@ -3614,7 +3614,7 @@
         "kind": 2,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "def alarm_set_on():\n    with app.app_context():\n        with lock:\n            global is_alarm\n            is_alarm = True\n            mqtt_client.publish(\"pi1\", json.dumps({\"trigger\": \"B\"}))\n            mqtt_client.publish(\"pi3\", json.dumps({\"trigger\": \"B\"}))\n            print(\"ALARM\")\n            point = (\n                Point(\"Alarm\")",
+        "peekOfCode": "def alarm_set_on():\n    print(\"ALARM\")\n    with app.app_context():\n        with lock:\n            global is_alarm\n            is_alarm = True\n            mqtt_client.publish(\"pi1\", json.dumps({\"trigger\": \"B\"}))\n            mqtt_client.publish(\"pi3\", json.dumps({\"trigger\": \"B\"}))\n            point = (\n                Point(\"Alarm\")",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3632,7 +3632,7 @@
         "kind": 2,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "def handle_connect():\n    print('Client connected successfully\\n')\n@socketio.on('disconnect')\ndef handle_disconnect():\n    print('Client disconnected successfully\\n')\ndef send_data_to_client(data):\n    try:\n        socketio.emit('data/' + data[\"runs_on\"], {'message': data})\n        print(\"Data sent to topic: data/\" + data[\"runs_on\"])\n    except Exception as e:",
+        "peekOfCode": "def handle_connect():\n    print('Client connected successfully\\n')\n@socketio.on('disconnect')\ndef handle_disconnect():\n    print('Client disconnected successfully\\n')\ndef send_data_to_client(data):\n    try:\n        socketio.emit('data', {'message': data})\n    except Exception as e:\n        print(e)",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3641,7 +3641,7 @@
         "kind": 2,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "def handle_disconnect():\n    print('Client disconnected successfully\\n')\ndef send_data_to_client(data):\n    try:\n        socketio.emit('data/' + data[\"runs_on\"], {'message': data})\n        print(\"Data sent to topic: data/\" + data[\"runs_on\"])\n    except Exception as e:\n        print(e)\ndef send_alarm_to_client():\n    global is_alarm",
+        "peekOfCode": "def handle_disconnect():\n    print('Client disconnected successfully\\n')\ndef send_data_to_client(data):\n    try:\n        socketio.emit('data', {'message': data})\n    except Exception as e:\n        print(e)\ndef send_alarm_to_client():\n    global is_alarm\n    try:",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3650,7 +3650,7 @@
         "kind": 2,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "def send_data_to_client(data):\n    try:\n        socketio.emit('data/' + data[\"runs_on\"], {'message': data})\n        print(\"Data sent to topic: data/\" + data[\"runs_on\"])\n    except Exception as e:\n        print(e)\ndef send_alarm_to_client():\n    global is_alarm\n    try:\n        socketio.emit('alarm', {'message': is_alarm})",
+        "peekOfCode": "def send_data_to_client(data):\n    try:\n        socketio.emit('data', {'message': data})\n    except Exception as e:\n        print(e)\ndef send_alarm_to_client():\n    global is_alarm\n    try:\n        socketio.emit('alarm', {'message': is_alarm})\n    except Exception as e:",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3659,7 +3659,7 @@
         "kind": 2,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "def send_alarm_to_client():\n    global is_alarm\n    try:\n        socketio.emit('alarm', {'message': is_alarm})\n        print(\"Alarm sent to topic: alarm\")\n    except Exception as e:\n        print(e)\ndef on_connect(client, userdata, flags, rc):\n    print(\"Connected to MQTT broker with result code \" + str(rc))\n    client.subscribe(\"data/+\")",
+        "peekOfCode": "def send_alarm_to_client():\n    global is_alarm\n    try:\n        socketio.emit('alarm', {'message': is_alarm})\n    except Exception as e:\n        print(e)\ndef on_connect(client, userdata, flags, rc):\n    print(\"Connected to MQTT broker with result code \" + str(rc))\n    client.subscribe(\"data/+\")\nmqtt_client.on_connect = on_connect",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3668,7 +3668,7 @@
         "kind": 2,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "def on_connect(client, userdata, flags, rc):\n    print(\"Connected to MQTT broker with result code \" + str(rc))\n    client.subscribe(\"data/+\")\nmqtt_client.on_connect = on_connect\nmqtt_client.on_message = lambda client, userdata, msg: save_to_db(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef laj_koji_pase_ne_ujeda():\n    global last_pressed_ds1\n    global last_pressed_ds2\n    global security_timestamp\n    while True:",
+        "peekOfCode": "def on_connect(client, userdata, flags, rc):\n    print(\"Connected to MQTT broker with result code \" + str(rc))\n    client.subscribe(\"data/+\")\nmqtt_client.on_connect = on_connect\nmqtt_client.on_message = lambda client, userdata, msg: save_to_db(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef laj_koji_pase_ne_ujeda():\n    global last_pressed_ds1\n    global last_pressed_ds2\n    global security_timestamp\n    global house_keep",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3677,7 +3677,7 @@
         "kind": 2,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "def laj_koji_pase_ne_ujeda():\n    global last_pressed_ds1\n    global last_pressed_ds2\n    global security_timestamp\n    while True:\n        if last_pressed_ds1 > 0 and time.time() - last_pressed_ds1 > 5 and last_released_ds1 <= last_pressed_ds1:\n            alarm_set_on()\n        if last_pressed_ds2 > 0 and time.time() - last_pressed_ds2 > 5 and last_released_ds2 <= last_pressed_ds2:\n            alarm_set_on()\n        if security_timestamp > time.time():",
+        "peekOfCode": "def laj_koji_pase_ne_ujeda():\n    global last_pressed_ds1\n    global last_pressed_ds2\n    global security_timestamp\n    global house_keep\n    while True:\n        if house_keep:\n            if last_pressed_ds1 > 0 and time.time() - last_pressed_ds1 > 5 and last_released_ds1 <= last_pressed_ds1:\n                alarm_set_on()\n            if last_pressed_ds2 > 0 and time.time() - last_pressed_ds2 > 5 and last_released_ds2 <= last_pressed_ds2:",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3686,7 +3686,7 @@
         "kind": 2,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "def adjust_people_count(device_number=1):\n    with app.app_context():\n        query = (f'from(bucket: \"{bucket}\") |> range(start: -5s, stop: now()) |> filter(fn: ('\n                 f'r) => r[\"_measurement\"] == \"UDS\") |> filter(fn: (r) => r[\"name\"] == \"DUS{device_number}\") '\n                 f' |> yield(name: \"last\")')\n        response = handle_influx_query(query)\n        print(\"InfluxDB response:\", response)\n        try:\n            values = json.loads(response.data.decode('utf-8'))['data']\n        except KeyError:",
+        "peekOfCode": "def adjust_people_count(device_number=1):\n    with app.app_context():\n        query = (f'from(bucket: \"{bucket}\") |> range(start: -5s, stop: now()) |> filter(fn: ('\n                 f'r) => r[\"_measurement\"] == \"UDS\") |> filter(fn: (r) => r[\"name\"] == \"DUS{device_number}\") '\n                 f' |> yield(name: \"last\")')\n        response = handle_influx_query(query)\n        try:\n            values = json.loads(response.data.decode('utf-8'))['data']\n        except KeyError:\n            print(\"Key 'data' not found in the response\")",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3704,7 +3704,7 @@
         "kind": 2,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "def rpir_raise_alarm():\n    with app.app_context():\n        global is_alarm\n        global in_house_count\n        if in_house_count == 0:\n            alarm_set_on()\ndef ds_adjust_time(data, device_number=1):\n    if data[\"value\"] == \"pressed\":\n        if device_number == 1:\n            with lock:",
+        "peekOfCode": "def rpir_raise_alarm():\n    with app.app_context():\n        global is_alarm\n        global in_house_count\n        global house_keep\n        if in_house_count == 0 and house_keep:\n            alarm_set_on()\ndef ds_adjust_time(data, device_number=1):\n    if data[\"value\"] == \"pressed\":\n        if device_number == 1:",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3740,7 +3740,7 @@
         "kind": 2,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "def save_to_db(topic, data):\n    print(\"Saving data to database: \", data)\n    write_api = influxdb_client.write_api(write_options=SYNCHRONOUS)\n    if isinstance(data[\"value\"], int):\n        data[\"value\"] = float(data[\"value\"])\n    if topic == \"data/acceleration\" or topic == \"data/gyroscope\":\n        point = (\n            Point(data[\"measurement\"])\n            .tag(\"simulated\", data[\"simulated\"])\n            .tag(\"runs_on\", data[\"runs_on\"])",
+        "peekOfCode": "def save_to_db(topic, data):\n    write_api = influxdb_client.write_api(write_options=SYNCHRONOUS)\n    if isinstance(data[\"value\"], int):\n        data[\"value\"] = float(data[\"value\"])\n    if topic == \"data/acceleration\" or topic == \"data/gyroscope\":\n        point = (\n            Point(data[\"measurement\"])\n            .tag(\"simulated\", data[\"simulated\"])\n            .tag(\"runs_on\", data[\"runs_on\"])\n            .tag(\"name\", data[\"name\"])",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3754,29 +3754,47 @@
         "documentation": {}
     },
     {
-        "label": "extract_keys_from_settings",
+        "label": "extract_filtered_device_info",
         "kind": 2,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "def extract_keys_from_settings():\n    settings = load_settings()\n    return list(settings.keys())\ndef extract_runs_on_from_settings():\n    settings = load_settings()\n    unique_runs_on = {settings[key]['runs_on'] for key in settings}\n    return list(unique_runs_on)\n@app.route('/device_names', methods=['GET'])\ndef retrieve_device_names():\n    device_names = extract_keys_from_settings()",
+        "peekOfCode": "def extract_filtered_device_info():\n    settings = load_settings()\n    filtered_info = {\n        key: {\n            \"name\": device_info[\"name\"],\n            \"simulated\": device_info[\"simulated\"],\n            \"pin\": device_info.get(\"pin\", None),\n            \"runs_on\": device_info[\"runs_on\"]\n        }\n        for key, device_info in settings.items()",
         "detail": "server.server",
         "documentation": {}
     },
     {
-        "label": "extract_runs_on_from_settings",
+        "label": "retrieve_filtered_device_info",
         "kind": 2,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "def extract_runs_on_from_settings():\n    settings = load_settings()\n    unique_runs_on = {settings[key]['runs_on'] for key in settings}\n    return list(unique_runs_on)\n@app.route('/device_names', methods=['GET'])\ndef retrieve_device_names():\n    device_names = extract_keys_from_settings()\n    return jsonify(device_names)\n@app.route('/api/updateRGB/<color>', methods=['GET'])\n@cross_origin()",
+        "peekOfCode": "def retrieve_filtered_device_info():\n    filtered_device_info = extract_filtered_device_info()\n    print(filtered_device_info)\n    return jsonify(filtered_device_info)\n@app.route('/api/active', methods=['GET'])\n@cross_origin()\ndef active_system():\n    global house_keep\n    house_keep = True\n    print(\"System activated\")",
         "detail": "server.server",
         "documentation": {}
     },
     {
-        "label": "retrieve_device_names",
+        "label": "active_system",
         "kind": 2,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "def retrieve_device_names():\n    device_names = extract_keys_from_settings()\n    return jsonify(device_names)\n@app.route('/api/updateRGB/<color>', methods=['GET'])\n@cross_origin()\ndef update_rgb(color):\n    rgb_topic = \"front-rgb\"\n    payload = json.dumps({\"value\": color})\n    mqtt_client.publish(rgb_topic, payload)\n    print(\"rgb change sent with mqtt\")",
+        "peekOfCode": "def active_system():\n    global house_keep\n    house_keep = True\n    print(\"System activated\")\n    return jsonify({\"status\": \"success\", \"message\": \"System activated\"})\n@app.route('/api/deactive', methods=['GET'])\n@cross_origin()\ndef deactive_system():\n    global house_keep\n    house_keep = False",
+        "detail": "server.server",
+        "documentation": {}
+    },
+    {
+        "label": "deactive_system",
+        "kind": 2,
+        "importPath": "server.server",
+        "description": "server.server",
+        "peekOfCode": "def deactive_system():\n    global house_keep\n    house_keep = False\n    print(\"System deactivated\")\n    return jsonify({\"status\": \"success\", \"message\": \"System deactivated\"})\n@app.route('/api/device_values', methods=['GET'])\n@cross_origin()\ndef retrieve_device_values():\n    query = f'from(bucket: \"{bucket}\") |> range(start: -5m) |> filter(fn: (r) => r[\"_measurement\"] != \"Alarm\") |> last()'\n    response = handle_influx_query(query)",
+        "detail": "server.server",
+        "documentation": {}
+    },
+    {
+        "label": "retrieve_device_values",
+        "kind": 2,
+        "importPath": "server.server",
+        "description": "server.server",
+        "peekOfCode": "def retrieve_device_values():\n    query = f'from(bucket: \"{bucket}\") |> range(start: -5m) |> filter(fn: (r) => r[\"_measurement\"] != \"Alarm\") |> last()'\n    response = handle_influx_query(query)\n    values = json.loads(response.data.decode('utf-8'))['data']\n    device_values = {}\n    for value in values:\n        device_name = value[\"name\"]\n        device_values[device_name] = {\n            \"value\": value[\"_value\"],\n            \"measurement\": value[\"_measurement\"],",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3785,7 +3803,7 @@
         "kind": 2,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "def update_rgb(color):\n    rgb_topic = \"front-rgb\"\n    payload = json.dumps({\"value\": color})\n    mqtt_client.publish(rgb_topic, payload)\n    print(\"rgb change sent with mqtt\")\n    return payload\n@app.route('/api/getAlarmClock', methods=['GET'])\n@cross_origin()\ndef get_alarm_clock():\n    print(\"api to get alarm clock\")",
+        "peekOfCode": "def update_rgb(color):\n    print(color)\n    rgb_topic = \"front-rgb\"\n    payload = json.dumps({\"value\": color})\n    mqtt_client.publish(rgb_topic, payload)\n    return payload\n@app.route('/api/getAlarmClock', methods=['GET'])\n@cross_origin()\ndef get_alarm_clock():\n    print(\"api to get alarm clock\")",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3803,7 +3821,7 @@
         "kind": 2,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "def set_alarm_clock():\n    global bb_alarm_time\n    try:\n        data = request.json\n        bb_alarm_time = data.get('time')\n        print(\"Alarm clock time changed to \", bb_alarm_time)\n        bb_topic = \"front-bb\"\n        payload = json.dumps({\"time\": bb_alarm_time})\n        mqtt_client.publish(bb_topic, payload)\n        return jsonify({'message': 'Alarm time set successfully'})",
+        "peekOfCode": "def set_alarm_clock():\n    global bb_alarm_time\n    try:\n        data = request.json\n        bb_alarm_time = data.get('time')\n        print(\"Alarm clock time changed to \", bb_alarm_time)\n        bb_topic = \"front-bb-on\"\n        payload = json.dumps({\"time\": bb_alarm_time})\n        mqtt_client.publish(bb_topic, payload)\n        return jsonify({'message': 'Alarm time set successfully'})",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3812,7 +3830,7 @@
         "kind": 2,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "def input_pin():\n    try:\n        data = request.json\n        pin = data.get('pin')\n        print(\"Pin entered: \", pin)\n        handle_pin_input(pin)\n        return jsonify({'message': 'Alarm time set successfully'})\n    except Exception as e:\n        return jsonify({'error': str(e)}), 500\n@app.route('/api/turnOffAlarmClock', methods=['GET'])",
+        "peekOfCode": "def input_pin():\n    try:\n        data = request.json\n        pin = data.get('pin')\n        print(\"Pin entered: \", pin)\n        handle_pin_input(pin)\n        return jsonify({'message': 'Pin entered successfully'})\n    except Exception as e:\n        return jsonify({'error': str(e)}), 500\n@app.route('/api/turnOffAlarmClock', methods=['GET'])",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3857,7 +3875,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "org = os.getenv(\"ORGANIZATION\")\nurl = os.getenv(\"URL\")\nbucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False\nlock = threading.Lock()",
+        "peekOfCode": "org = os.getenv(\"ORGANIZATION\")\nurl = os.getenv(\"URL\")\nbucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False\nhouse_keep = False",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3866,7 +3884,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "url = os.getenv(\"URL\")\nbucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False\nlock = threading.Lock()\nlast_pressed_ds1 = 0",
+        "peekOfCode": "url = os.getenv(\"URL\")\nbucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False\nhouse_keep = False\nlock = threading.Lock()",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3875,7 +3893,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "bucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False\nlock = threading.Lock()\nlast_pressed_ds1 = 0\nlast_released_ds1 = 0",
+        "peekOfCode": "bucket = os.getenv(\"BUCKET_NAME\")\ninfluxdb_client = InfluxDBClient(url=url, token=token, org=org)\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False\nhouse_keep = False\nlock = threading.Lock()\nlast_pressed_ds1 = 0",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3884,7 +3902,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "influxdb_client = InfluxDBClient(url=url, token=token, org=org)\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False\nlock = threading.Lock()\nlast_pressed_ds1 = 0\nlast_released_ds1 = 0\nlast_pressed_ds2 = 0",
+        "peekOfCode": "influxdb_client = InfluxDBClient(url=url, token=token, org=org)\nmqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False\nhouse_keep = False\nlock = threading.Lock()\nlast_pressed_ds1 = 0\nlast_released_ds1 = 0",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3893,7 +3911,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "mqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False\nlock = threading.Lock()\nlast_pressed_ds1 = 0\nlast_released_ds1 = 0\nlast_pressed_ds2 = 0\nlast_released_ds2 = 0",
+        "peekOfCode": "mqtt_client = mqtt.Client()\nmqtt_client.connect(\"localhost\", 1883, 0)\nmqtt_client.loop_start()\nin_house_count = 0\nis_alarm = False\nhouse_keep = False\nlock = threading.Lock()\nlast_pressed_ds1 = 0\nlast_released_ds1 = 0\nlast_pressed_ds2 = 0",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3902,7 +3920,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "in_house_count = 0\nis_alarm = False\nlock = threading.Lock()\nlast_pressed_ds1 = 0\nlast_released_ds1 = 0\nlast_pressed_ds2 = 0\nlast_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0",
+        "peekOfCode": "in_house_count = 0\nis_alarm = False\nhouse_keep = False\nlock = threading.Lock()\nlast_pressed_ds1 = 0\nlast_released_ds1 = 0\nlast_pressed_ds2 = 0\nlast_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3911,7 +3929,16 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "is_alarm = False\nlock = threading.Lock()\nlast_pressed_ds1 = 0\nlast_released_ds1 = 0\nlast_pressed_ds2 = 0\nlast_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"",
+        "peekOfCode": "is_alarm = False\nhouse_keep = False\nlock = threading.Lock()\nlast_pressed_ds1 = 0\nlast_released_ds1 = 0\nlast_pressed_ds2 = 0\nlast_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0",
+        "detail": "server.server",
+        "documentation": {}
+    },
+    {
+        "label": "house_keep",
+        "kind": 5,
+        "importPath": "server.server",
+        "description": "server.server",
+        "peekOfCode": "house_keep = False\nlock = threading.Lock()\nlast_pressed_ds1 = 0\nlast_released_ds1 = 0\nlast_pressed_ds2 = 0\nlast_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3929,7 +3956,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "last_pressed_ds1 = 0\nlast_released_ds1 = 0\nlast_pressed_ds2 = 0\nlast_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    with app.app_context():",
+        "peekOfCode": "last_pressed_ds1 = 0\nlast_released_ds1 = 0\nlast_pressed_ds2 = 0\nlast_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    print(\"ALARM\")",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3938,7 +3965,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "last_released_ds1 = 0\nlast_pressed_ds2 = 0\nlast_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    with app.app_context():\n        with lock:",
+        "peekOfCode": "last_released_ds1 = 0\nlast_pressed_ds2 = 0\nlast_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    print(\"ALARM\")\n    with app.app_context():",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3947,7 +3974,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "last_pressed_ds2 = 0\nlast_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    with app.app_context():\n        with lock:\n            global is_alarm",
+        "peekOfCode": "last_pressed_ds2 = 0\nlast_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    print(\"ALARM\")\n    with app.app_context():\n        with lock:",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3956,7 +3983,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "last_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    with app.app_context():\n        with lock:\n            global is_alarm\n            is_alarm = True",
+        "peekOfCode": "last_released_ds2 = 0\ncorrect_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    print(\"ALARM\")\n    with app.app_context():\n        with lock:\n            global is_alarm",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3965,7 +3992,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "correct_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    with app.app_context():\n        with lock:\n            global is_alarm\n            is_alarm = True\n            mqtt_client.publish(\"pi1\", json.dumps({\"trigger\": \"B\"}))",
+        "peekOfCode": "correct_pin = \"1234\"\nsecurity_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    print(\"ALARM\")\n    with app.app_context():\n        with lock:\n            global is_alarm\n            is_alarm = True",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3974,7 +4001,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "security_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    with app.app_context():\n        with lock:\n            global is_alarm\n            is_alarm = True\n            mqtt_client.publish(\"pi1\", json.dumps({\"trigger\": \"B\"}))\n            mqtt_client.publish(\"pi3\", json.dumps({\"trigger\": \"B\"}))",
+        "peekOfCode": "security_timestamp = time.time()\nlast_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    print(\"ALARM\")\n    with app.app_context():\n        with lock:\n            global is_alarm\n            is_alarm = True\n            mqtt_client.publish(\"pi1\", json.dumps({\"trigger\": \"B\"}))",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3983,7 +4010,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "last_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    with app.app_context():\n        with lock:\n            global is_alarm\n            is_alarm = True\n            mqtt_client.publish(\"pi1\", json.dumps({\"trigger\": \"B\"}))\n            mqtt_client.publish(\"pi3\", json.dumps({\"trigger\": \"B\"}))\n            print(\"ALARM\")",
+        "peekOfCode": "last_correct_pin = 0\nbb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    print(\"ALARM\")\n    with app.app_context():\n        with lock:\n            global is_alarm\n            is_alarm = True\n            mqtt_client.publish(\"pi1\", json.dumps({\"trigger\": \"B\"}))\n            mqtt_client.publish(\"pi3\", json.dumps({\"trigger\": \"B\"}))",
         "detail": "server.server",
         "documentation": {}
     },
@@ -3992,7 +4019,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "bb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    with app.app_context():\n        with lock:\n            global is_alarm\n            is_alarm = True\n            mqtt_client.publish(\"pi1\", json.dumps({\"trigger\": \"B\"}))\n            mqtt_client.publish(\"pi3\", json.dumps({\"trigger\": \"B\"}))\n            print(\"ALARM\")\n            point = (",
+        "peekOfCode": "bb_alarm_time = \"21:39\"\ndef alarm_set_on():\n    print(\"ALARM\")\n    with app.app_context():\n        with lock:\n            global is_alarm\n            is_alarm = True\n            mqtt_client.publish(\"pi1\", json.dumps({\"trigger\": \"B\"}))\n            mqtt_client.publish(\"pi3\", json.dumps({\"trigger\": \"B\"}))\n            point = (",
         "detail": "server.server",
         "documentation": {}
     },
@@ -4001,7 +4028,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "mqtt_client.on_connect = on_connect\nmqtt_client.on_message = lambda client, userdata, msg: save_to_db(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef laj_koji_pase_ne_ujeda():\n    global last_pressed_ds1\n    global last_pressed_ds2\n    global security_timestamp\n    while True:\n        if last_pressed_ds1 > 0 and time.time() - last_pressed_ds1 > 5 and last_released_ds1 <= last_pressed_ds1:\n            alarm_set_on()\n        if last_pressed_ds2 > 0 and time.time() - last_pressed_ds2 > 5 and last_released_ds2 <= last_pressed_ds2:",
+        "peekOfCode": "mqtt_client.on_connect = on_connect\nmqtt_client.on_message = lambda client, userdata, msg: save_to_db(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef laj_koji_pase_ne_ujeda():\n    global last_pressed_ds1\n    global last_pressed_ds2\n    global security_timestamp\n    global house_keep\n    while True:\n        if house_keep:\n            if last_pressed_ds1 > 0 and time.time() - last_pressed_ds1 > 5 and last_released_ds1 <= last_pressed_ds1:",
         "detail": "server.server",
         "documentation": {}
     },
@@ -4010,7 +4037,7 @@
         "kind": 5,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "mqtt_client.on_message = lambda client, userdata, msg: save_to_db(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef laj_koji_pase_ne_ujeda():\n    global last_pressed_ds1\n    global last_pressed_ds2\n    global security_timestamp\n    while True:\n        if last_pressed_ds1 > 0 and time.time() - last_pressed_ds1 > 5 and last_released_ds1 <= last_pressed_ds1:\n            alarm_set_on()\n        if last_pressed_ds2 > 0 and time.time() - last_pressed_ds2 > 5 and last_released_ds2 <= last_pressed_ds2:\n            alarm_set_on()",
+        "peekOfCode": "mqtt_client.on_message = lambda client, userdata, msg: save_to_db(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef laj_koji_pase_ne_ujeda():\n    global last_pressed_ds1\n    global last_pressed_ds2\n    global security_timestamp\n    global house_keep\n    while True:\n        if house_keep:\n            if last_pressed_ds1 > 0 and time.time() - last_pressed_ds1 > 5 and last_released_ds1 <= last_pressed_ds1:\n                alarm_set_on()",
         "detail": "server.server",
         "documentation": {}
     },

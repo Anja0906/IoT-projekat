@@ -65,7 +65,7 @@ def run_dioda(pipe, settings, threads, stop_event):
     if settings['simulated']:
         print("Starting {} simulator".format(settings["name"]))
         uds_thread = threading.Thread(target=run_dioda_simulator,
-                                      args=(pipe, 2, light_callback, stop_event, publish_event, settings))
+                                      args=(pipe, 0.5, light_callback, stop_event, publish_event, settings))
         uds_thread.start()
         threads.append(uds_thread)
         print("{0} simulator started".format(settings["name"]))
