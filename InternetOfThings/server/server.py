@@ -158,6 +158,12 @@ def adjust_people_count(device_number=1):
         write_api = influxdb_client.write_api(write_options=SYNCHRONOUS)
         write_api.write(bucket=bucket, org=org, record=point)
 
+def integrate(values, delta_t):
+    integral = 0
+    for i in range(1, len(values)):
+        integral += (values[i] + values[i-1]) / 2 * delta_t
+    return integral
+
 def check_safe_movement(data):
     with app.app_context():
         axis = str(data["axis"])
@@ -170,13 +176,23 @@ def check_safe_movement(data):
                  '|> yield(name: "last")')
         response = handle_influx_query(query)
         values = json.loads(response.data.decode('utf-8'))['data']
+
         global is_alarm
         global house_keep
-        if len(values) > 0 and house_keep:
-            diff = abs(values[0]["_value"] - data["value"])
-            if diff > 10:
-                alarm_set_on()
 
+        if len(values) > 1 and house_keep:
+            time_format = '%a, %d %b %Y %H:%M:%S %Z'
+            t1 = datetime.strptime(values[0]["_time"], time_format)
+            t2 = datetime.strptime(values[1]["_time"], time_format)
+            delta_t = (t2 - t1).total_seconds()
+            gyro_values = [v["_value"] for v in values]
+            displacement = integrate(gyro_values, delta_t)
+            threshold = 10  
+            if abs(displacement) > threshold:
+                print("DEGAS")
+                alarm_set_on()
+                
+                
 def rpir_raise_alarm():
     with app.app_context():
         global is_alarm

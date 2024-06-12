@@ -70,7 +70,7 @@ def run_dioda(pipe, settings, threads, stop_event):
         threads.append(uds_thread)
         print("{0} simulator started".format(settings["name"]))
     else:
-        from sensors.dioda import run_dioda_loop, Dioda
+        from actuators.dioda import run_dioda_loop, Dioda
         print("Starting {} loop".format(settings["name"]))
         l = Dioda(settings["name"], settings["pin"])
         uds_thread = threading.Thread(target=run_dioda_loop,

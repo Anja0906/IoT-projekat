@@ -42,7 +42,7 @@ class UDS:
 def run_uds_loop(uds, delay, callback, stop_event, publish_event, settings):
     try:
         while True:
-            distance = get_distance(trigger_pin, echo_pin)
+            distance = uds.get_distance(trigger_pin, echo_pin)
             if distance is not None:
                 callback(distance, publish_event, settings)
             else:

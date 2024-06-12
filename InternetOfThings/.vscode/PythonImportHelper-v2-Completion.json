@@ -715,22 +715,6 @@
         "documentation": {}
     },
     {
-        "label": "PCF8574_GPIO",
-        "importPath": "PCF8574",
-        "description": "PCF8574",
-        "isExtraImport": true,
-        "detail": "PCF8574",
-        "documentation": {}
-    },
-    {
-        "label": "Adafruit_CharLCD",
-        "importPath": "Adafruit_LCD1602",
-        "description": "Adafruit_LCD1602",
-        "isExtraImport": true,
-        "detail": "Adafruit_LCD1602",
-        "documentation": {}
-    },
-    {
         "label": "datetime",
         "importPath": "datetime",
         "description": "datetime",
@@ -1829,7 +1813,7 @@
         "kind": 2,
         "importPath": "project.components.dioda",
         "description": "project.components.dioda",
-        "peekOfCode": "def run_dioda(pipe, settings, threads, stop_event):\n    if settings['simulated']:\n        print(\"Starting {} simulator\".format(settings[\"name\"]))\n        uds_thread = threading.Thread(target=run_dioda_simulator,\n                                      args=(pipe, 0.5, light_callback, stop_event, publish_event, settings))\n        uds_thread.start()\n        threads.append(uds_thread)\n        print(\"{0} simulator started\".format(settings[\"name\"]))\n    else:\n        from sensors.dioda import run_dioda_loop, Dioda",
+        "peekOfCode": "def run_dioda(pipe, settings, threads, stop_event):\n    if settings['simulated']:\n        print(\"Starting {} simulator\".format(settings[\"name\"]))\n        uds_thread = threading.Thread(target=run_dioda_simulator,\n                                      args=(pipe, 0.5, light_callback, stop_event, publish_event, settings))\n        uds_thread.start()\n        threads.append(uds_thread)\n        print(\"{0} simulator started\".format(settings[\"name\"]))\n    else:\n        from actuators.dioda import run_dioda_loop, Dioda",
         "detail": "project.components.dioda",
         "documentation": {}
     },
@@ -2896,6 +2880,33 @@
         "documentation": {}
     },
     {
+        "label": "PCF8574_I2C",
+        "kind": 6,
+        "importPath": "project.sensors.LCD.lcd",
+        "description": "project.sensors.LCD.lcd",
+        "peekOfCode": "class PCF8574_I2C(object):\n    OUTPUT = 0\n    INPUT = 1\n    def __init__(self, address):\n        # Note you need to change the bus number to 0 if running on a revision 1 Raspberry Pi.\n        self.bus = smbus.SMBus(1)\n        self.address = address\n        self.currentValue = 0\n        self.writeByte(0)  # I2C test.\n    def readByte(self):  # Read PCF8574 all port of the data",
+        "detail": "project.sensors.LCD.lcd",
+        "documentation": {}
+    },
+    {
+        "label": "PCF8574_GPIO",
+        "kind": 6,
+        "importPath": "project.sensors.LCD.lcd",
+        "description": "project.sensors.LCD.lcd",
+        "peekOfCode": "class PCF8574_GPIO(object):  # Standardization function interface\n    OUT = 0\n    IN = 1\n    BCM = 0\n    BOARD = 0\n    def __init__(self, address):\n        self.chip = PCF8574_I2C(address)\n        self.address = address\n    def setmode(self, mode):  # PCF8574 port belongs to two-way IO, do not need to set the input and output model\n        pass",
+        "detail": "project.sensors.LCD.lcd",
+        "documentation": {}
+    },
+    {
+        "label": "Adafruit_CharLCD",
+        "kind": 6,
+        "importPath": "project.sensors.LCD.lcd",
+        "description": "project.sensors.LCD.lcd",
+        "peekOfCode": "class Adafruit_CharLCD(object):\n    # commands\n    LCD_CLEARDISPLAY = 0x01\n    LCD_RETURNHOME = 0x02\n    LCD_ENTRYMODESET = 0x04\n    LCD_DISPLAYCONTROL = 0x08\n    LCD_CURSORSHIFT = 0x10\n    LCD_FUNCTIONSET = 0x20\n    LCD_SETCGRAMADDR = 0x40\n    LCD_SETDDRAMADDR = 0x80",
+        "detail": "project.sensors.LCD.lcd",
+        "documentation": {}
+    },
+    {
         "label": "on_connect",
         "kind": 2,
         "importPath": "project.sensors.LCD.lcd",
@@ -2909,7 +2920,7 @@
         "kind": 2,
         "importPath": "project.sensors.LCD.lcd",
         "description": "project.sensors.LCD.lcd",
-        "peekOfCode": "def update_data(topic, data):\n    global humidity, temperature\n    if data[\"name\"] == DHT_NAME:\n        if topic == \"data/temperature\":\n            temperature = data[\"value\"]\n        elif topic == \"data/humidity\":\n            humidity = data[\"value\"]\ndef connect_mqtt(hostname,port):\n    # MQTT Configuration\n    mqtt_client = mqtt.Client()",
+        "peekOfCode": "def update_data(topic, data):\n    global humidity, temperature\n    if data[\"name\"] == DHT_NAME:\n        if topic == \"data/temperature\":\n            temperature = data[\"value\"]\n        elif topic == \"data/humidity\":\n            humidity = data[\"value\"]\ndef connect_mqtt(hostname, port):\n    # MQTT Configuration\n    mqtt_client = mqtt.Client()",
         "detail": "project.sensors.LCD.lcd",
         "documentation": {}
     },
@@ -2918,7 +2929,7 @@
         "kind": 2,
         "importPath": "project.sensors.LCD.lcd",
         "description": "project.sensors.LCD.lcd",
-        "peekOfCode": "def connect_mqtt(hostname,port):\n    # MQTT Configuration\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(hostname,port, 60)\n    mqtt_client.loop_start()\n    mqtt_client.on_connect = on_connect\n    mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef create_lcd_and_adapter(settings):\n    PCF8574_address = 0x27  # I2C address of the PCF8574 chip.\n    PCF8574A_address = 0x3F  # I2C address of the PCF8574A chip.",
+        "peekOfCode": "def connect_mqtt(hostname, port):\n    # MQTT Configuration\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(hostname, port, 60)\n    mqtt_client.loop_start()\n    mqtt_client.on_connect = on_connect\n    mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\n# LCD and Adapter Creation\ndef create_lcd_and_adapter(settings):\n    PCF8574_address = 0x27  # I2C address of the PCF8574 chip.",
         "detail": "project.sensors.LCD.lcd",
         "documentation": {}
     },
@@ -2936,7 +2947,7 @@
         "kind": 2,
         "importPath": "project.sensors.LCD.lcd",
         "description": "project.sensors.LCD.lcd",
-        "peekOfCode": "def run_lcd_loop(lcd, mcp, delay, callback, stop_event, settings,hostname,port):\n    mcp.output(3, 1)     # turn on LCD backlight\n    lcd.begin(16, 2)     # set number of LCD lines and columns\n    connect_mqtt(hostname,port)\n    while True:\n        lcd.clear()\n        lcd.setCursor(0, 0)  # set cursor position\n        lcd.message(\"Humidity: \", humidity)\n        lcd.message(\"Temperature: \", temperature)\n        callback(humidity, temperature, settings)",
+        "peekOfCode": "def run_lcd_loop(lcd, mcp, delay, callback, stop_event, settings, hostname, port):\n    mcp.output(3, 1)  # turn on LCD backlight\n    lcd.begin(16, 2)  # set number of LCD lines and columns\n    connect_mqtt(hostname, port)\n    while True:\n        lcd.clear()\n        lcd.setCursor(0, 0)  # set cursor position\n        lcd.message(f\"Humidity: {humidity}\")\n        lcd.setCursor(0, 1)  # set cursor position for temperature\n        lcd.message(f\"Temp: {temperature}\")",
         "detail": "project.sensors.LCD.lcd",
         "documentation": {}
     },
@@ -3089,7 +3100,7 @@
         "kind": 2,
         "importPath": "project.sensors.uds",
         "description": "project.sensors.uds",
-        "peekOfCode": "def run_uds_loop(uds, delay, callback, stop_event, publish_event, settings):\n    try:\n        while True:\n            distance = get_distance(trigger_pin, echo_pin)\n            if distance is not None:\n                callback(distance, publish_event, settings)\n            else:\n                print('Measurement timed out')\n            time.sleep(delay)\n    except KeyboardInterrupt:",
+        "peekOfCode": "def run_uds_loop(uds, delay, callback, stop_event, publish_event, settings):\n    try:\n        while True:\n            distance = uds.get_distance(trigger_pin, echo_pin)\n            if distance is not None:\n                callback(distance, publish_event, settings)\n            else:\n                print('Measurement timed out')\n            time.sleep(delay)\n    except KeyboardInterrupt:",
         "detail": "project.sensors.uds",
         "documentation": {}
     },
@@ -3702,6 +3713,15 @@
         "importPath": "server.server",
         "description": "server.server",
         "peekOfCode": "def adjust_people_count(device_number=1):\n    with app.app_context():\n        query = (f'from(bucket: \"{bucket}\") |> range(start: -5s, stop: now()) |> filter(fn: ('\n                 f'r) => r[\"_measurement\"] == \"UDS\") |> filter(fn: (r) => r[\"name\"] == \"DUS{device_number}\") '\n                 f' |> yield(name: \"last\")')\n        response = handle_influx_query(query)\n        try:\n            values = json.loads(response.data.decode('utf-8'))['data']\n        except KeyError:\n            print(\"Key 'data' not found in the response\")",
+        "detail": "server.server",
+        "documentation": {}
+    },
+    {
+        "label": "integrate",
+        "kind": 2,
+        "importPath": "server.server",
+        "description": "server.server",
+        "peekOfCode": "def integrate(values, delta_t):\n    integral = 0\n    for i in range(1, len(values)):\n        integral += (values[i] + values[i-1]) / 2 * delta_t\n    return integral\ndef check_safe_movement(data):\n    with app.app_context():\n        axis = str(data[\"axis\"])\n        query = (f'from(bucket: \"{bucket}\") |> range(start: -10s, stop: now())'\n                 '|> filter(fn: (r) => r[\"_measurement\"] == \"Gyroscope\")'",
         "detail": "server.server",
         "documentation": {}
     },
