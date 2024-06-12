@@ -35,17 +35,17 @@ def update_data(topic, data):
     print("rgb data: ", data, "received from topic " + topic)
     new_action = map_color(data["value"])
 
-def connect_mqtt():
+def connect_mqtt(hostname,port):
     mqtt_client = mqtt.Client()
-    mqtt_client.connect("localhost", 1883, 60)
+    mqtt_client.connect(hostname,port, 60)
     mqtt_client.loop_start()
     mqtt_client.on_connect = on_connect
     mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))
 
 
-def run_rgb_simulator(delay, callback, stop_event, publish_event, settings):
+def run_rgb_simulator(delay, callback, stop_event, publish_event, settings,hostname,port):
     print("AAAAAAAAAAAAAAAA")
-    connect_mqtt()
+    connect_mqtt(hostname,port)
     global status, new_action
     while True:
         if new_action != status:

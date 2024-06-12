@@ -29,10 +29,10 @@ def update_data(topic, data):
             humidity = data["value"]
 
 
-def connect_mqtt():
+def connect_mqtt(hostname,port):
     # MQTT Configuration
     mqtt_client = mqtt.Client()
-    mqtt_client.connect("localhost", 1883, 60)
+    mqtt_client.connect(hostname,port, 60)
     mqtt_client.loop_start()
     mqtt_client.on_connect = on_connect
     mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))
@@ -55,10 +55,10 @@ def create_lcd_and_adapter(settings):
     return lcd, mcp
 
 
-def run_lcd_loop(lcd, mcp, delay, callback, stop_event, settings):
+def run_lcd_loop(lcd, mcp, delay, callback, stop_event, settings,hostname,port):
     mcp.output(3, 1)     # turn on LCD backlight
     lcd.begin(16, 2)     # set number of LCD lines and columns
-    connect_mqtt()
+    connect_mqtt(hostname,port)
     while True:
         lcd.clear()
         lcd.setCursor(0, 0)  # set cursor position

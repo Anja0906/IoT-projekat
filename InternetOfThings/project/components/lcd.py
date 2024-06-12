@@ -12,10 +12,10 @@ def lcd_callback(humidity, temperature, lcd_settings):
         print(f"Temperature: {temperature}°C")
 
 
-def run_lcd(settings, threads, stop_event):
+def run_lcd(settings, threads, stop_event,hostname,port):
     if settings['simulated']:
         print("Starting {} simulator".format(settings["name"]))
-        lcd_thread = threading.Thread(target=run_lcd_simulator, args=(2, lcd_callback, stop_event, settings))
+        lcd_thread = threading.Thread(target=run_lcd_simulator, args=(2, lcd_callback, stop_event, settings,hostname,port))
         lcd_thread.start()
         threads.append(lcd_thread)
         print("{0} simulator started".format(settings["name"]))
@@ -23,7 +23,7 @@ def run_lcd(settings, threads, stop_event):
         from sensors.LCD.lcd import run_lcd_loop, create_lcd_and_adapter
         print("Starting {} loop".format(settings["name"]))
         LCD, mcp = create_lcd_and_adapter(settings)
-        lcd_thread = threading.Thread(target=run_lcd_loop, args=(LCD, mcp, 2, lcd_callback, stop_event, settings))
+        lcd_thread = threading.Thread(target=run_lcd_loop, args=(LCD, mcp, 2, lcd_callback, stop_event, settings,hostname,port))
         lcd_thread.start()
         threads.append(lcd_thread)
         print("{} loop started".format(settings["name"]))

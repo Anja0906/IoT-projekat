@@ -715,15 +715,6 @@
         "documentation": {}
     },
     {
-        "label": "paho.mqtt.publish",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "paho.mqtt.publish",
-        "description": "paho.mqtt.publish",
-        "detail": "paho.mqtt.publish",
-        "documentation": {}
-    },
-    {
         "label": "PCF8574_GPIO",
         "importPath": "PCF8574",
         "description": "PCF8574",
@@ -2000,7 +1991,7 @@
         "kind": 2,
         "importPath": "project.components.lcd",
         "description": "project.components.lcd",
-        "peekOfCode": "def lcd_callback(humidity, temperature, lcd_settings):\n        t = time.localtime()\n        print(\"=\" * 10 + lcd_settings[\"name\"] + \"=\" * 10)\n        print(f\"Timestamp: {time.strftime('%H:%M:%S', t)}\")\n        print(\"Showing data below\")\n        print(f\"Humidity: {humidity}%\")\n        print(f\"Temperature: {temperature}°C\")\ndef run_lcd(settings, threads, stop_event):\n    if settings['simulated']:\n        print(\"Starting {} simulator\".format(settings[\"name\"]))",
+        "peekOfCode": "def lcd_callback(humidity, temperature, lcd_settings):\n        t = time.localtime()\n        print(\"=\" * 10 + lcd_settings[\"name\"] + \"=\" * 10)\n        print(f\"Timestamp: {time.strftime('%H:%M:%S', t)}\")\n        print(\"Showing data below\")\n        print(f\"Humidity: {humidity}%\")\n        print(f\"Temperature: {temperature}°C\")\ndef run_lcd(settings, threads, stop_event,hostname,port):\n    if settings['simulated']:\n        print(\"Starting {} simulator\".format(settings[\"name\"]))",
         "detail": "project.components.lcd",
         "documentation": {}
     },
@@ -2009,7 +2000,7 @@
         "kind": 2,
         "importPath": "project.components.lcd",
         "description": "project.components.lcd",
-        "peekOfCode": "def run_lcd(settings, threads, stop_event):\n    if settings['simulated']:\n        print(\"Starting {} simulator\".format(settings[\"name\"]))\n        lcd_thread = threading.Thread(target=run_lcd_simulator, args=(2, lcd_callback, stop_event, settings))\n        lcd_thread.start()\n        threads.append(lcd_thread)\n        print(\"{0} simulator started\".format(settings[\"name\"]))\n    else:\n        from sensors.LCD.lcd import run_lcd_loop, create_lcd_and_adapter\n        print(\"Starting {} loop\".format(settings[\"name\"]))",
+        "peekOfCode": "def run_lcd(settings, threads, stop_event,hostname,port):\n    if settings['simulated']:\n        print(\"Starting {} simulator\".format(settings[\"name\"]))\n        lcd_thread = threading.Thread(target=run_lcd_simulator, args=(2, lcd_callback, stop_event, settings,hostname,port))\n        lcd_thread.start()\n        threads.append(lcd_thread)\n        print(\"{0} simulator started\".format(settings[\"name\"]))\n    else:\n        from sensors.LCD.lcd import run_lcd_loop, create_lcd_and_adapter\n        print(\"Starting {} loop\".format(settings[\"name\"]))",
         "detail": "project.components.lcd",
         "documentation": {}
     },
@@ -2216,7 +2207,7 @@
         "kind": 2,
         "importPath": "project.components.rgb",
         "description": "project.components.rgb",
-        "peekOfCode": "def run_rgb(settings, threads, stop_event,hostname,port):\n    if settings['simulated']:\n        print(\"Starting {} simulator\".format(settings[\"name\"]))\n        rgb_thread = threading.Thread(target=run_rgb_simulator, args=(2, rgb_callback, stop_event, publish_event, settings))\n        rgb_thread.start()\n        threads.append(rgb_thread)\n        print(\"{0} simulator started\".format(settings[\"name\"]))\n    else:\n        from sensors.rgb import run_rgb_loop, RGB\n        print(\"Starting {} loop\".format(settings[\"name\"]))",
+        "peekOfCode": "def run_rgb(settings, threads, stop_event,hostname,port):\n    if settings['simulated']:\n        print(\"Starting {} simulator\".format(settings[\"name\"]))\n        rgb_thread = threading.Thread(target=run_rgb_simulator, args=(2, rgb_callback, stop_event, publish_event, settings,hostname,port))\n        rgb_thread.start()\n        threads.append(rgb_thread)\n        print(\"{0} simulator started\".format(settings[\"name\"]))\n    else:\n        from sensors.rgb import run_rgb_loop, RGB\n        print(\"Starting {} loop\".format(settings[\"name\"]))",
         "detail": "project.components.rgb",
         "documentation": {}
     },
@@ -2855,7 +2846,7 @@
         "kind": 2,
         "importPath": "project.sensors.Gyro.gyro",
         "description": "project.sensors.Gyro.gyro",
-        "peekOfCode": "def run_gyro_loop(mpu, delay, callback, stop_event, publish_event, settings):\n    mpu.dmp_initialize()\n    while True:\n        accel = mpu.get_acceleration()      #get accelerometer data\n        gyro = mpu.get_rotation()           #get gyroscope data\n        accel = [a/16384.0 for a in accel]\n        gyro = [g/131.0 for g in gyro]\n        callback(accel, gyro, publish_event, settings)\n        os.system('clear')\n        if stop_event.is_set():",
+        "peekOfCode": "def run_gyro_loop(mpu, delay, callback, stop_event, publish_event, settings):\n    mpu.dmp_initialize()\n    while True:\n        accel = mpu.get_acceleration()     \n        gyro = mpu.get_rotation()          \n        accel = [a/16384.0 for a in accel]\n        gyro = [g/131.0 for g in gyro]\n        callback(accel, gyro, publish_event, settings)\n        os.system('clear')\n        if stop_event.is_set():",
         "detail": "project.sensors.Gyro.gyro",
         "documentation": {}
     },
@@ -2864,7 +2855,7 @@
         "kind": 5,
         "importPath": "project.sensors.Gyro.gyro",
         "description": "project.sensors.Gyro.gyro",
-        "peekOfCode": "accel = [0]*3               #store accelerometer data\ngyro = [0]*3                #store gyroscope data\ndef run_gyro_loop(mpu, delay, callback, stop_event, publish_event, settings):\n    mpu.dmp_initialize()\n    while True:\n        accel = mpu.get_acceleration()      #get accelerometer data\n        gyro = mpu.get_rotation()           #get gyroscope data\n        accel = [a/16384.0 for a in accel]\n        gyro = [g/131.0 for g in gyro]\n        callback(accel, gyro, publish_event, settings)",
+        "peekOfCode": "accel = [0]*3               \ngyro = [0]*3                \ndef run_gyro_loop(mpu, delay, callback, stop_event, publish_event, settings):\n    mpu.dmp_initialize()\n    while True:\n        accel = mpu.get_acceleration()     \n        gyro = mpu.get_rotation()          \n        accel = [a/16384.0 for a in accel]\n        gyro = [g/131.0 for g in gyro]\n        callback(accel, gyro, publish_event, settings)",
         "detail": "project.sensors.Gyro.gyro",
         "documentation": {}
     },
@@ -2873,7 +2864,7 @@
         "kind": 5,
         "importPath": "project.sensors.Gyro.gyro",
         "description": "project.sensors.Gyro.gyro",
-        "peekOfCode": "gyro = [0]*3                #store gyroscope data\ndef run_gyro_loop(mpu, delay, callback, stop_event, publish_event, settings):\n    mpu.dmp_initialize()\n    while True:\n        accel = mpu.get_acceleration()      #get accelerometer data\n        gyro = mpu.get_rotation()           #get gyroscope data\n        accel = [a/16384.0 for a in accel]\n        gyro = [g/131.0 for g in gyro]\n        callback(accel, gyro, publish_event, settings)\n        os.system('clear')",
+        "peekOfCode": "gyro = [0]*3                \ndef run_gyro_loop(mpu, delay, callback, stop_event, publish_event, settings):\n    mpu.dmp_initialize()\n    while True:\n        accel = mpu.get_acceleration()     \n        gyro = mpu.get_rotation()          \n        accel = [a/16384.0 for a in accel]\n        gyro = [g/131.0 for g in gyro]\n        callback(accel, gyro, publish_event, settings)\n        os.system('clear')",
         "detail": "project.sensors.Gyro.gyro",
         "documentation": {}
     },
@@ -2918,7 +2909,7 @@
         "kind": 2,
         "importPath": "project.sensors.LCD.lcd",
         "description": "project.sensors.LCD.lcd",
-        "peekOfCode": "def update_data(topic, data):\n    global humidity, temperature\n    if data[\"name\"] == DHT_NAME:\n        if topic == \"data/temperature\":\n            temperature = data[\"value\"]\n        elif topic == \"data/humidity\":\n            humidity = data[\"value\"]\ndef connect_mqtt():\n    # MQTT Configuration\n    mqtt_client = mqtt.Client()",
+        "peekOfCode": "def update_data(topic, data):\n    global humidity, temperature\n    if data[\"name\"] == DHT_NAME:\n        if topic == \"data/temperature\":\n            temperature = data[\"value\"]\n        elif topic == \"data/humidity\":\n            humidity = data[\"value\"]\ndef connect_mqtt(hostname,port):\n    # MQTT Configuration\n    mqtt_client = mqtt.Client()",
         "detail": "project.sensors.LCD.lcd",
         "documentation": {}
     },
@@ -2927,7 +2918,7 @@
         "kind": 2,
         "importPath": "project.sensors.LCD.lcd",
         "description": "project.sensors.LCD.lcd",
-        "peekOfCode": "def connect_mqtt():\n    # MQTT Configuration\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(\"localhost\", 1883, 60)\n    mqtt_client.loop_start()\n    mqtt_client.on_connect = on_connect\n    mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef create_lcd_and_adapter(settings):\n    PCF8574_address = 0x27  # I2C address of the PCF8574 chip.\n    PCF8574A_address = 0x3F  # I2C address of the PCF8574A chip.",
+        "peekOfCode": "def connect_mqtt(hostname,port):\n    # MQTT Configuration\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(hostname,port, 60)\n    mqtt_client.loop_start()\n    mqtt_client.on_connect = on_connect\n    mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef create_lcd_and_adapter(settings):\n    PCF8574_address = 0x27  # I2C address of the PCF8574 chip.\n    PCF8574A_address = 0x3F  # I2C address of the PCF8574A chip.",
         "detail": "project.sensors.LCD.lcd",
         "documentation": {}
     },
@@ -2945,7 +2936,7 @@
         "kind": 2,
         "importPath": "project.sensors.LCD.lcd",
         "description": "project.sensors.LCD.lcd",
-        "peekOfCode": "def run_lcd_loop(lcd, mcp, delay, callback, stop_event, settings):\n    mcp.output(3, 1)     # turn on LCD backlight\n    lcd.begin(16, 2)     # set number of LCD lines and columns\n    connect_mqtt()\n    while True:\n        lcd.clear()\n        lcd.setCursor(0, 0)  # set cursor position\n        lcd.message(\"Humidity: \", humidity)\n        lcd.message(\"Temperature: \", temperature)\n        callback(humidity, temperature, settings)",
+        "peekOfCode": "def run_lcd_loop(lcd, mcp, delay, callback, stop_event, settings,hostname,port):\n    mcp.output(3, 1)     # turn on LCD backlight\n    lcd.begin(16, 2)     # set number of LCD lines and columns\n    connect_mqtt(hostname,port)\n    while True:\n        lcd.clear()\n        lcd.setCursor(0, 0)  # set cursor position\n        lcd.message(\"Humidity: \", humidity)\n        lcd.message(\"Temperature: \", temperature)\n        callback(humidity, temperature, settings)",
         "detail": "project.sensors.LCD.lcd",
         "documentation": {}
     },
@@ -3116,7 +3107,7 @@
         "kind": 5,
         "importPath": "project.settings.settings",
         "description": "project.settings.settings",
-        "peekOfCode": "HOSTNAME = \"localhost\"\nPORT = 1883\nlock = threading.Lock()\ndef load_settings():\n    file_path = \"settings/settings.json\"\n    with open(file_path, 'r') as f:\n        return json.load(f)\nlock = threading.Lock()",
+        "peekOfCode": "HOSTNAME = \"192.168.1.100\"\nPORT = 1883\nlock = threading.Lock()\ndef load_settings():\n    file_path = \"settings/settings.json\"\n    with open(file_path, 'r') as f:\n        return json.load(f)\nlock = threading.Lock()",
         "detail": "project.settings.settings",
         "documentation": {}
     },
@@ -3251,7 +3242,7 @@
         "kind": 2,
         "importPath": "project.simulations.dioda",
         "description": "project.simulations.dioda",
-        "peekOfCode": "def run_dioda_simulator(pipe, delay, callback, stop_event, publish_event, settings):\n    last_dioda_time = time.time()\n    while True:\n        if pipe.poll():\n            message = pipe.recv()\n            message = str(message).strip().lower()\n            if message == \"l\":\n                last_dioda_time = time.time()\n        print(\"BIBIBIBIBI\" + \" \" +time.time())\n        print(\"BIBIBIBIBI\" + \" \" +last_dioda_time)",
+        "peekOfCode": "def run_dioda_simulator(pipe, delay, callback, stop_event, publish_event, settings):\n    last_dioda_time = time.time()\n    while True:\n        if pipe.poll():\n            message = pipe.recv()\n            message = str(message).strip().lower()\n            if message == \"l\":\n                last_dioda_time = time.time()\n        dioda_state = time.time() - last_dioda_time <= 10\n        time.sleep(delay)  ",
         "detail": "project.simulations.dioda",
         "documentation": {}
     },
@@ -3287,7 +3278,7 @@
         "kind": 2,
         "importPath": "project.simulations.lcd",
         "description": "project.simulations.lcd",
-        "peekOfCode": "def update_data(topic, data):\n    global humidity, temperature\n    if data[\"name\"] == DHT_NAME:\n        if topic == \"data/temperature\":\n            temperature = data[\"value\"]\n        elif topic == \"data/humidity\":\n            humidity = data[\"value\"]\ndef connect_mqtt():\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(\"localhost\", 1883, 60)",
+        "peekOfCode": "def update_data(topic, data):\n    global humidity, temperature\n    if data[\"name\"] == DHT_NAME:\n        if topic == \"data/temperature\":\n            temperature = data[\"value\"]\n        elif topic == \"data/humidity\":\n            humidity = data[\"value\"]\ndef connect_mqtt(hostname,port):\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(hostname,port, 60)",
         "detail": "project.simulations.lcd",
         "documentation": {}
     },
@@ -3296,7 +3287,7 @@
         "kind": 2,
         "importPath": "project.simulations.lcd",
         "description": "project.simulations.lcd",
-        "peekOfCode": "def connect_mqtt():\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(\"localhost\", 1883, 60)\n    mqtt_client.loop_start()\n    mqtt_client.on_connect = on_connect\n    mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef run_lcd_simulator(delay, callback, stop_event, settings):\n    connect_mqtt()\n    while True:\n        callback(humidity, temperature, settings)",
+        "peekOfCode": "def connect_mqtt(hostname,port):\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(hostname,port, 60)\n    mqtt_client.loop_start()\n    mqtt_client.on_connect = on_connect\n    mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef run_lcd_simulator(delay, callback, stop_event, settings,hostname,port):\n    connect_mqtt(hostname,port)\n    while True:\n        callback(humidity, temperature, settings)",
         "detail": "project.simulations.lcd",
         "documentation": {}
     },
@@ -3305,7 +3296,7 @@
         "kind": 2,
         "importPath": "project.simulations.lcd",
         "description": "project.simulations.lcd",
-        "peekOfCode": "def run_lcd_simulator(delay, callback, stop_event, settings):\n    connect_mqtt()\n    while True:\n        callback(humidity, temperature, settings)\n        if stop_event.is_set():\n            break\n        time.sleep(delay)",
+        "peekOfCode": "def run_lcd_simulator(delay, callback, stop_event, settings,hostname,port):\n    connect_mqtt(hostname,port)\n    while True:\n        callback(humidity, temperature, settings)\n        if stop_event.is_set():\n            break\n        time.sleep(delay)",
         "detail": "project.simulations.lcd",
         "documentation": {}
     },
@@ -3404,7 +3395,7 @@
         "kind": 2,
         "importPath": "project.simulations.rgb",
         "description": "project.simulations.rgb",
-        "peekOfCode": "def on_connect(client, userdata, flags, rc):\n    client.subscribe(\"data/ir\")\n    client.subscribe(\"front-rgb\")\ndef update_data(topic, data):\n    global new_action\n    print(\"rgb data: \", data, \"received from topic \" + topic)\n    new_action = map_color(data[\"value\"])\ndef connect_mqtt():\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(\"localhost\", 1883, 60)",
+        "peekOfCode": "def on_connect(client, userdata, flags, rc):\n    client.subscribe(\"data/ir\")\n    client.subscribe(\"front-rgb\")\ndef update_data(topic, data):\n    global new_action\n    print(\"rgb data: \", data, \"received from topic \" + topic)\n    new_action = map_color(data[\"value\"])\ndef connect_mqtt(hostname,port):\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(hostname,port, 60)",
         "detail": "project.simulations.rgb",
         "documentation": {}
     },
@@ -3413,7 +3404,7 @@
         "kind": 2,
         "importPath": "project.simulations.rgb",
         "description": "project.simulations.rgb",
-        "peekOfCode": "def update_data(topic, data):\n    global new_action\n    print(\"rgb data: \", data, \"received from topic \" + topic)\n    new_action = map_color(data[\"value\"])\ndef connect_mqtt():\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(\"localhost\", 1883, 60)\n    mqtt_client.loop_start()\n    mqtt_client.on_connect = on_connect\n    mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))",
+        "peekOfCode": "def update_data(topic, data):\n    global new_action\n    print(\"rgb data: \", data, \"received from topic \" + topic)\n    new_action = map_color(data[\"value\"])\ndef connect_mqtt(hostname,port):\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(hostname,port, 60)\n    mqtt_client.loop_start()\n    mqtt_client.on_connect = on_connect\n    mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))",
         "detail": "project.simulations.rgb",
         "documentation": {}
     },
@@ -3422,7 +3413,7 @@
         "kind": 2,
         "importPath": "project.simulations.rgb",
         "description": "project.simulations.rgb",
-        "peekOfCode": "def connect_mqtt():\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(\"localhost\", 1883, 60)\n    mqtt_client.loop_start()\n    mqtt_client.on_connect = on_connect\n    mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef run_rgb_simulator(delay, callback, stop_event, publish_event, settings):\n    print(\"AAAAAAAAAAAAAAAA\")\n    connect_mqtt()\n    global status, new_action",
+        "peekOfCode": "def connect_mqtt(hostname,port):\n    mqtt_client = mqtt.Client()\n    mqtt_client.connect(hostname,port, 60)\n    mqtt_client.loop_start()\n    mqtt_client.on_connect = on_connect\n    mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))\ndef run_rgb_simulator(delay, callback, stop_event, publish_event, settings,hostname,port):\n    print(\"AAAAAAAAAAAAAAAA\")\n    connect_mqtt(hostname,port)\n    global status, new_action",
         "detail": "project.simulations.rgb",
         "documentation": {}
     },
@@ -3431,7 +3422,7 @@
         "kind": 2,
         "importPath": "project.simulations.rgb",
         "description": "project.simulations.rgb",
-        "peekOfCode": "def run_rgb_simulator(delay, callback, stop_event, publish_event, settings):\n    print(\"AAAAAAAAAAAAAAAA\")\n    connect_mqtt()\n    global status, new_action\n    while True:\n        if new_action != status:\n            status = new_action\n            callback(status, publish_event, settings)\n        if stop_event.is_set():\n            break",
+        "peekOfCode": "def run_rgb_simulator(delay, callback, stop_event, publish_event, settings,hostname,port):\n    print(\"AAAAAAAAAAAAAAAA\")\n    connect_mqtt(hostname,port)\n    global status, new_action\n    while True:\n        if new_action != status:\n            status = new_action\n            callback(status, publish_event, settings)\n        if stop_event.is_set():\n            break",
         "detail": "project.simulations.rgb",
         "documentation": {}
     },
@@ -3539,7 +3530,7 @@
         "kind": 2,
         "importPath": "project.main",
         "description": "project.main",
-        "peekOfCode": "def run_alarm_clock(bb_settings, threads, buzzer_stop_event):\n    global mqtt_client, bb_alarm_time\n    is_active = False\n    time_difference = timedelta(seconds=7)\n    while True:\n        try:\n            print(str(bb_alarm_time) + \" HEEEEJ\")\n            # Ensure bb_alarm_time is properly formatted\n            try:\n                # Debug: print the time value",
+        "peekOfCode": "def run_alarm_clock(bb_settings, threads, buzzer_stop_event):\n    global mqtt_client, bb_alarm_time\n    is_active = False\n    time_difference = timedelta(seconds=7)\n    while True:\n        try:\n            # Ensure bb_alarm_time is properly formatted\n            try:\n                # Debug: print the time value\n                print(f\"Parsing time: '{bb_alarm_time}'\")",
         "detail": "project.main",
         "documentation": {}
     },
@@ -3557,7 +3548,7 @@
         "kind": 2,
         "importPath": "project.main",
         "description": "project.main",
-        "peekOfCode": "def run_pi2(settings, threads, stop_event):\n    gdht_settings = settings.get('GDHT')\n    rdht3_settings = settings.get('RDHT3')\n    uds2_settings = settings.get('DUS2')\n    rpir3_settings = settings.get('RPIR3')\n    dpir2_settings = settings.get('DPIR2')\n    glcd_settings = settings.get('GLCD')\n    gsg_settings = settings.get('GSG')\n    ds2_settings = settings.get('DS2')\n    if gdht_settings:",
+        "peekOfCode": "def run_pi2(settings, threads, stop_event):\n    global HOSTNAME\n    global PORT\n    gdht_settings = settings.get('GDHT')\n    rdht3_settings = settings.get('RDHT3')\n    uds2_settings = settings.get('DUS2')\n    rpir3_settings = settings.get('RPIR3')\n    dpir2_settings = settings.get('DPIR2')\n    glcd_settings = settings.get('GLCD')\n    gsg_settings = settings.get('GSG')",
         "detail": "project.main",
         "documentation": {}
     },
@@ -4079,7 +4070,7 @@
         "kind": 5,
         "importPath": "server.settings",
         "description": "server.settings",
-        "peekOfCode": "HOSTNAME = \"localhost\"\nPORT = 1883\nlock = threading.Lock()\ndef load_settings():\n    file_path = \"settings.json\"\n    with open(file_path, 'r') as f:\n        return json.load(f)\nlock = threading.Lock()",
+        "peekOfCode": "HOSTNAME = \"192.168.1.100\"\nPORT = 1883\nlock = threading.Lock()\ndef load_settings():\n    file_path = \"settings.json\"\n    with open(file_path, 'r') as f:\n        return json.load(f)\nlock = threading.Lock()",
         "detail": "server.settings",
         "documentation": {}
     },

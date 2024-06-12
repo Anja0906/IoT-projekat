@@ -2,20 +2,18 @@
 import MPU6050 
 import time
 import os
-import paho.mqtt.client as mqtt
-import paho.mqtt.publish as publish
 import json
 
 
-accel = [0]*3               #store accelerometer data
-gyro = [0]*3                #store gyroscope data
+accel = [0]*3               
+gyro = [0]*3                
 
 
 def run_gyro_loop(mpu, delay, callback, stop_event, publish_event, settings):
     mpu.dmp_initialize()
     while True:
-        accel = mpu.get_acceleration()      #get accelerometer data
-        gyro = mpu.get_rotation()           #get gyroscope data
+        accel = mpu.get_acceleration()     
+        gyro = mpu.get_rotation()          
         accel = [a/16384.0 for a in accel]
         gyro = [g/131.0 for g in gyro]
         callback(accel, gyro, publish_event, settings)

@@ -252,7 +252,6 @@ def command_callback(data):
 
 def save_to_db(topic, data):
     write_api = influxdb_client.write_api(write_options=SYNCHRONOUS)
-    
     if isinstance(data["value"], int):
         data["value"] = float(data["value"])
 

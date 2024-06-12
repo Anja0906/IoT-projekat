@@ -23,16 +23,16 @@ def update_data(topic, data):
             humidity = data["value"]
 
 
-def connect_mqtt():
+def connect_mqtt(hostname,port):
     mqtt_client = mqtt.Client()
-    mqtt_client.connect("localhost", 1883, 60)
+    mqtt_client.connect(hostname,port, 60)
     mqtt_client.loop_start()
     mqtt_client.on_connect = on_connect
     mqtt_client.on_message = lambda client, userdata, msg: update_data(msg.topic, json.loads(msg.payload.decode('utf-8')))
 
 
-def run_lcd_simulator(delay, callback, stop_event, settings):
-    connect_mqtt()
+def run_lcd_simulator(delay, callback, stop_event, settings,hostname,port):
+    connect_mqtt(hostname,port)
     while True:
         callback(humidity, temperature, settings)
         if stop_event.is_set():

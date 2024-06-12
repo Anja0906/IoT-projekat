@@ -2,7 +2,7 @@ import json
 import os
 import threading
 
-HOSTNAME = "localhost"
+HOSTNAME = "192.168.1.100"
 PORT = 1883
 
 lock = threading.Lock()

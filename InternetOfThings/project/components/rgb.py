@@ -65,7 +65,7 @@ def rgb_callback(status, publish_event, rgb_settings, verbose=False):
 def run_rgb(settings, threads, stop_event,hostname,port):
     if settings['simulated']:
         print("Starting {} simulator".format(settings["name"]))
-        rgb_thread = threading.Thread(target=run_rgb_simulator, args=(2, rgb_callback, stop_event, publish_event, settings))
+        rgb_thread = threading.Thread(target=run_rgb_simulator, args=(2, rgb_callback, stop_event, publish_event, settings,hostname,port))
         rgb_thread.start()
         threads.append(rgb_thread)
         print("{0} simulator started".format(settings["name"]))

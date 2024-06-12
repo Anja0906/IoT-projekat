@@ -89,7 +89,6 @@ def run_alarm_clock(bb_settings, threads, buzzer_stop_event):
     time_difference = timedelta(seconds=7)
     while True:
         try:
-            print(str(bb_alarm_time) + " HEEEEJ")
 
             # Ensure bb_alarm_time is properly formatted
             try:
@@ -104,7 +103,6 @@ def run_alarm_clock(bb_settings, threads, buzzer_stop_event):
             current_time = datetime.now().time()
             delta_target_time = datetime.combine(datetime.today(), target_time) + time_difference
             max_target_time = delta_target_time.time()
-            print(str(target_time) + " ALOOOOOO " + str(current_time) + " ALOOOOOO " + str(max_target_time))
 
             if target_time <= current_time <= max_target_time and not is_active:
                 print("IDE ALARM NA MAKS")
@@ -154,6 +152,8 @@ def run_pi1(settings, threads, stop_event, pi_light_pipe):
         run_dioda(pi_light_pipe, dl_settings, threads, stop_event)
 
 def run_pi2(settings, threads, stop_event):
+    global HOSTNAME
+    global PORT
     gdht_settings = settings.get('GDHT')
     rdht3_settings = settings.get('RDHT3')
     uds2_settings = settings.get('DUS2')
@@ -174,7 +174,7 @@ def run_pi2(settings, threads, stop_event):
     if dpir2_settings:
         run_pir(dpir2_settings, threads, stop_event)
     if glcd_settings:
-        run_lcd(glcd_settings, threads, stop_event)
+        run_lcd(glcd_settings, threads, stop_event,HOSTNAME,PORT)
     if gsg_settings:
         run_gyro(gsg_settings, threads, stop_event)
     if ds2_settings:

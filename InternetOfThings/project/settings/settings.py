@@ -3,7 +3,7 @@ import os
 import threading
 
 # HOSTNAME = "10.1.121.63"
-HOSTNAME = "localhost"
+HOSTNAME = "192.168.1.100"
 
 PORT = 1883
 
