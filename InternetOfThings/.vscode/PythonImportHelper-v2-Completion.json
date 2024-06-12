@@ -3118,7 +3118,7 @@
         "kind": 5,
         "importPath": "project.settings.settings",
         "description": "project.settings.settings",
-        "peekOfCode": "HOSTNAME = \"192.168.1.100\"\nPORT = 1883\nlock = threading.Lock()\ndef load_settings():\n    file_path = \"settings/settings.json\"\n    with open(file_path, 'r') as f:\n        return json.load(f)\nlock = threading.Lock()",
+        "peekOfCode": "HOSTNAME = \"10.1.121.33\"\nPORT = 1883\nlock = threading.Lock()\ndef load_settings():\n    file_path = \"settings/settings.json\"\n    with open(file_path, 'r') as f:\n        return json.load(f)\nlock = threading.Lock()",
         "detail": "project.settings.settings",
         "documentation": {}
     },
