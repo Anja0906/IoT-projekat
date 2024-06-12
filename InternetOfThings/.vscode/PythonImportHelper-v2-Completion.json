@@ -66,14 +66,6 @@
         "documentation": {}
     },
     {
-        "label": "sleep",
-        "importPath": "time",
-        "description": "time",
-        "isExtraImport": true,
-        "detail": "time",
-        "documentation": {}
-    },
-    {
         "label": "RPi.GPIO",
         "kind": 6,
         "isExtraImport": true,
@@ -757,6 +749,38 @@
     },
     {
         "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "timedelta",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "timedelta",
         "importPath": "datetime",
         "description": "datetime",
         "isExtraImport": true,
@@ -3506,7 +3530,7 @@
         "kind": 2,
         "importPath": "project.main",
         "description": "project.main",
-        "peekOfCode": "def update_data(topic, data):\n    print(\"bb data: \", data, \"received from topic \" + topic)\n    if topic == \"front-bb-on\":\n        global bb_alarm_time\n        bb_alarm_time = data[\"time\"]\n    elif topic == \"front-bb-off\":\n        buzzer_stop_event.set()\n    elif topic == \"pi3\":\n        user_inputs(data)\ndef run_alarm_clock(bb_settings, threads, buzzer_stop_event):",
+        "peekOfCode": "def update_data(topic, data):\n    print(\"bb data: \", data, \"received from topic \" + topic)\n    if topic == \"front-bb-on\":\n        global bb_alarm_time\n        bb_alarm_time = data[\"time\"]\n    elif topic == \"front-bb-off\":\n        buzzer_stop_event.set()\n    elif topic == \"pi3\":\n        user_inputs(data)\nfrom datetime import datetime, timedelta",
         "detail": "project.main",
         "documentation": {}
     },
@@ -3515,7 +3539,7 @@
         "kind": 2,
         "importPath": "project.main",
         "description": "project.main",
-        "peekOfCode": "def run_alarm_clock(bb_settings, threads, buzzer_stop_event):\n    global mqtt_client\n    is_active = False\n    time_difference = timedelta(seconds=7)\n    while True:\n        target_time = datetime.strptime(bb_alarm_time, \"%H:%M\").time()\n        current_time = datetime.now().time()\n        delta_target_time = datetime.combine(datetime.today(), target_time) + time_difference\n        max_target_time = delta_target_time.time()\n        if target_time <= current_time <= max_target_time and not is_active:",
+        "peekOfCode": "def run_alarm_clock(bb_settings, threads, buzzer_stop_event):\n    global mqtt_client, bb_alarm_time\n    is_active = False\n    time_difference = timedelta(seconds=7)\n    while True:\n        try:\n            print(str(bb_alarm_time) + \" HEEEEJ\")\n            # Ensure bb_alarm_time is properly formatted\n            try:\n                # Debug: print the time value",
         "detail": "project.main",
         "documentation": {}
     },
@@ -3821,7 +3845,7 @@
         "kind": 2,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "def set_alarm_clock():\n    global bb_alarm_time\n    try:\n        data = request.json\n        bb_alarm_time = data.get('time')\n        print(\"Alarm clock time changed to \", bb_alarm_time)\n        bb_topic = \"front-bb-on\"\n        payload = json.dumps({\"time\": bb_alarm_time})\n        mqtt_client.publish(bb_topic, payload)\n        return jsonify({'message': 'Alarm time set successfully'})",
+        "peekOfCode": "def set_alarm_clock():\n    global bb_alarm_time\n    try:\n        data = request.json\n        bb_alarm_time = data.get('time').strip()  # Trimovanje eventualnih belih znakova\n        # Validate and sanitize time format\n        try:\n            # Debug: print the time value\n            print(f\"Received time: '{bb_alarm_time}'\")\n            datetime.strptime(bb_alarm_time, \"%H:%M\")",
         "detail": "server.server",
         "documentation": {}
     },

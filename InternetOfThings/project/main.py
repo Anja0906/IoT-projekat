@@ -3,7 +3,8 @@ import multiprocessing
 import threading
 import paho.mqtt.client as mqtt
 from datetime import datetime, timedelta
-from time import sleep
+import time
+
 
 from components.button import run_button
 from components.ms import run_ms
@@ -80,26 +81,46 @@ def update_data(topic, data):
     elif topic == "pi3":
         user_inputs(data)
 
+from datetime import datetime, timedelta
+
 def run_alarm_clock(bb_settings, threads, buzzer_stop_event):
-    global mqtt_client
+    global mqtt_client, bb_alarm_time
     is_active = False
     time_difference = timedelta(seconds=7)
     while True:
-        target_time = datetime.strptime(bb_alarm_time, "%H:%M").time()
-        current_time = datetime.now().time()
+        try:
+            print(str(bb_alarm_time) + " HEEEEJ")
 
-        delta_target_time = datetime.combine(datetime.today(), target_time) + time_difference
-        max_target_time = delta_target_time.time()
+            # Ensure bb_alarm_time is properly formatted
+            try:
+                # Debug: print the time value
+                print(f"Parsing time: '{bb_alarm_time}'")
+                target_time = datetime.strptime(bb_alarm_time, "%H:%M").time()
+            except ValueError as e:
+                print(f"Time format error: {e}")
+                time.sleep(5)
+                continue
 
-        if target_time <= current_time <= max_target_time and not is_active:
-            print("IDE ALARM NA MAKS")
-            buzzer_stop_event.clear()
-            run_buzzer(bb_settings, threads, buzzer_stop_event)
-            is_active = True
-            mqtt_client.publish("front-bb-on", json.dumps({"time": ""}))
-        if buzzer_stop_event.is_set():
-            is_active = False
-        sleep(5)
+            current_time = datetime.now().time()
+            delta_target_time = datetime.combine(datetime.today(), target_time) + time_difference
+            max_target_time = delta_target_time.time()
+            print(str(target_time) + " ALOOOOOO " + str(current_time) + " ALOOOOOO " + str(max_target_time))
+
+            if target_time <= current_time <= max_target_time and not is_active:
+                print("IDE ALARM NA MAKS")
+                buzzer_stop_event.clear()
+                run_buzzer(bb_settings, threads, buzzer_stop_event)
+                is_active = True
+                mqtt_client.publish("front-bb-on", json.dumps({"time": ""}))
+
+            if buzzer_stop_event.is_set():
+                is_active = False
+
+            time.sleep(5)
+        except Exception as e:
+            print(f"Exception in run_alarm_clock: {e}")
+        
+
 
 def run_pi1(settings, threads, stop_event, pi_light_pipe):
     dht1_settings = settings.get('DHT1')

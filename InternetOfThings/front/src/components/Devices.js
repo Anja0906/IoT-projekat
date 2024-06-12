@@ -20,6 +20,7 @@ export class Devices extends Component {
       isBBDialogOpen: false,
       selectedDevice: null,
       showAlarm: localStorage.getItem("alarm") === "true",
+      alarmTriggered: false, // Dodaj novi state
     };
     this.socket = null;
   }
@@ -83,7 +84,7 @@ export class Devices extends Component {
     this.socket.on("alarm", (msg) => {
       const message = msg.message;
       console.log(message);
-      this.setState({ showAlarm: message });
+      this.setState({ showAlarm: message, alarmTriggered: message }); // Ažuriraj state
       localStorage.setItem("alarm", message);
     });
 
@@ -292,11 +293,13 @@ export class Devices extends Component {
   };
 
   render() {
-    const { data, deviceValues } = this.state;
+    const { data, deviceValues, alarmTriggered } = this.state; // Dodaj alarmTriggered
     const showAlarm = this.state.showAlarm;
 
     return (
-      <div>
+      <div className={alarmTriggered ? "blink-screen" : ""}>
+        {" "}
+        {/* Dodaj klasu za bljeskanje */}
         <Navigation showAlarm={showAlarm} />
         <div id="tools"></div>
         <RGBDialog
@@ -323,6 +326,7 @@ export class Devices extends Component {
           openBBDialog={this.openBBDialog}
           handleActivateSystem={this.handleActivateSystem}
           handleDeactivateSystem={this.handleDeactivateSystem}
+          alarmTriggered={alarmTriggered} // Prosledi alarmTriggered
         />
         <iframe
           width="100%"
@@ -343,13 +347,19 @@ const DevicesList = ({
   openBBDialog,
   handleActivateSystem,
   handleDeactivateSystem,
+  alarmTriggered, // Dodaj alarmTriggered
 }) => {
   return (
     <div id="devices-container">
       {devices.map((device, index) => {
         const deviceValue = deviceValues[device.name] || {};
         return (
-          <div key={index} className="device-card">
+          <div
+            key={index}
+            className={`device-card ${alarmTriggered ? "alarm-card" : ""}`}
+          >
+            {" "}
+            {/* Dodaj klasu za promenu boje */}
             <div className="device-info">
               <p className="device-title">{device.name}</p>
               <p className="device-text">

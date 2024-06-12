@@ -10,6 +10,7 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 import paho.mqtt.client as mqtt
 import json
 from settings import load_settings
+from datetime import datetime, timedelta
 
 # Load environment variables from .env file
 load_dotenv()
@@ -375,15 +376,29 @@ def set_alarm_clock():
     global bb_alarm_time
     try:
         data = request.json
-        bb_alarm_time = data.get('time')
+        bb_alarm_time = data.get('time').strip()  # Trimovanje eventualnih belih znakova
+
+        # Validate and sanitize time format
+        try:
+            # Debug: print the time value
+            print(f"Received time: '{bb_alarm_time}'")
+            datetime.strptime(bb_alarm_time, "%H:%M")
+        except ValueError as e:
+            print(f"Time format error: {e}")
+            return jsonify({'error': 'Invalid time format. Use HH:MM'}), 400
+
         print("Alarm clock time changed to ", bb_alarm_time)
         bb_topic = "front-bb-on"
         payload = json.dumps({"time": bb_alarm_time})
         mqtt_client.publish(bb_topic, payload)
         return jsonify({'message': 'Alarm time set successfully'})
     except Exception as e:
+        print(f"Exception occurred: {e}")
         return jsonify({'error': str(e)}), 500
 
+
+    
+    
 @app.route('/api/inputPin', methods=['PUT'])
 @cross_origin()
 def input_pin():
