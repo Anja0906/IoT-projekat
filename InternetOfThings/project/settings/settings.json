@@ -1,0 +1,185 @@
+{
+  "DHT1": {
+    "name": "RDH1",
+    "simulated": true,
+    "pin": 26,
+    "runs_on": "PI1",
+    "type": "Room DHT"
+  },
+  "DHT2": {
+    "name": "RDH2",
+    "simulated": true,
+    "pin": 6,
+    "runs_on": "PI1",
+    "type": "Room DHT"
+  },
+  "DUS1": {
+    "name": "DUS1",
+    "simulated": true,
+    "echo_pin": 23,
+    "trig_pin": 24,
+    "max_iter": 100,
+    "runs_on": "PI1",
+    "type": "Door Ultrasonic Sensor"
+  },
+  "RPIR1": {
+    "name": "RPIR1",
+    "simulated": true,
+    "pin": 10,
+    "runs_on": "PI1",
+    "type": "Room PIR"
+  },
+  "RPIR2": {
+    "name": "RPIR2",
+    "simulated": true,
+    "pin": 3,
+    "runs_on": "PI1",
+    "type": "Room PIR"
+  },
+  "DPIR1": {
+    "name": "DPIR1",
+    "simulated": true,
+    "pin": 17,
+    "runs_on": "PI1",
+    "type": "Door Motion Sensor"
+  },
+  "DS1": {
+    "name": "DS1",
+    "simulated": true,
+    "pin": 27,
+    "runs_on": "PI1",
+    "type": "Door Sensor (Button)"
+  },
+  "DMS": {
+    "name": "DMS",
+    "simulated": true,
+    "R1": 25,
+    "R2": 8,
+    "R3": 7,
+    "R4": 1,
+    "C1": 12,
+    "C2": 16,
+    "C3": 20,
+    "C4": 21,
+    "runs_on": "PI1",
+    "type": "Door Membrane Switch"
+  },
+  "DB": {
+    "name": "DB",
+    "simulated": true,
+    "pin": 5,
+    "runs_on": "PI1",
+    "type": "Door Buzzer"
+  },
+  "DL": {
+    "name": "DL",
+    "simulated": true,
+    "pin": 22,
+    "runs_on": "PI1",
+    "type": "Door Light (LED diode)"
+  },
+  "GDHT": {
+    "name": "GDHT",
+    "simulated": true,
+    "pin": 26,
+    "runs_on": "PI2",
+    "type": "Garage DHT"
+  },
+  "GLCD": {
+    "name": "GLCD",
+    "simulated": true,
+    "pin_rs": 25,
+    "pin_e": 24,
+    "pins_db": [23, 17, 21, 22],
+    "runs_on": "PI2",
+    "type": "Garage LCD"
+  },
+  "RDHT3": {
+    "name": "RDHT3",
+    "simulated": true,
+    "pin": 6,
+    "runs_on": "PI2",
+    "type": "Room DHT"
+  },
+  "DUS2": {
+    "name": "DUS2",
+    "simulated": true,
+    "echo_pin": 5,
+    "trig_pin": 16,
+    "max_iter": 100,
+    "runs_on": "PI2",
+    "type": "Door Ultrasonic Sensor"
+  },
+  "RPIR3": {
+    "name": "RPIR3",
+    "simulated": true,
+    "pin": 10,
+    "runs_on": "PI2",
+    "type": "Room PIR"
+  },
+  "DPIR2": {
+    "name": "DPIR2",
+    "simulated": true,
+    "pin": 3,
+    "runs_on": "PI2",
+    "type": "Door Motion Sensor"
+  },
+  "DS2": {
+    "name": "DS2",
+    "simulated": true,
+    "pin": 27,
+    "runs_on": "PI2",
+    "type": "Door Sensor (Button)"
+  },
+  "GSG": {
+    "name": "GSG",
+    "simulated": true,
+    "runs_on": "PI2",
+    "type": "Gun Safe Gyro (Gyroscope)"
+  },
+  "BB": {
+    "name": "BB",
+    "simulated": true,
+    "pin": 5,
+    "runs_on": "PI3",
+    "type": "Bedroom Buzzer"
+  },
+  "RPIR4": {
+    "name": "RPIR4",
+    "simulated": true,
+    "pin": 19,
+    "runs_on": "PI3",
+    "type": "Room PIR"
+  },
+  "RDHT4": {
+    "name": "RDHT4",
+    "simulated": true,
+    "pin": 6,
+    "runs_on": "PI3",
+    "type": "Room DHT"
+  },
+  "BIR": {
+    "name": "BIR",
+    "simulated": true,
+    "pin": 13,
+    "runs_on": "PI3",
+    "type": "Bedroom Infrared"
+  },
+  "BRGB": {
+    "name": "BRGB",
+    "simulated": true,
+    "red_pin": 16,
+    "blue_pin": 12,
+    "green_pin": 26,
+    "runs_on": "PI3",
+    "type": "Bedroom RGB"
+  },
+  "B4SD": {
+    "name": "B4SD",
+    "simulated": true,
+    "segments": [11, 4, 23, 8, 7, 10, 18, 25],
+    "digits": [22, 27, 17, 24],
+    "runs_on": "PI3",
+    "type": "Bedroom 4 Digit 7 Segment Display"
+  }
+}
